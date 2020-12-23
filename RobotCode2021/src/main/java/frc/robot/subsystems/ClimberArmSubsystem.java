@@ -6,6 +6,7 @@ import frc.robot.Constants;
 
 import java.util.logging.Logger;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -46,9 +47,11 @@ public class ClimberArmSubsystem extends SubsystemBase {
      */
     public ClimberArmSubsystem() {
         climberArmMotor = new VictorSPX(Constants.CLIMBER_ARM_ID);
+        if(RobotBase.isReal()){
         this.encoder = new DutyCycleEncoder(Constants.CLIMBER_ENCODER_PORT_ID);
         this.encoder.reset();
     }
+}
 
     // -------- METHODS --------\\
 
@@ -94,6 +97,11 @@ public class ClimberArmSubsystem extends SubsystemBase {
     }
 
     public double getRawEncoderPosition(){
-        return this.encoder.get();
+        if(RobotBase.isReal()){
+            return this.encoder.get();
+        }
+        else {
+            return 0.0;
+        }
     }
 }  // End of ClimberArm Subsystem

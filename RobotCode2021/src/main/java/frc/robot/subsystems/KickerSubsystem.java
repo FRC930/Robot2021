@@ -13,6 +13,8 @@ import frc.robot.Constants;
 
 import java.util.logging.Logger;
 
+import edu.wpi.first.wpilibj.RobotBase;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -37,8 +39,10 @@ public class KickerSubsystem extends SubsystemBase {
 
     public KickerSubsystem() {
         kickerMotor = new VictorSPX(Constants.KICKER_ID);  
-        this.encoder = new DutyCycleEncoder(Constants.HOPPER_ENCODER_PORT_ID);
-        kickerMotor.setInverted(true);
+        if(RobotBase.isReal()){
+            this.encoder = new DutyCycleEncoder(Constants.HOPPER_ENCODER_PORT_ID);
+            kickerMotor.setInverted(true);
+        }
     }   
     
     //-------- METHODS --------\\
@@ -63,7 +67,12 @@ public class KickerSubsystem extends SubsystemBase {
     }
 
     public double getEncoder(){
-        return encoder.get();
+        if(RobotBase.isReal()){
+            return encoder.get();
+        }
+        else {
+            return 0.0;
+        }
     }
 
     //stops the motor

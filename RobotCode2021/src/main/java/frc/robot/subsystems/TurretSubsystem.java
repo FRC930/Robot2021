@@ -19,6 +19,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 //import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.RobotBase;
+
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,7 +47,9 @@ public class TurretSubsystem extends SubsystemBase {
 
     public TurretSubsystem() {
         this.turretMotor = new TalonSRX(Constants.TURRET_ID);
-        this.encoder = new DutyCycleEncoder(Constants.ENCODER_PORT_ID);
+        if(RobotBase.isReal()){
+            this.encoder = new DutyCycleEncoder(Constants.ENCODER_PORT_ID);
+        }
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
         logger.log(Constants.LOG_LEVEL_INFO, "Starting TurretSubsystem");
     }
@@ -53,8 +57,14 @@ public class TurretSubsystem extends SubsystemBase {
     // -------- METHODS --------\\
 
     public void setSpeed(double speed) {
+        if(RobotBase.isReal()){
+            encoderPosition = encoder.get();
+}
+        else {
+        }
 
-        encoderPosition = encoder.get();
+    encoderPosition = 0.0;
+
 
         SmartDashboard.putNumber("Turret speed unclamped", speed);
         speed = clamp(speed);
@@ -79,7 +89,12 @@ public class TurretSubsystem extends SubsystemBase {
 
     // converts encoder units to degrees
     public double unitsToDegrees(double units) {
+        if(RobotBase.isReal()){
         return this.encoder.get() / DEGREE_CONVERSION_NUMBER;
+    }
+        else {
+            return 0.0;
+        }
     }
 
     // returns the current encoder position in degrees
@@ -89,7 +104,12 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     public double getRawEncoderPosition() {
-        return this.encoder.get();
+        if(RobotBase.isReal()){
+            return this.encoder.get();
+        }
+        else {
+            return 0.0;
+        }
     }
 
     private double clamp(double speed) {
