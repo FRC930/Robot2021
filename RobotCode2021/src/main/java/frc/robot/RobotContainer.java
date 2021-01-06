@@ -159,8 +159,6 @@ public class RobotContainer {
   // --Tower subsystem
   private final TowerSubsystem towerSubsystem;
 
-  //private final EndgameSubsystem endgameSubsystem;
-
   // --Turret subsystem
   private final TurretSubsystem turretSubsystem;
 
@@ -232,8 +230,6 @@ public class RobotContainer {
     towerSubsystem = new TowerSubsystem();
 
     turretSubsystem = new TurretSubsystem();
-
-    //endgameSubsystem = new EndgameSubsystem();
 
     // --Commands
 
