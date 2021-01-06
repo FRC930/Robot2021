@@ -9,7 +9,7 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
@@ -32,7 +32,7 @@ public class GyroSubsystem extends SubsystemBase {
     //-------- DECLARATIONS --------\\
     
     //The intake talon motor controller, has the gyro attached to it
-    private TalonSRX gyroTalon;
+    private WPI_TalonSRX gyroTalon;
     
     //The gyro, used for autonomous
     private PigeonIMU gyro;
@@ -45,7 +45,7 @@ public class GyroSubsystem extends SubsystemBase {
     //-------- CONSTRUCTOR --------\\
 
     public GyroSubsystem() {
-        gyroTalon = new TalonSRX(Constants.INTAKE_ID);
+        gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
         gyro = new PigeonIMU(gyroTalon);
         driveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
         zeroHeading();

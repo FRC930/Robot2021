@@ -14,7 +14,7 @@ import frc.robot.Constants;
 import java.util.logging.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //-------- SUBSYSTEM CLASS --------\\
@@ -28,12 +28,12 @@ public class TowerSubsystem extends SubsystemBase {
     //-------- DECLARATIONS --------\\
 
     // VictorSPX is a motor controller that makes the conveor belt  Take's the power cell up to the shooter
-    private VictorSPX towerMotor;
+    private WPI_VictorSPX towerMotor;
 
     //-------- CONSTRUCTOR --------\\
 
     public TowerSubsystem() {
-        towerMotor = new VictorSPX(Constants.TOWER_ID);  
+        towerMotor = new WPI_VictorSPX(Constants.TOWER_ID);  
     }   
     
     //-------- METHODS --------\\

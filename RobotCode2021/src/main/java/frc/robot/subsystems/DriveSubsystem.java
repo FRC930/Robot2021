@@ -9,7 +9,7 @@ package frc.robot.subsystems;
 
 import java.util.logging.*;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
@@ -39,7 +39,7 @@ public class DriveSubsystem extends SubsystemBase {
   //private ShuffleboardUtility shuffleboardUtility;
 
   // The intake talon motor controller, has the gyro attached to it
-  private TalonSRX gyroTalon;
+  private WPI_TalonSRX gyroTalon;
 
   // The gyro, used for autonomous
   private PigeonIMU gyro;
@@ -74,7 +74,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // the talon that controls intake, used to get the piston
     // TODO: Change this because IntakeSubsystem already instantiates this!
-    gyroTalon = new TalonSRX(Constants.INTAKE_ID);
+    gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
 
     // the gyro attached to the talon, used to track position and rotation
     // TODO: Change this because GyroSubsystem already instantiates this!

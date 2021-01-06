@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 import edu.wpi.first.wpilibj.RobotBase;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,13 +32,13 @@ public class KickerSubsystem extends SubsystemBase {
     //-------- DECLARATIONS --------\\
 
     // VictorSPX is a motor controller that makes the conveor belt  Take's the power cell up to the shooter
-    private VictorSPX kickerMotor;  
+    private WPI_VictorSPX kickerMotor;  
     private DutyCycleEncoder encoder;
 
     //-------- CONSTRUCTOR --------\\
 
     public KickerSubsystem() {
-        kickerMotor = new VictorSPX(Constants.KICKER_ID);  
+        kickerMotor = new WPI_VictorSPX(Constants.KICKER_ID);  
         if(RobotBase.isReal()){
             this.encoder = new DutyCycleEncoder(Constants.HOPPER_ENCODER_PORT_ID);
             kickerMotor.setInverted(true);

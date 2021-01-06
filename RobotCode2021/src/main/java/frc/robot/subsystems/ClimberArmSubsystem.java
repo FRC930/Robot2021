@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //--------SUBSYSTEM CLASS--------\\
@@ -37,7 +37,7 @@ public class ClimberArmSubsystem extends SubsystemBase {
      * ClimberArmMotor is a motor controller that makes the arm go up and down for
      * when we climb for endgame
      */
-    private VictorSPX climberArmMotor;
+    private WPI_VictorSPX climberArmMotor;
 
     // -------- CONSTRUCTOR --------\\
 
@@ -46,7 +46,7 @@ public class ClimberArmSubsystem extends SubsystemBase {
      * {@link #climberArmMotor motor controller} to the right motor controller.
      */
     public ClimberArmSubsystem() {
-        climberArmMotor = new VictorSPX(Constants.CLIMBER_ARM_ID);
+        climberArmMotor = new WPI_VictorSPX(Constants.CLIMBER_ARM_ID);
         if(RobotBase.isReal()){
         this.encoder = new DutyCycleEncoder(Constants.CLIMBER_ENCODER_PORT_ID);
         this.encoder.reset();

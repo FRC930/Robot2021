@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 //import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 //import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -38,7 +38,7 @@ public class TurretSubsystem extends SubsystemBase {
     // -------- DECLARATIONS --------\\
 
     // The motor controller that will control the turret
-    private TalonSRX turretMotor;
+    private WPI_TalonSRX turretMotor;
     private DutyCycleEncoder encoder;
     //private ShuffleboardUtility shuffleboardUtility;
     private double encoderPosition;
@@ -46,7 +46,7 @@ public class TurretSubsystem extends SubsystemBase {
     // -------- CONSTRUCTOR --------\\
 
     public TurretSubsystem() {
-        this.turretMotor = new TalonSRX(Constants.TURRET_ID);
+        this.turretMotor = new WPI_TalonSRX(Constants.TURRET_ID);
         if(RobotBase.isReal()){
             this.encoder = new DutyCycleEncoder(Constants.ENCODER_PORT_ID);
         }

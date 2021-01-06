@@ -17,9 +17,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.util.logging.Logger;
 
+import edu.wpi.first.wpilibj.RobotBase;
+
 //import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import frc.robot.utilities.SparkMaxWrapper;
 
 //-------- SUBSYSTEM CLASS --------\\
 
@@ -53,8 +57,18 @@ public class FlywheelSubsystem extends SubsystemBase {
     public FlywheelSubsystem() {
 
         // Motor declaration
-        this.motorLead = new CANSparkMax(Constants.SHOOTER_LEAD_ID, MotorType.kBrushless);
-        this.motor2 = new CANSparkMax(Constants.SHOOTER_SLAVE_ID, MotorType.kBrushless);
+        // Determines if dealing with a real robot. 
+        if(RobotBase.isReal()){ 
+            // If true, use hardware
+            this.motorLead = new CANSparkMax(Constants.SHOOTER_LEAD_ID, MotorType.kBrushless);
+            this.motor2 = new CANSparkMax(Constants.SHOOTER_SLAVE_ID, MotorType.kBrushless);
+        }
+        else { 
+            // If false, use simulator
+            this.motorLead = new SparkMaxWrapper(Constants.SHOOTER_LEAD_ID, MotorType.kBrushless);
+            this.motor2 = new SparkMaxWrapper(Constants.SHOOTER_SLAVE_ID, MotorType.kBrushless);
+        }
+
 
         //TODO: Config PID
         // Setting our PID values
