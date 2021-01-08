@@ -315,7 +315,7 @@ public class RobotContainer {
     // L Button
     JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
     // ZR Button
-    JoystickButton shootButton = new JoystickButton(driverController, XB_AXIS_RT);
+    AxisTrigger shootButton = new AxisTrigger(driverController, XB_AXIS_RT);
 
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
@@ -334,9 +334,9 @@ public class RobotContainer {
     driveCommand.setTurningAndThrottleAxis(XB_AXIS_RIGHT_X, XB_AXIS_LEFT_Y);
 
     // Shooter command binds
-    shootButton.whileActiveOnce(new ShootPowerCellCommandGroup(flywheelSubsystem, towerSubsystem, hopperSubsystem,
-        kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, shootButton)).and(stopJamButton.negate());
-    shootButton.whenReleased(new StopTowerKickerCommandGroup(towerSubsystem, kickerSubsystem));
+    shootButton.whenActive(new ShootPowerCellCommandGroup(flywheelSubsystem, towerSubsystem, hopperSubsystem,
+        kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem)).and(stopJamButton.negate())
+        .whenInactive(new StopTowerKickerCommandGroup(towerSubsystem, kickerSubsystem));
     stopJamButton.whileActiveOnce(new StopJamCommandGroup(towerSubsystem, kickerSubsystem));
     stopJamButton.whenReleased(new StopTowerKickerCommandGroup(towerSubsystem, kickerSubsystem));
     // shootButton.whenPressed(new RunFlywheelCommand(flywheelSubsystem, 0.8));
@@ -361,8 +361,9 @@ public class RobotContainer {
     JoystickButton stopHopperButton = new JoystickButton(coDriverController, XB_A);
     
     //JoystickButton toggleAngle = new JoystickButton(coDriverController, XB_Y);
-    
+
     Trigger manualFlywheelButton = new JoystickButton(driverController, XB_AXIS_RT).and(inManualModeTrigger);
+    
     // ZL Button
     // AxisTrigger manualFlywheelPistonButton = new AxisTrigger(coDriverController,
     // XB_AXIS_LT);// .and(inManualModeTrigger);
@@ -380,8 +381,10 @@ public class RobotContainer {
     manualTowerEndgame.whenActive(new RunTowerCommand(towerSubsystem))
         .whenInactive(new StopTowerCommand(towerSubsystem));
     // manual flywheel spinning
+
     manualFlywheelButton.whenActive(new RunFlywheelCommand(flywheelSubsystem, 0.7))
         .whenInactive(new StopFlywheelCommand(flywheelSubsystem));
+
     // manual flywheel piston stuff
     // manualFlywheelPistonButton.whenActive(new
     // ExtendFlywheelPistonCommand(flywheelPistonSubsystem)).whenInactive(new
