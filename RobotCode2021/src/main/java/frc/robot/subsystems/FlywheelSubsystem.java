@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-//TODO: Uncomment PID stuff and configure it
+//TODO: Add Module Based PID
 
 //-------- IMPORTS --------\\
 
@@ -62,8 +62,7 @@ public class FlywheelSubsystem extends SubsystemBase {
             // If true, use hardware
             this.motorLead = new CANSparkMax(Constants.SHOOTER_LEAD_ID, MotorType.kBrushless);
             this.motor2 = new CANSparkMax(Constants.SHOOTER_SLAVE_ID, MotorType.kBrushless);
-        }
-        else { 
+        } else { 
             // If false, use simulator
             this.motorLead = new SparkMaxWrapper(Constants.SHOOTER_LEAD_ID, MotorType.kBrushless);
             this.motor2 = new SparkMaxWrapper(Constants.SHOOTER_SLAVE_ID, MotorType.kBrushless);
@@ -79,7 +78,9 @@ public class FlywheelSubsystem extends SubsystemBase {
         // this.pidcontroller.setD(PID_D);
 
         // Follow lead reverse speed
-        motor2.follow(motorLead, true);
+        if(RobotBase.isReal()){
+            motor2.follow(motorLead, true);
+        }
 
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
     }
@@ -93,6 +94,12 @@ public class FlywheelSubsystem extends SubsystemBase {
         // this.pidcontroller.setReference(speed * 5880, ControlType.kVelocity);
         //motorLead.set(-speed * 5880 * PID_FF);
         motorLead.set(-speed);
+        
+        //
+        // If we are simulating we need to explicitly set motor2's speed.
+        if(!RobotBase.isReal()){
+            motor2.set(speed);
+        }
 
         logger.log(Constants.LOG_LEVEL_FINE, "Set shooter speed to " + speed);
         logger.exiting(FlywheelSubsystem.class.getName(), "setSpeed()");
