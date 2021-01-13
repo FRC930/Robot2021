@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -102,9 +103,11 @@ public class DriveSubsystem extends SubsystemBase {
     right2.setSensorPhase(false);
 
     // Mirror primary motor controllers on each side
-    left2.follow(left1);
-    right2.follow(right1);
-
+    if(RobotBase.isReal()){
+      left2.follow(left1);
+      right2.follow(right1);
+    }
+    
     // Sets the ramp rate of the robot, this will need to be configued
     left1.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
     right1.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
@@ -145,6 +148,11 @@ public class DriveSubsystem extends SubsystemBase {
     
     left1.set(leftSpeed);
     right1.set(rightSpeed);
+    
+    if(!RobotBase.isReal()){
+      left2.set(leftSpeed);
+      right2.set(rightSpeed);
+    }
 
     logger.exiting(DriveSubsystem.class.getName(), "runAt()");
   } // end of method runAt()
