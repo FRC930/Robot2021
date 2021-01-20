@@ -20,7 +20,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.hal.sim.EncoderSim;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -40,7 +39,6 @@ public class TurretSubsystem extends SubsystemBase {
     // The motor controller that will control the turret
     private WPI_TalonSRX turretMotor;
     private DutyCycleEncoder encoder;
-    private EncoderSim encoderSim;
     //private ShuffleboardUtility shuffleboardUtility;
     private double encoderPosition;
 
@@ -50,8 +48,6 @@ public class TurretSubsystem extends SubsystemBase {
         this.turretMotor = new WPI_TalonSRX(Constants.TURRET_ID);
         if(RobotBase.isReal()){
             this.encoder = new DutyCycleEncoder(Constants.ENCODER_PORT_ID);
-        } else {
-            this.encoderSim = new EncoderSim(Constants.ENCODER_PORT_ID);
         }
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
         logger.log(Constants.LOG_LEVEL_INFO, "Starting TurretSubsystem");
@@ -62,8 +58,6 @@ public class TurretSubsystem extends SubsystemBase {
     public void setSpeed(double speed) {
         if(RobotBase.isReal()){
             encoderPosition = encoder.get();
-        } else {
-            encoderPosition = encoderSim.getCount();
         }
 
         encoderPosition = 0.0;
@@ -95,7 +89,7 @@ public class TurretSubsystem extends SubsystemBase {
         if(RobotBase.isReal()){
             return this.encoder.get() / DEGREE_CONVERSION_NUMBER;
         } else {
-            return this.encoderSim.getCount();
+            return 0.0;
         }
     }
 
@@ -108,9 +102,8 @@ public class TurretSubsystem extends SubsystemBase {
     public double getRawEncoderPosition() {
         if(RobotBase.isReal()){
             return this.encoder.get();
-        }
-        else {
-            return this.encoderSim.getCount();
+        } else {
+            return 0.0;
         }
     }
 

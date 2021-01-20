@@ -15,6 +15,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 import java.util.logging.*;
@@ -45,7 +46,14 @@ public class GyroSubsystem extends SubsystemBase {
     //-------- CONSTRUCTOR --------\\
 
     public GyroSubsystem() {
-        gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
+        // Move gyro to port 16 so simulator does not break
+        if(RobotBase.isReal())
+        {
+            gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
+        } else {
+            gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID + 10);
+        }
+        
         gyro = new PigeonIMU(gyroTalon);
         driveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
         zeroHeading();

@@ -75,7 +75,13 @@ public class DriveSubsystem extends SubsystemBase {
 
     // the talon that controls intake, used to get the piston
     // TODO: Change this because IntakeSubsystem already instantiates this!
-    gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
+    // Move gyro to port 16 so simulator does not break
+    if(RobotBase.isReal())
+    {
+      gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
+    } else {
+      gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID + 10);
+    }
 
     // the gyro attached to the talon, used to track position and rotation
     // TODO: Change this because GyroSubsystem already instantiates this!
