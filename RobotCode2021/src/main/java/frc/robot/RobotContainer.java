@@ -159,8 +159,6 @@ public class RobotContainer {
   // --Tower subsystem
   private final TowerSubsystem towerSubsystem;
 
-  private final EndgameSubsystem endgameSubsystem;
-
   // --Turret subsystem
   private final TurretSubsystem turretSubsystem;
 
@@ -233,8 +231,6 @@ public class RobotContainer {
 
     turretSubsystem = new TurretSubsystem();
 
-    endgameSubsystem = new EndgameSubsystem();
-
     // --Commands
 
     // endgame
@@ -242,7 +238,7 @@ public class RobotContainer {
         new JoystickButton(coDriverController, XB_RB));
 
     // drive (NOTE: This is where we bind the driver controls to the drivetrain)
-    driveCommand = new DriveCommand(driveSubsystem, driverController, GC_AXIS_LEFT_X, GC_AXIS_RIGHT_Y);
+    driveCommand = new DriveCommand(driveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_RIGHT_Y);
 
     // hopper
     defaultStopHopperCommand = new DefaultStopHopperCommand(hopperSubsystem);
@@ -317,9 +313,9 @@ public class RobotContainer {
     // B Button
     //JoystickButton positionalButton = new JoystickButton(driverController, GC_B);
     // L Button
-    JoystickButton toggleEndgame = new JoystickButton(driverController, GC_L);
+    JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
     // ZR Button
-    JoystickButton shootButton = new JoystickButton(driverController, GC_ZR);
+    AxisTrigger shootButton = new AxisTrigger(driverController, XB_AXIS_RT);
 
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
@@ -335,12 +331,12 @@ public class RobotContainer {
     // positionalButton.whileActiveOnce(positionalControlCommandGroup);
 
     // Drive command binds
-    driveCommand.setTurningAndThrottleAxis(GC_AXIS_RIGHT_X, GC_AXIS_LEFT_Y);
+    driveCommand.setTurningAndThrottleAxis(XB_AXIS_RIGHT_X, XB_AXIS_LEFT_Y);
 
     // Shooter command binds
-    shootButton.whileActiveOnce(new ShootPowerCellCommandGroup(flywheelSubsystem, towerSubsystem, hopperSubsystem,
-        kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, shootButton)).and(stopJamButton.negate());
-    shootButton.whenReleased(new StopTowerKickerCommandGroup(towerSubsystem, kickerSubsystem));
+    shootButton.whenActive(new ShootPowerCellCommandGroup(flywheelSubsystem, towerSubsystem, hopperSubsystem,
+        kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem)).and(stopJamButton.negate())
+        .whenInactive(new StopTowerKickerCommandGroup(towerSubsystem, kickerSubsystem));
     stopJamButton.whileActiveOnce(new StopJamCommandGroup(towerSubsystem, kickerSubsystem));
     stopJamButton.whenReleased(new StopTowerKickerCommandGroup(towerSubsystem, kickerSubsystem));
     // shootButton.whenPressed(new RunFlywheelCommand(flywheelSubsystem, 0.8));
@@ -356,17 +352,18 @@ public class RobotContainer {
     // Trigger manualColorSpinnerButton = new JoystickButton(driverController,
     // GC_A).and(inManualModeTrigger);
     // X Button
-    Trigger manualKickerButton = new JoystickButton(driverController, GC_X).and(inManualModeTrigger);
+    Trigger manualKickerButton = new JoystickButton(driverController, XB_X).and(inManualModeTrigger);
     // Y Button
-    Trigger manualTowerEndgame = new JoystickButton(driverController, GC_Y).and(inManualModeTrigger);
+    Trigger manualTowerEndgame = new JoystickButton(driverController, XB_Y).and(inManualModeTrigger);
 
     JoystickButton reverseHopperButton = new JoystickButton(coDriverController, XB_B);
 
     JoystickButton stopHopperButton = new JoystickButton(coDriverController, XB_A);
     
     //JoystickButton toggleAngle = new JoystickButton(coDriverController, XB_Y);
+
+    Trigger manualFlywheelButton = new JoystickButton(driverController, XB_AXIS_RT).and(inManualModeTrigger);
     
-    Trigger manualFlywheelButton = new JoystickButton(driverController, GC_ZR).and(inManualModeTrigger);
     // ZL Button
     // AxisTrigger manualFlywheelPistonButton = new AxisTrigger(coDriverController,
     // XB_AXIS_LT);// .and(inManualModeTrigger);
@@ -384,8 +381,10 @@ public class RobotContainer {
     manualTowerEndgame.whenActive(new RunTowerCommand(towerSubsystem))
         .whenInactive(new StopTowerCommand(towerSubsystem));
     // manual flywheel spinning
+
     manualFlywheelButton.whenActive(new RunFlywheelCommand(flywheelSubsystem, 0.7))
         .whenInactive(new StopFlywheelCommand(flywheelSubsystem));
+
     // manual flywheel piston stuff
     // manualFlywheelPistonButton.whenActive(new
     // ExtendFlywheelPistonCommand(flywheelPistonSubsystem)).whenInactive(new

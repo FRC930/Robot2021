@@ -9,7 +9,7 @@ package frc.robot.subsystems;
 
 import java.util.logging.*;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -39,7 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
   //private ShuffleboardUtility shuffleboardUtility;
 
   // The intake talon motor controller, has the gyro attached to it
-  private TalonSRX gyroTalon;
+  private WPI_TalonSRX gyroTalon;
 
   // The gyro, used for autonomous
   private PigeonIMU gyro;
@@ -74,7 +75,13 @@ public class DriveSubsystem extends SubsystemBase {
 
     // the talon that controls intake, used to get the piston
     // TODO: Change this because IntakeSubsystem already instantiates this!
-    gyroTalon = new TalonSRX(Constants.INTAKE_ID);
+    // Move gyro to port 16 so simulator does not break
+    if(RobotBase.isReal())
+    {
+      gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
+    } else {
+      gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID + 10);
+    }
 
     // the gyro attached to the talon, used to track position and rotation
     // TODO: Change this because GyroSubsystem already instantiates this!
@@ -102,16 +109,18 @@ public class DriveSubsystem extends SubsystemBase {
     right2.setSensorPhase(false);
 
     // Mirror primary motor controllers on each side
-    left2.follow(left1);
-    right2.follow(right1);
-
+    if(RobotBase.isReal()){
+      left2.follow(left1);
+      right2.follow(right1);
+    }
+    
     // Sets the ramp rate of the robot, this will need to be configued
     left1.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
     right1.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
     // Sets up the differntial drive
     // drive = new DifferentialDrive(right1, left1);
     shifter.set(true);
-    endgameClamp.set(true);
+    //endgameClamp.set(true);
   }
 
   public void setShifterState(boolean state) {
@@ -121,7 +130,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setEndgameClampState(boolean state) {
     logger.log(Constants.LOG_LEVEL_FINE, "Endgame clamp state: " + state);
-    endgameClamp.set(state);
+    //endgameClamp.set(state);
   }
 
   /**
@@ -145,6 +154,11 @@ public class DriveSubsystem extends SubsystemBase {
     
     left1.set(leftSpeed);
     right1.set(rightSpeed);
+    
+    if(!RobotBase.isReal()){
+      left2.set(leftSpeed);
+      right2.set(rightSpeed);
+    }
 
     logger.exiting(DriveSubsystem.class.getName(), "runAt()");
   } // end of method runAt()
