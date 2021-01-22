@@ -54,7 +54,7 @@ public class GyroSubsystem extends SubsystemBase {
     // updates the yaw, pitch, and roll values in the array
     public void updateYawPitchRoll() {
         gyro.getYawPitchRoll(yawPitchRollValues);
-        logger.log(Level.INFO, yawPitchRollValues.toString());
+        logger.log(Level.FINER, yawPitchRollValues.toString());
     }
 
     public double getHeading() {

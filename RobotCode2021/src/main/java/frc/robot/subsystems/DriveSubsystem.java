@@ -115,7 +115,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void setShifterState(boolean state) {
-    logger.log(Constants.LOG_LEVEL_FINE, "New shifter state: " + state);
+    logger.log(Constants.LOG_LEVEL_FINER, "New shifter state: " + state);
     shifter.set(state);
   }
 
@@ -135,7 +135,7 @@ public class DriveSubsystem extends SubsystemBase {
     logger.entering(DriveSubsystem.class.getName(), "runAt()");
 
     //TODO: We should be seeing this on the Shuffleboard
-    logger.log(Constants.LOG_LEVEL_FINE, "New left speed: " + leftSpeed + "|| New right speed: " + rightSpeed);
+    logger.log(Constants.LOG_LEVEL_FINER, "New left speed: " + leftSpeed + "|| New right speed: " + rightSpeed);
     logger.log(Constants.LOG_LEVEL_FINE, "running " + "left encoder " + getLeftWheelRotations() + " | right encoder " + getRightWheelRotations());
 
     if(!shifter.get()) {
@@ -218,7 +218,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     logger.entering(DriveSubsystem.class.getName(), "tankDriveVolts()");
 
-    logger.log(Constants.LOG_LEVEL_FINE, "Drivetrain Moving: " + leftVolts + " " + rightVolts);
+    logger.log(Constants.LOG_LEVEL_FINER, "Drivetrain Moving: " + leftVolts + " " + rightVolts);
 
     //TODO: Change for Prac Robot
     // right1.setVoltage(rightVolts);

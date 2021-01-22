@@ -60,7 +60,7 @@ public class HopperSubsystem extends SubsystemBase {
 
         hopperMotor.set(ControlMode.PercentOutput, speed);
 
-        logger.log(Constants.LOG_LEVEL_INFO, "Set shooter speed to " + hopperMotor.getMotorOutputPercent());
+        logger.log(Constants.LOG_LEVEL_FINE, "Set shooter speed to " + hopperMotor.getMotorOutputPercent());
         logger.exiting(HopperSubsystem.class.getName(), "setSpeed()");
     }
 
@@ -74,7 +74,7 @@ public class HopperSubsystem extends SubsystemBase {
     public double getSpeed() {
         // Logs the getSpeed method as INFO returning, "getSpeed()"
         logger.entering(HopperSubsystem.class.getName(), "getSpeed()");
-        logger.log(Constants.LOG_LEVEL_INFO, "Get shooter speed to " + hopperMotor.getMotorOutputPercent());
+        logger.log(Constants.LOG_LEVEL_FINER, "Get shooter speed to " + hopperMotor.getMotorOutputPercent());
         logger.exiting(HopperSubsystem.class.getName(), "getSpeed()");
         return hopperMotor.getMotorOutputPercent();
     }

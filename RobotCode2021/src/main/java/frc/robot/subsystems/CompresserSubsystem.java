@@ -58,7 +58,7 @@ public class CompresserSubsystem extends SubsystemBase {
      */
     public void turnCompressorOn() {
         compressorUtility.setClosedLoopControl(COMPRESSOR_ON);
-        logger.log(Constants.LOG_LEVEL_FINE, "Compresser on");
+        logger.log(Constants.LOG_LEVEL_INFO, "Compresser on");
     }
 
     /**
@@ -67,7 +67,7 @@ public class CompresserSubsystem extends SubsystemBase {
      */
     public void turnCompressorOff(){
         compressorUtility.setClosedLoopControl(COMPRESSOR_OFF);
-        logger.log(Constants.LOG_LEVEL_FINE, "Compresser off");
+        logger.log(Constants.LOG_LEVEL_INFO, "Compresser off");
     }
 
 } // end of class CompresserSubsystem
