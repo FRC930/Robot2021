@@ -165,7 +165,7 @@ public class RobotContainer {
   private final TurretSubsystem turretSubsystem;
 
   // --LED subsystem
-  LEDSubsystem ledSubsystem = new LEDSubsystem();
+  LEDSubsystem ledSubsystem = new LEDSubsystem(0,5);
 
   // -------- COMMANDS --------\\
 

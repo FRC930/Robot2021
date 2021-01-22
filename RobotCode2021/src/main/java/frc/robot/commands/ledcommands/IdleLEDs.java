@@ -49,7 +49,7 @@ public class IdleLEDs extends CommandBase {
 
     if(counter >= 32)
     {
-		m_LEDSubsystem.setLEDs(0, 0, 255);
+		//m_LEDSubsystem.setLEDs(0, 0, 255);
         if(animCheck == true)
         {
 			for(int i = 0; i < buffer.getLength(); i++)
@@ -76,7 +76,7 @@ public class IdleLEDs extends CommandBase {
 	  counter = 0;
 	}
 
-	m_LEDSubsystem.updateBuffer(buffer);
+	m_LEDSubsystem.setBuffer(buffer);
   }
 
   // Called once the command ends or is interrupted.
