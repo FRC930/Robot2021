@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 //-------- SUBSYSTEM CLASS --------\\
 /**
@@ -31,7 +31,7 @@ public class IntakeMotorSubsystem extends SubsystemBase {
     /**
      * The motor controller that controls the intake motor
      */
-    private TalonSRX intakeMotorController; 
+    private WPI_TalonSRX intakeMotorController; 
 
     //-------- CONSTRUCTOR --------\
 
@@ -39,7 +39,7 @@ public class IntakeMotorSubsystem extends SubsystemBase {
      * This constructor initializes the {@link #intakeMotorController} to the proper hardware
      */
     public IntakeMotorSubsystem() {
-        intakeMotorController = new TalonSRX(Constants.INTAKE_ID);
+        intakeMotorController = new WPI_TalonSRX(Constants.INTAKE_ID);
     }
 
     //-------- METHODS --------\\
