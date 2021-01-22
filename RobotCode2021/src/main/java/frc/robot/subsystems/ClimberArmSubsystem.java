@@ -47,9 +47,12 @@ public class ClimberArmSubsystem extends SubsystemBase {
      */
     public ClimberArmSubsystem() {
         climberArmMotor = new WPI_VictorSPX(Constants.CLIMBER_ARM_ID);
+
+        // Dont use the encoder in simulation
         if(RobotBase.isReal()){
-        this.encoder = new DutyCycleEncoder(Constants.CLIMBER_ENCODER_PORT_ID);
-        this.encoder.reset();
+            this.encoder = new DutyCycleEncoder(Constants.CLIMBER_ENCODER_PORT_ID);
+            this.encoder.reset();
+        }
     }
 }
 
@@ -97,6 +100,7 @@ public class ClimberArmSubsystem extends SubsystemBase {
     }
 
     public double getRawEncoderPosition(){
+        // Dont use encoder in robot sim
         if(RobotBase.isReal()){
             return this.encoder.get();
         }

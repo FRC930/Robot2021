@@ -108,7 +108,7 @@ public class DriveSubsystem extends SubsystemBase {
     right1.setSensorPhase(false);
     right2.setSensorPhase(false);
 
-    // Mirror primary motor controllers on each side
+    // Mirror primary motor controllers on each side (Not when in simulation)
     if(RobotBase.isReal()){
       left2.follow(left1);
       right2.follow(right1);
@@ -155,6 +155,7 @@ public class DriveSubsystem extends SubsystemBase {
     left1.set(leftSpeed);
     right1.set(rightSpeed);
     
+    // If we are simulating robot set motor speeds manually
     if(!RobotBase.isReal()){
       left2.set(leftSpeed);
       right2.set(rightSpeed);
