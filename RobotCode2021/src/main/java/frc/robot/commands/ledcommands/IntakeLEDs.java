@@ -47,7 +47,7 @@ public class IntakeLEDs extends CommandBase {
         for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setRGB(i, 0, 0, 0);
         }
-        m_LEDSubsystem.updateBuffer(buffer);
+        m_LEDSubsystem.setBuffer(buffer);
     }
 
     private void moveLEDs() {
@@ -82,7 +82,7 @@ public class IntakeLEDs extends CommandBase {
             moveLEDs();
             buffer.setRGB(index2, 0, 0, 255);
             buffer.setRGB(indexB, 255, 255, 0);
-            m_LEDSubsystem.updateBuffer(buffer);
+            m_LEDSubsystem.setBuffer(buffer);
         }
     }
 

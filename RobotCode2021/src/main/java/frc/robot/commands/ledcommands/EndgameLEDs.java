@@ -49,7 +49,7 @@ public class EndgameLEDs extends CommandBase {
     for (int i = 0; i < buffer.getLength(); i++) {
       buffer.setRGB(i, 0, 0, 0);
     }
-    m_LEDSubsystem.updateBuffer(buffer);
+    m_LEDSubsystem.setBuffer(buffer);
   }
 
   private void moveLEDs() {
@@ -83,7 +83,7 @@ public class EndgameLEDs extends CommandBase {
         moveLEDs();
         buffer.setRGB(index2, 255, 0, 0);
       }      
-      m_LEDSubsystem.updateBuffer(buffer);
+      m_LEDSubsystem.setBuffer(buffer);
     }
   }
 

@@ -18,53 +18,27 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDSubsystem extends SubsystemBase {
 
-    //-------- CONSTANTS --------\\
-    
-    private final int PORT = 0;
-    private final int LEDS = 60;
+    //-------- DECLARATIONS --------\\
 
-//     //-------- DECLARATIONS --------\\
+    private AddressableLED leds;
 
-    private AddressableLEDBuffer ledsBuffer = new AddressableLEDBuffer(LEDS);
-    private AddressableLED leds = new AddressableLED(PORT);
+    //-------- CONSTRUCTOR --------\\
 
-    //private boolean doneLoop;
-
-//     //-------- CONSTRUCTOR --------\\
-
-    public LEDSubsystem() {
-        leds.setLength(ledsBuffer.getLength());
-        setLEDs(0, 0, 0);
-        leds.start();
-
-        //doneLoop = false;
+    public LEDSubsystem(int port, int length) {
+        leds = new AddressableLED(port); //initialization of the AdressableLED
+        leds.setLength(length); //Sets the LED Strip length once
     }
 
     //-------- METHODS --------\\
     
-    public void updateBuffer(AddressableLEDBuffer buffer)
-    {
-        this.ledsBuffer = buffer;
-        leds.setData(ledsBuffer);
+    //call the leds to start the subsystem
+    public void start(){
+        leds.start();
     }
 
-    public void resetLEDs()
-    {
-        for(int i = 0; i < ledsBuffer.getLength(); i++)
-            this.ledsBuffer.setRGB(i, 0, 0, 0);
-
-        leds.setData(ledsBuffer);
+    //sets the buffer(color strips) for the LED Strip
+    public void setBuffer(AddressableLEDBuffer buffer){
+        leds.setData(buffer);
     }
-
-    public void setLEDs(int r, int g, int b) {
-        for(int i = 0; i < ledsBuffer.getLength(); i++) {
-            ledsBuffer.setRGB(i, r, g, b);
-        }
-        leds.setData(ledsBuffer);
-    }
-
-    // @Override
-    // public void periodic() {      
-    // }
     
 } // end of class LEDSubsystem
