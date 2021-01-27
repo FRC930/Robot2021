@@ -36,7 +36,8 @@ import frc.robot.triggers.*;
 // --Utility imports
 import frc.robot.utilities.*;
 
-import java.util.logging.Logger;
+import java.util.logging.*;
+import frc.robot.Constants;
 import java.util.logging.Level;
 
 // --Other imports
@@ -107,7 +108,7 @@ public class RobotContainer {
   private final int CODRIVER_CONTROLLER_ID = 1; // The xbox controller
 
   // -------- DECLARATIONS --------\\
-  private static final Logger frcRobotLogger = Logger.getLogger(RobotContainer.class.getPackageName());
+  private static final Logger logger = Logger.getLogger(RobotContainer.class.toString());
 
   // -------- DECLARATIONS --------\\
   private static boolean inManualMode = false; // Default, this should be false
@@ -202,8 +203,7 @@ public class RobotContainer {
     new CameraUtil().startCapture();
     // Setting Log level for entire robot code
     // TODO: Edit this in Shuffleboard...?
-    frcRobotLogger.setLevel(Level.OFF);
-
+    
     // --Drive controllers
     driverController = new Joystick(DRIVER_CONTROLLER_ID);
     coDriverController = new Joystick(CODRIVER_CONTROLLER_ID);
@@ -281,6 +281,12 @@ public class RobotContainer {
   } // end of constructor RobotContainer()
 
   // -------- METHODS --------\\
+
+  // -------- LOGGER ---------\\
+  private void robotLogger() {
+    logger.entering(RobotContainer.class.getName(), "robotLogger()");
+    	logger.log(Constants.LOG_LEVEL_FINE, "Test if you can see this");
+  }
 
   private void configureButtonBindings() {
 
