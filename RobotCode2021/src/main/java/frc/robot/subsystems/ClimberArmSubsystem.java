@@ -54,7 +54,6 @@ public class ClimberArmSubsystem extends SubsystemBase {
             this.encoder.reset();
         }
     }
-}
 
     // -------- METHODS --------\\
 
