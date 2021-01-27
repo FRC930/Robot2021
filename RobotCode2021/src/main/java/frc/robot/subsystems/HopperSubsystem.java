@@ -7,7 +7,7 @@ import frc.robot.Constants;
 import java.util.logging.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -32,7 +32,7 @@ public class HopperSubsystem extends SubsystemBase {
     /**
      * This VictorSPX is the motor that controls the hopper
      */
-    private VictorSPX hopperMotor;
+    private WPI_VictorSPX hopperMotor;
 
     // -------- CONSTRUCTOR --------\\
 
@@ -41,7 +41,7 @@ public class HopperSubsystem extends SubsystemBase {
      * <p>It also sets the motor to be in inverted mode</p>
      */
     public HopperSubsystem() {
-        hopperMotor = new VictorSPX(Constants.HOPPER_ID);
+        hopperMotor = new WPI_VictorSPX(Constants.HOPPER_ID);
         hopperMotor.setInverted(true);
     }
 
