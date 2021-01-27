@@ -61,7 +61,7 @@ public class ClimberArmSubsystem extends SubsystemBase {
      */
     public void setSpeed(double speed) {
         logger.entering(ClimberArmSubsystem.class.getName(), "Extend");
-        logger.log(Constants.LOG_LEVEL_INFO, "motorSpeed: " + speed);
+        logger.log(Constants.LOG_LEVEL_INFO, "Expected Motor Speed: " + speed);
 
         climberArmMotor.set(ControlMode.PercentOutput, speed);
 
@@ -77,7 +77,7 @@ public class ClimberArmSubsystem extends SubsystemBase {
      */
     public double getSpeed() {
         logger.entering(ClimberArmSubsystem.class.getName(), "getSpeed");
-        logger.log(Constants.LOG_LEVEL_INFO, "motorSpeed: " + climberArmMotor.getMotorOutputPercent());
+        logger.log(Constants.LOG_LEVEL_INFO, "Actual Motor Speed: " + climberArmMotor.getMotorOutputPercent());
         logger.exiting(ClimberArmSubsystem.class.getName(), "getSpeed");
 
         return climberArmMotor.getMotorOutputPercent();

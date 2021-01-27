@@ -2,6 +2,8 @@ package frc.robot.utilities;
 import frc.robot.Constants;
 import java.util.logging.Logger;
 
+//Delete Soon!
+
 class logWriter {
     //--------------------------------------------
     // Creates A Logger for Use. 
@@ -12,6 +14,26 @@ class logWriter {
     // Writes a new log reading the contents of log with the 
     // sourceMethod being srcMethod, and level of level.
     //--------------------------------------------
+
+
+
+    //Examples of Use:
+
+    // private static final Logger logger = Logger.getLogger(ClimberArmSubsystem.class.getName());
+    //
+    // becomes
+    //
+    // logWriter logger1 = new logWriter(ClimberArmSubsystem.class.getName());
+
+    // logger.entering(ClimberArmSubsystem.class.getName(), "getSpeed");
+    // logger.log(Constants.LOG_LEVEL_INFO, "Actual Motor Speed: " + climberArmMotor.getMotorOutputPercent());
+    // logger.exiting(ClimberArmSubsystem.class.getName(), "getSpeed");
+    //
+    // becomes
+    // 
+    // logger1.log("INFO", "getSpeed", "Actual Motor Speed: " + climberArmMotor.getMotorOutputPercent());
+    //
+
 
 
     //innitialization
