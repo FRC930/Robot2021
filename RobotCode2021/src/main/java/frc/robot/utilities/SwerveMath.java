@@ -4,10 +4,10 @@ import frc.robot.Constants;
 // We are using imperial (inches)
 public class SwerveMath {
     // Distance between the front and back wheels
-    private final double wheelBase = 12;
+    private final double wheelBase = 22.5;
 
     // Distance between left and right wheels
-    private final double trackWidth = 16;
+    private final double trackWidth = 24.5;
 
     private double r;
 
