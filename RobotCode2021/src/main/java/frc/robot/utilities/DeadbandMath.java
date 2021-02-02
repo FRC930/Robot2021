@@ -192,7 +192,7 @@ public class DeadbandMath {
                 }
             }
         }
-        logger.log(Constants.LOG_LEVEL_INFO, "Calculated Deadband Zone! (" + deadBandZone + ")");
+        logger.log(Constants.LOG_LEVEL_INFO, "Calculated Deadband Zone! (" + deadbandZone + ")");
         logger.exiting(DeadbandMath.class.getName(), "calculateDeadbandZone");
     }
 
