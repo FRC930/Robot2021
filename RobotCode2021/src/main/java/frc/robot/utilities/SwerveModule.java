@@ -3,6 +3,7 @@ package frc.robot.utilities;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.RobotBase;
 
 public class SwerveModule {
 
@@ -10,6 +11,12 @@ public class SwerveModule {
 
     private WPI_TalonFX steerFx;
 
+    /**
+     * Helper class for a swerve wheel. Holds two Falcon500's.
+     * 
+     * @param driveID  ID for the driving motor
+     * @param turnID   ID for the turning motor
+     */
     public SwerveModule(int driveID, int turnID) {
         driveFx = new WPI_TalonFX(driveID);
         steerFx = new WPI_TalonFX(turnID);
@@ -18,7 +25,11 @@ public class SwerveModule {
     }
 
     public void setAngle(double rotation) {
-        steerFx.set(ControlMode.Position, rotation);
+        if(RobotBase.isReal()){
+            steerFx.set(ControlMode.Position, rotation);
+        } else {
+            steerFx.set(ControlMode.PercentOutput, rotation);
+        }
     }
 
     public void setSpeed(double speed) {
