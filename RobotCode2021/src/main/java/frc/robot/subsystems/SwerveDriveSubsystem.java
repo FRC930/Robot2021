@@ -11,6 +11,7 @@ import frc.robot.utilities.SwerveModule;
 import frc.robot.utilities.SwerveMath;
 import edu.wpi.first.wpilibj.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //-------- SUBSYSTEM CLASS --------\\
@@ -25,10 +26,15 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   private SwerveMath swerveMath;
 
+  private SwerveDrivePoseEstimator swervePoseEstimator;
+  private SwerveModuleState swerveModuleState;
+
   // -------- CONSTRUCTOR --------\\
 
   public SwerveDriveSubsystem() {
     setDriveMotors();
+    swerveModuleState = new SwerveModuleState(speedMetersPerSecond, angle);
+    swervePoseEstimator.update(gyroAngle, moduleStates);
     swerveMath = new SwerveMath();
   }
 
@@ -37,10 +43,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private void setDriveMotors() {
 
     // instantiates the swerve modules on the robot (We use 4)
-    FRDrive = new SwerveModule(0, 1);
-    BRDrive = new SwerveModule(2, 3);
-    FLDrive = new SwerveModule(4, 5);
-    BLDrive = new SwerveModule(6, 7);
+    FRDrive = new SwerveModule(1, 13);
+    BRDrive = new SwerveModule(2, 14);
+    FLDrive = new SwerveModule(3, 15);
+    BLDrive = new SwerveModule(4, 16);
   }
 
   /**
