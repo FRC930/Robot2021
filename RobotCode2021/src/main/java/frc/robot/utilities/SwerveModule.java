@@ -1,7 +1,12 @@
 package frc.robot.utilities;
 
+import java.util.logging.Logger;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -11,6 +16,10 @@ public class SwerveModule {
 
     private WPI_TalonFX steerFx;
 
+    private CANCoder steerEncoder;
+
+    private static final Logger logger = Logger.getLogger(SwerveModule.class.getName());
+    
     /**
      * Helper class for a swerve wheel. Holds two Falcon500's.
      * 
@@ -20,6 +29,10 @@ public class SwerveModule {
     public SwerveModule(int driveID, int turnID) {
         driveFx = new WPI_TalonFX(driveID);
         steerFx = new WPI_TalonFX(turnID);
+        steerEncoder = new CANCoder(turnID);
+        //steerEncoder.
+
+        //steerFx.configSelectedFeedbackSensor(RemoteFeedbackDevice);
 
         driveFx.configOpenloopRamp(2);
     }
@@ -42,10 +55,10 @@ public class SwerveModule {
     }
 
     public double getAngle() {
-        return steerFx.getSelectedSensorPosition() / 6.86;
+        return steerFx.getSelectedSensorPosition();
     }
 
     public double getSpeed() {
-        return driveFx.getSelectedSensorVelocity() / 6.68;
+        return driveFx.getSelectedSensorVelocity();
     }
 }

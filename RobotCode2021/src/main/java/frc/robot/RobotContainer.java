@@ -202,7 +202,7 @@ public class RobotContainer {
     new CameraUtil().startCapture();
     // Setting Log level for entire robot code
     // TODO: Edit this in Shuffleboard...?
-    frcRobotLogger.setLevel(Level.OFF);
+    frcRobotLogger.setLevel(Level.INFO);
 
     // --Drive controllers
     driverController = new Joystick(DRIVER_CONTROLLER_ID);

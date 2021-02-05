@@ -10,6 +10,9 @@ package frc.robot.subsystems;
 import frc.robot.utilities.SwerveModule;
 import frc.robot.utilities.SwerveMath;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.AnalogEncoder;
@@ -47,6 +50,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
 
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+
+  private static final Logger logger = Logger.getLogger(SwerveDriveSubsystem.class.getName());
 /*
   private final SwerveDrivePoseEstimator m_poseEstimator =
       new SwerveDrivePoseEstimator(
@@ -83,10 +88,24 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    * @param rotation The Y position of the controller (Right stick)
    */
   public void drive(double targetX, double targetY, double rotation) {
+    logger.entering(SwerveDriveSubsystem.class.getName(), "drive");
+
+    logger.log(Level.INFO, "FRAngle: " + swerveMath.getFrontRightAngle(targetX, targetY, rotation));
+    logger.log(Level.INFO, "BRAngle: " + swerveMath.getBackRightAngle(targetX, targetY, rotation));
+    logger.log(Level.INFO, "FLAngle: " + swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
+    logger.log(Level.INFO, "BLAngle: " + swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+
+    logger.log(Level.INFO, "FREnc:" + FRDrive.getAngle());
+    logger.log(Level.INFO, "BREnc:" + BRDrive.getAngle());
+    logger.log(Level.INFO, "FLEnc:" + FLDrive.getAngle());
+    logger.log(Level.INFO, "BLEnc:" + BLDrive.getAngle());
+
     FRDrive.drive(swerveMath.getFrontRightSpeed(targetX, targetY, rotation), swerveMath.getFrontRightAngle(targetX, targetY, rotation));
     BRDrive.drive(swerveMath.getBackRightSpeed(targetX, targetY, rotation), swerveMath.getBackRightAngle(targetX, targetY, rotation));
     FLDrive.drive(swerveMath.getFrontLeftSpeed(targetX, targetY, rotation), swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
     BLDrive.drive(swerveMath.getBackLeftSpeed(targetX, targetY, rotation), swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+
+    logger.exiting(SwerveDriveSubsystem.class.getName(), "drive");
   } // end of method drive()
 
 } // end of the class DriveSubsystem
