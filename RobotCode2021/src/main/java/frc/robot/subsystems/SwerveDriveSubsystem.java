@@ -74,10 +74,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private void setDriveMotors() {
 
     // instantiates the swerve modules on the robot (We use 4)
-    FRDrive = new SwerveModule(3, 7);
-    BRDrive = new SwerveModule(4, 8);
-    FLDrive = new SwerveModule(1, 5);
-    BLDrive = new SwerveModule(2, 6);
+    FRDrive = new SwerveModule(3, 7, 11);
+    BRDrive = new SwerveModule(4, 8, 12);
+    FLDrive = new SwerveModule(1, 5, 9);
+    BLDrive = new SwerveModule(2, 6, 10);
   }
 
   /**

@@ -9,6 +9,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import frc.robot.Constants;
 
 public class SwerveModule {
 
@@ -18,6 +21,15 @@ public class SwerveModule {
 
     private CANCoder steerEncoder;
 
+    private final ProfiledPIDController m_turningPIDController =
+            new ProfiledPIDController(
+                    0.005,
+                    0,
+                    0,
+                    new TrapezoidProfile.Constraints(
+                            2 * Math.PI,
+                            2 * Math.PI));
+
     private static final Logger logger = Logger.getLogger(SwerveModule.class.getName());
     
     /**
@@ -26,10 +38,10 @@ public class SwerveModule {
      * @param driveID  ID for the driving motor
      * @param turnID   ID for the turning motor
      */
-    public SwerveModule(int driveID, int turnID) {
+    public SwerveModule(int driveID, int turnID, int encID) {
         driveFx = new WPI_TalonFX(driveID);
         steerFx = new WPI_TalonFX(turnID);
-        steerEncoder = new CANCoder(turnID);
+        steerEncoder = new CANCoder(encID);
         //steerEncoder.
 
         //steerFx.configSelectedFeedbackSensor(RemoteFeedbackDevice);
@@ -38,11 +50,8 @@ public class SwerveModule {
     }
 
     public void setAngle(double rotation) {
-        if(RobotBase.isReal()){
-            steerFx.set(ControlMode.Position, rotation);
-        } else {
-            steerFx.set(ControlMode.PercentOutput, rotation);
-        }
+        double turn = m_turningPIDController.calculate(steerEncoder.getAbsolutePosition(), rotation);
+        steerFx.set(ControlMode.PercentOutput, turn);
     }
 
     public void setSpeed(double speed) {
