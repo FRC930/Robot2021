@@ -61,4 +61,8 @@ public class SwerveModule {
     public double getSpeed() {
         return driveFx.getSelectedSensorVelocity();
     }
+
+    public double getClosedLoopError() {
+        return steerFx.getClosedLoopError();
+    }
 }

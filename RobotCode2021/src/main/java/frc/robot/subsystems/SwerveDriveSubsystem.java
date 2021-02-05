@@ -100,6 +100,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     logger.log(Level.INFO, "FLEnc:" + FLDrive.getAngle());
     logger.log(Level.INFO, "BLEnc:" + BLDrive.getAngle());
 
+    logger.log(Level.INFO, "FR_CLE:" + FRDrive.getClosedLoopError());
+    logger.log(Level.INFO, "BR_CLE:" + BRDrive.getClosedLoopError());
+    logger.log(Level.INFO, "FL_CLE:" + FLDrive.getClosedLoopError());
+    logger.log(Level.INFO, "BL_CLE:" + BLDrive.getClosedLoopError());
+
     FRDrive.drive(swerveMath.getFrontRightSpeed(targetX, targetY, rotation), swerveMath.getFrontRightAngle(targetX, targetY, rotation));
     BRDrive.drive(swerveMath.getBackRightSpeed(targetX, targetY, rotation), swerveMath.getBackRightAngle(targetX, targetY, rotation));
     FLDrive.drive(swerveMath.getFrontLeftSpeed(targetX, targetY, rotation), swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
