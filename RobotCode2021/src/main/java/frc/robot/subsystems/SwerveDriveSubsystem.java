@@ -4,7 +4,7 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
+//DO NOT GO BACK TO ZERO AFTER LET GO
 package frc.robot.subsystems;
 
 import frc.robot.utilities.SwerveModule;
@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.VecBuilder;
@@ -78,7 +79,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     BRDrive = new SwerveModule(4, 8, 12);
     FLDrive = new SwerveModule(1, 5, 9);
     BLDrive = new SwerveModule(2, 6, 10);
-  }
+    }
 
   /**
    * Sets each swerve module's angle and speed
@@ -90,20 +91,20 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   public void drive(double targetX, double targetY, double rotation) {
     logger.entering(SwerveDriveSubsystem.class.getName(), "drive");
 
-    logger.log(Level.INFO, "FRAngle: " + swerveMath.getFrontRightAngle(targetX, targetY, rotation));
+    SmartDashboard.putNumber("FRAngle: ",swerveMath.getFrontRightAngle(targetX, targetY, rotation));
     logger.log(Level.INFO, "BRAngle: " + swerveMath.getBackRightAngle(targetX, targetY, rotation));
     logger.log(Level.INFO, "FLAngle: " + swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
     logger.log(Level.INFO, "BLAngle: " + swerveMath.getBackLeftAngle(targetX, targetY, rotation));
 
-    logger.log(Level.INFO, "FREnc:" + FRDrive.getAngle());
-    logger.log(Level.INFO, "BREnc:" + BRDrive.getAngle());
-    logger.log(Level.INFO, "FLEnc:" + FLDrive.getAngle());
-    logger.log(Level.INFO, "BLEnc:" + BLDrive.getAngle());
+    logger.log(Level.INFO, "FRAngle: " + FRDrive.getAngle());
+    logger.log(Level.INFO, "BRAngle: " + swerveMath.getBackRightAngle(targetX, targetY, rotation));
+    logger.log(Level.INFO, "FLAngle: " + swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
+    logger.log(Level.INFO, "BLAngle: " + swerveMath.getBackLeftAngle(targetX, targetY, rotation));
 
-    logger.log(Level.INFO, "FR_CLE:" + FRDrive.getClosedLoopError());
-    logger.log(Level.INFO, "BR_CLE:" + BRDrive.getClosedLoopError());
-    logger.log(Level.INFO, "FL_CLE:" + FLDrive.getClosedLoopError());
-    logger.log(Level.INFO, "BL_CLE:" + BLDrive.getClosedLoopError());
+    //logger.log(Level.INFO, "FR_CLE:" + FRDrive.getClosedLoopError());
+    //logger.log(Level.INFO, "BR_CLE:" + BRDrive.getClosedLoopError());
+    //logger.log(Level.INFO, "FL_CLE:" + FLDrive.getClosedLoopError());
+    //logger.log(Level.INFO, "BL_CLE:" + BLDrive.getClosedLoopError());
 
     FRDrive.drive(swerveMath.getFrontRightSpeed(targetX, targetY, rotation), swerveMath.getFrontRightAngle(targetX, targetY, rotation));
     BRDrive.drive(swerveMath.getBackRightSpeed(targetX, targetY, rotation), swerveMath.getBackRightAngle(targetX, targetY, rotation));

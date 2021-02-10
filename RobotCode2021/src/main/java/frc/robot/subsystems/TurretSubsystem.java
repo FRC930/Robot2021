@@ -63,7 +63,7 @@ public class TurretSubsystem extends SubsystemBase {
             encoderPosition = encoder.get();
         }
 
-        encoderPosition = 0.0;
+        //encoderPosition = 0.0;
 
 
         SmartDashboard.putNumber("Turret speed unclamped", speed);

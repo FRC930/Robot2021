@@ -18,7 +18,7 @@ import frc.robot.commands.kickercommands.*;
 import frc.robot.commands.limelightcommands.*;
 import frc.robot.commands.shootercommands.*;
 import frc.robot.commands.shootercommands.flywheelcommands.*;
-//import frc.robot.commands.shootercommands.pistoncommands.*;
+import frc.robot.commands.shootercommands.pistoncommands.*;
 import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
 
 import frc.robot.commands.towercommands.*;
@@ -202,7 +202,7 @@ public class RobotContainer {
     new CameraUtil().startCapture();
     // Setting Log level for entire robot code
     // TODO: Edit this in Shuffleboard...?
-    frcRobotLogger.setLevel(Level.INFO);
+    frcRobotLogger.setLevel(Level.OFF);
 
     // --Drive controllers
     driverController = new Joystick(DRIVER_CONTROLLER_ID);
@@ -367,8 +367,8 @@ public class RobotContainer {
     Trigger manualFlywheelButton = new JoystickButton(driverController, XB_AXIS_RT).and(inManualModeTrigger);
     
     // ZL Button
-    // AxisTrigger manualFlywheelPistonButton = new AxisTrigger(coDriverController,
-    // XB_AXIS_LT);// .and(inManualModeTrigger);
+    AxisTrigger manualFlywheelPistonButton = new AxisTrigger(driverController,
+    XB_AXIS_LT);// .and(inManualModeTrigger);
 
     // --Command binds
 
@@ -388,9 +388,9 @@ public class RobotContainer {
         .whenInactive(new StopFlywheelCommand(flywheelSubsystem));
 
     // manual flywheel piston stuff
-    // manualFlywheelPistonButton.whenActive(new
-    // ExtendFlywheelPistonCommand(flywheelPistonSubsystem)).whenInactive(new
-    // RetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    manualFlywheelPistonButton.whenActive(new
+    ExtendFlywheelPistonCommand(flywheelPistonSubsystem)).whenInactive(new
+    RetractFlywheelPistonCommand(flywheelPistonSubsystem));
 
     reverseHopperButton.whileActiveOnce(new SetHopperCommand(hopperSubsystem, Constants.HOPPER_REVERSE_SPEED, true));
     // manual
