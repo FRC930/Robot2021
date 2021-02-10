@@ -47,6 +47,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+// limelight
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 //-------- CLASS RobotContainer --------\\
 
 public class RobotContainer {
@@ -132,8 +136,8 @@ public class RobotContainer {
   // private final ColorWheelSpinnerSubsystem colorWheelSpinnerSubsystem;
 
   // --Drive subsystem
-  //private final DriveSubsystem driveSubsystem;
-  private final SwerveDriveSubsystem swerveDriveSubsystem;
+  private DriveSubsystem driveSubsystem;
+  private SwerveDriveSubsystem swerveDriveSubsystem;
 
   // --Shooter stuff subsystems
   private final FlywheelSubsystem flywheelSubsystem;
@@ -169,8 +173,9 @@ public class RobotContainer {
   // -------- COMMANDS --------\\
 
   // --Drive commands
-  private final SwerveDriveCommand driveCommand;
+  private DriveCommand driveCommand;
   private final ClimberArmCommandGroup climberArmCommandGroup;
+  private SwerveDriveCommand swerveDriveCommand;
 
   // --Hopper commands
   // private final StopHopperCommand stopHopperCommand;
@@ -212,35 +217,45 @@ public class RobotContainer {
     // colorWheelSpinnerSubsystem = new ColorWheelSpinnerSubsystem();
 
     swerveDriveSubsystem = new SwerveDriveSubsystem();
+    driveSubsystem = new DriveSubsystem();
 
-    hopperSubsystem = new HopperSubsystem();
+    // (HOPPER_ID)
+    hopperSubsystem = new HopperSubsystem(13);
 
-    intakeMotorSubsystem = new IntakeMotorSubsystem();
-    intakePistonSubsystem = new IntakePistonSubsystem();
+    // (INTAKE_ID)
+    intakeMotorSubsystem = new IntakeMotorSubsystem(Constants.INTAKE_ID);
+    // (INTAKE_SOLENOID_ID)
+    intakePistonSubsystem = new IntakePistonSubsystem(0);
 
-    kickerSubsystem = new KickerSubsystem();
+    // (KICKER_ID)
+    kickerSubsystem = new KickerSubsystem(14);
 
-    climberArmSubsystem = new ClimberArmSubsystem();
+    // (CLIMBER_ARM_ID)
+    climberArmSubsystem = new ClimberArmSubsystem(12);
 
     // ledSubsystem = new LEDSubsystem();
 
-    limelightSubsystem = new LimelightSubsystem();
+    // (_limelightNetworkInstance)
+    limelightSubsystem = new LimelightSubsystem(NetworkTableInstance.getDefault().getTable("limelight"));
 
-    flywheelSubsystem = new FlywheelSubsystem();
-    flywheelPistonSubsystem = new FlywheelPistonSubsystem();
+    // (SHOOTER_LEAD_ID, SHOOTER_SLAVE_ID)
+    flywheelSubsystem = new FlywheelSubsystem(18, 19);
+    // (SHOOTER_SOLENOID_ID)
+    flywheelPistonSubsystem = new FlywheelPistonSubsystem(1);
 
-    towerSubsystem = new TowerSubsystem();
+    // (TOWER_ID)
+    towerSubsystem = new TowerSubsystem(16);
 
-    turretSubsystem = new TurretSubsystem();
+    // (TURRET_ID, ENCODER_PORT_ID)
+    turretSubsystem = new TurretSubsystem(15, 0);
 
     // --Commands
 
     // endgame
     climberArmCommandGroup = new ClimberArmCommandGroup(climberArmSubsystem, coDriverController, XB_AXIS_LEFT_Y,
         new JoystickButton(coDriverController, XB_RB));
-
     // drive (NOTE: This is where we bind the driver controls to the drivetrain)
-    driveCommand = new SwerveDriveCommand(swerveDriveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
+    swerveDriveCommand = new SwerveDriveCommand(swerveDriveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
 
     // hopper
     defaultStopHopperCommand = new DefaultStopHopperCommand(hopperSubsystem);
@@ -315,7 +330,7 @@ public class RobotContainer {
     // B Button
     //JoystickButton positionalButton = new JoystickButton(driverController, GC_B);
     // L Button
-    //JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
+    JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
     // ZR Button
     AxisTrigger shootButton = new AxisTrigger(driverController, XB_AXIS_RT);
 
@@ -333,7 +348,7 @@ public class RobotContainer {
     // positionalButton.whileActiveOnce(positionalControlCommandGroup);
 
     // Drive command binds
-    driveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
+    swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
 
     // Shooter command binds
     shootButton.whenActive(new ShootPowerCellCommandGroup(flywheelSubsystem, towerSubsystem, hopperSubsystem,

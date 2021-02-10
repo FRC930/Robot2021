@@ -29,26 +29,14 @@ public final class Constants {
     public static final int DRIVE_LEFT_FRONT_ID = 1;
     public static final int DRIVE_LEFT_BACK_ID = 2;
 
-    public static final int TURRET_ID = 5;
     public static final int INTAKE_ID = 6;
-
-    public static final int SHOOTER_LEAD_ID = 8;
-    public static final int SHOOTER_SLAVE_ID = 7;
-
-    public static final int HOPPER_ID = 9;
-    public static final int TOWER_ID = 10;
-    public static final int KICKER_ID = 11;
-
     public static final int COLOR_WHEEL_ID = 333;
 
-    public static final int CLIMBER_ARM_ID = 12;
 
     // [-------------------MOTOR IDS--------------------------]
 
     // [-------------------PISTON IDS-------------------------]
 
-    public static final int INTAKE_SOLENOID_ID = 0;
-    public static final int SHOOTER_SOLENOID_ID = 1;
     public static final int SHIFTER_SOLENOID_ID = 2;
 
     public static final int COMPRESSOR_PORT = 0;
@@ -57,8 +45,7 @@ public final class Constants {
 
     // [-------------------ROBORIO PORT IDS---------------------------]
 
-    public static final int ENCODER_PORT_ID = 0;
-	  public static final int HOPPER_ENCODER_PORT_ID = 1; 
+	public static final int HOPPER_ENCODER_PORT_ID = 1; 
     public static final int CLIMBER_ENCODER_PORT_ID = 2;
 
     // [-------------------ROBORIO PORT IDS---------------------------]
@@ -165,12 +152,32 @@ public final class Constants {
     public static final DifferentialDriveKinematics KDRIVEKINEMATICS = new DifferentialDriveKinematics(KTRACKWIDTH);
     // AUTO code values---------------------------------------]
 
-    // DRIVETRAIN Constants --------------------------------]
+    // DRIVE Constants --------------------------------]
 
+    //Drive type enum
+    public static enum DRIVE_TYPE {
+        TANK_DRIVE(0),
+        SWERVE_DRIVE(1);
+
+        private int driveType;
+
+        private DRIVE_TYPE(int _driveType) {
+            driveType = _driveType;
+        }
+        public int Get() {
+            return this.driveType;
+        }
+    }
+    public static final DRIVE_TYPE driveType = DRIVE_TYPE.SWERVE_DRIVE;
+
+    //Drivetrain
     public static final double DRIVE_DEADBAND_JOYSTICK = 0.000125;
     public static final double DRIVE_TURNING_MULTIPLIER = 0.5;
 
-    // DRIVETRAIN Constants --------------------------------]
+    //Swervedrive
+    //TODO: Add constants for deadbands.
+
+    // DRIVE Constants --------------------------------]
 
     //[-------------------LOGGER--------------------------]
 

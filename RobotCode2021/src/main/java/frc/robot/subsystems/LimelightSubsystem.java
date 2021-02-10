@@ -55,7 +55,7 @@ public class LimelightSubsystem extends SubsystemBase {
     // -------- DECLARATIONS --------\\
 
     // network table that holds the limelight's settings
-    private NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+    private NetworkTable limelightTable;
 
     // shuffleboardUtility
     //private ShuffleboardUtility shuffleboardUtility;
@@ -96,7 +96,8 @@ public class LimelightSubsystem extends SubsystemBase {
 
     //-------- CONSTRUCTOR --------\\
 
-    public LimelightSubsystem() {
+    public LimelightSubsystem(NetworkTable _limelightTable) {
+        limelightTable = _limelightTable;
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
     }
 

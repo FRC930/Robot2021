@@ -32,8 +32,8 @@ public class IntakePistonSubsystem extends SubsystemBase {
    
     //-------- CONSTRUCTOR --------\\
 
-    public IntakePistonSubsystem() {
-        intakePistonController = new Solenoid(Constants.INTAKE_SOLENOID_ID);
+    public IntakePistonSubsystem(int INTAKE_SOLENOID_ID) {
+        intakePistonController = new Solenoid(INTAKE_SOLENOID_ID);
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
     }
 

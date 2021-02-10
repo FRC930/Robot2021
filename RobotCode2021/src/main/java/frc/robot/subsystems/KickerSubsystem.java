@@ -37,8 +37,8 @@ public class KickerSubsystem extends SubsystemBase {
 
     //-------- CONSTRUCTOR --------\\
 
-    public KickerSubsystem() {
-        kickerMotor = new WPI_VictorSPX(Constants.KICKER_ID);  
+    public KickerSubsystem(int KICKER_ID) {
+        kickerMotor = new WPI_VictorSPX(KICKER_ID);  
 
         //Dont use encoder in simulation
         if(RobotBase.isReal()){

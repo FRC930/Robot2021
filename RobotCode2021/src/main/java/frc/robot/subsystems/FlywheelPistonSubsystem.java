@@ -55,8 +55,8 @@ public class FlywheelPistonSubsystem extends SubsystemBase {
     /**
      * This constructor will assign {@link #flywheelPiston} to the correct hardware
      */
-    public FlywheelPistonSubsystem() {
-        flywheelPiston = new Solenoid(Constants.SHOOTER_SOLENOID_ID);
+    public FlywheelPistonSubsystem(int SHOOTER_SOLENOID_ID) {
+        flywheelPiston = new Solenoid(SHOOTER_SOLENOID_ID);
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
     }
 
