@@ -10,22 +10,43 @@ public class SwerveMath {
     //radius: length from middle of robot to the wheel
     private double r;
 
-    //calculate 
+    /*
+    *                FRONT
+    * 
+    *            c          d
+    *            | 		    |
+    *       b ------------------ b
+    *            |          |
+    *            |          |
+    * LEFT       |          |      RIGHT
+    *            |          |
+    *            |          |
+    *       a ------------------ a
+    *            |          |
+    *            c          d
+    * 
+    *                BACK
+    */
+
+    // returning b
     private  double calculateFrontAxle(double targetX, double rotation) {
         double Rtn = targetX + rotation * (wheelBase / r);
         return Rtn;
     }
-    //calculate rear axle
+
+    //returning a
     private  double calculateRearAxle(double targetX, double rotation) {
         double Rtn = targetX - rotation * (wheelBase / r);
         return Rtn;
     }
 
+    //returning c
    private double calculateLeftTrack(double targetY, double rotation) {
         double Rtn = targetY - rotation * (trackWidth / r);
         return Rtn;
     }
 
+    //returning d
     public  double calculateRightTrack(double targetY, double rotation) {
         double Rtn = targetY + rotation * (trackWidth / r);
         return Rtn;
@@ -40,6 +61,7 @@ public class SwerveMath {
         r = Math.sqrt((wheelBase * wheelBase) + (trackWidth * trackWidth));
     }
 
+    //getting back right speed
     public double getBackRightSpeed(double targetX, double targetY, double rotation) {
         double a = calculateRearAxle(targetX, rotation);
         double d = calculateRightTrack(targetY, rotation);
@@ -48,7 +70,8 @@ public class SwerveMath {
 
         return BRSpeed;
     }
-
+    
+    //getting back left speed
     public double getBackLeftSpeed(double targetX, double targetY, double rotation) {
         double a = calculateRearAxle(targetX, rotation);
         double c =  calculateLeftTrack(targetY, rotation);
@@ -58,6 +81,7 @@ public class SwerveMath {
         return BLSpeed;
     }
 
+    //getting front right speed
     public double getFrontRightSpeed(double targetX, double targetY, double rotation) {
         double b = calculateFrontAxle(targetX, rotation);
         double d = calculateRightTrack(targetY, rotation);
@@ -67,6 +91,7 @@ public class SwerveMath {
         return FRSpeed;
     }
 
+    //getting front left speed
     public double getFrontLeftSpeed(double targetX, double targetY, double rotation) {
         double b = calculateFrontAxle(targetX, rotation);
         double c = calculateLeftTrack(targetY, rotation);
@@ -76,6 +101,7 @@ public class SwerveMath {
         return FLSpeed;
     }
 
+    //getting back right angle
     public double getBackRightAngle(double targetX, double targetY, double rotation) {
         double a = calculateRearAxle(targetX, rotation);
         double d = calculateRightTrack(targetY, rotation);
@@ -87,6 +113,7 @@ public class SwerveMath {
         return BRAngle;
     }
 
+    //getting back left angle
     public double getBackLeftAngle(double targetX, double targetY, double rotation) {
         double a = calculateRearAxle(targetX, rotation);
         double c = calculateLeftTrack(targetY, rotation);
@@ -97,16 +124,18 @@ public class SwerveMath {
         return BLAngle;
     }
 
+    //getting front right angle
     public double getFrontRightAngle(double targetX, double targetY, double rotation) {
         double b = calculateFrontAxle(targetX, rotation);
         double d = calculateRightTrack(targetY, rotation);
        
-//what does this do 
         double FRAngle = (Math.atan2(b, d) / Math.PI) * 180;
         
+       
         return FRAngle;
     }
 
+    //getting front left axle
     public double getFrontLeftAngle(double targetX, double targetY, double rotation) {
         double b = calculateFrontAxle(targetX, rotation);
         double c = calculateLeftTrack(targetY, rotation);
