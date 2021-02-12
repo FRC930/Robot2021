@@ -5,6 +5,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.logging.*;
 
@@ -55,32 +56,36 @@ public class SwerveDriveCommand extends CommandBase{
     driverLeftX = _driverLeftX;
     driverLeftY = _driverLeftY;
     driverRightX = _driverRightX;
+    
   }
   
   // Swerve Drive Logic
   private void run(double leftX, double leftY, double rightX) {
+
+    // TODO: Create deadband constants for each axis
+    // Set value to zero if under deadband limit
+    if (Math.abs(leftX) < 0.01) {
+        logger.log(Level.INFO, "leftX < Left Joystick's X-Axis Deadband");
+        leftX = 0;
+    }
+    if (Math.abs(leftY) < 0.01) {
+        logger.log(Level.INFO, "leftY < Left Joystick's Y-Axis Deadband");
+        leftY = 0;
+    }
+    if (Math.abs(rightX) < 0.01) {
+        logger.log(Level.INFO, "rightX < Right Joystick's Y-Axis Deadband");
+        rightX = 0;
+    }
 
     // Cube values to create smoother movement
     leftX = -Math.pow(leftX, 3);
     leftY = -Math.pow(leftY, 3);
     rightX = -Math.pow(rightX, 3);
     
-
-    // TODO: Create deadband constants for each axis
-    // Set value to zero if under deadband limit
-    if (Math.abs(leftX) < 0.1) {
-        logger.log(Level.INFO, "leftX < Left Joystick's X-Axis Deadband");
-        leftX = 0;
-    }
-    if (Math.abs(leftY) < 0.1) {
-        logger.log(Level.INFO, "leftY < Left Joystick's Y-Axis Deadband");
-        leftY = 0;
-    }
-    if (Math.abs(rightX) < 0.1) {
-        logger.log(Level.INFO, "rightX < Right Joystick's Y-Axis Deadband");
-        rightX = 0;
-    }
-
+    SmartDashboard.putNumber("Drive Leftx", leftX);
+    SmartDashboard.putNumber("Drive Lefty", leftY);
+    SmartDashboard.putNumber("Drive Rightx", rightX);
+  
     // Sends resulting values to SwerveDriveSubsystem for the values to be translated into physical movement
     sdSubsystem.drive(leftX, leftY, rightX);
 
