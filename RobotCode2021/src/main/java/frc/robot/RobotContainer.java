@@ -37,15 +37,39 @@ import frc.robot.triggers.*;
 import frc.robot.utilities.*;
 
 import java.util.logging.Logger;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.logging.Level;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Filesystem;
 // --Other imports
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.wpilibj.system.LinearSystem;
+import edu.wpi.first.wpilibj.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpiutil.math.numbers.N2;
 
 //-------- CLASS RobotContainer --------\\
 
@@ -163,7 +187,7 @@ public class RobotContainer {
   private final TurretSubsystem turretSubsystem;
 
   // --LED subsystem
-  LEDSubsystem ledSubsystem = new LEDSubsystem(0,5);
+  LEDSubsystem ledSubsystem;
 
   // -------- COMMANDS --------\\
 
@@ -190,6 +214,20 @@ public class RobotContainer {
   // --Auto commands
   private final SaltAndPepperSkilletCommand saltAndPepperSkilletCommand;
   private final FarmersBreakfastSkilletCommand farmersBreakfastSkilletCommand;
+
+  // --Auto Simulation
+  
+  private final LinearSystem<N2, N2, N2> m_drivetrainSystem;
+  private final DifferentialDrivetrainSim m_drivetrainSimulator;
+  private final RamseteController m_ramsete = new RamseteController();
+  private final SimulatedDrivetrain m_simDrive = new SimulatedDrivetrain();
+
+  private final Timer m_timer = new Timer();
+
+  private Trajectory m_trajectory;
+  private String trajectoryJSON;
+
+  private static final Logger logger = Logger.getLogger(RobotContainer.class.getName());
 
   // --Utilities
   private final ShuffleboardUtility shuffleboardUtility;
@@ -220,7 +258,7 @@ public class RobotContainer {
 
     climberArmSubsystem = new ClimberArmSubsystem();
 
-    // ledSubsystem = new LEDSubsystem();
+    ledSubsystem = new LEDSubsystem(0,20);
 
     limelightSubsystem = new LimelightSubsystem();
 
@@ -274,6 +312,12 @@ public class RobotContainer {
     configureButtonBindings(); // Configures buttons for drive team
 
     // --Default commands
+
+    // --AutoSim
+    m_drivetrainSystem = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3);
+    m_drivetrainSimulator =
+      new DifferentialDrivetrainSim(
+          m_drivetrainSystem, DCMotor.getCIM(2), 8, Constants.KTRACKWIDTH, 3, null);
   } // end of constructor RobotContainer()
 
   // -------- METHODS --------\\
@@ -502,6 +546,42 @@ public class RobotContainer {
   public void StartShuffleBoard() {
     // shuffleboardUtility.putDriveTab();
     // shuffleboardUtility.putTestingTab();
+  }
+
+  public void robotSimInit() {
+    
+
+    trajectoryJSON = "../../../../Resources/BarrelRacing.wpilib.json";
+      m_trajectory = new Trajectory();
+      try {
+          Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+          logger.log(Constants.LOG_LEVEL_INFO, "Slalom tragectory path: " + trajectoryPath.toString());
+          m_trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      } catch (IOException ex) {
+          DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+          logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
+      }
+  }
+
+  public void robotSimPeriodic() {
+    m_simDrive.periodic();
+  }
+
+  public void autoSimInit(){
+    m_timer.reset();
+    m_timer.start();
+    m_simDrive.resetOdometry(m_trajectory.getInitialPose());
+  }
+
+  public void autoSimPeriodic(){
+    double elapsed = m_timer.get();
+    Trajectory.State reference = m_trajectory.sample(elapsed);
+    ChassisSpeeds speeds = m_ramsete.calculate(m_simDrive.getPose(), reference);
+    m_simDrive.drive(speeds.vxMetersPerSecond, speeds.omegaRadiansPerSecond);
+  }
+
+  public void simPeriodic() {
+    m_simDrive.simulationPeriodic();
   }
 
 } // end of class RobotContainer
