@@ -76,7 +76,7 @@ public class GalaticSearch_B_RedCommand extends SequentialCommandGroup {
     Trajectory trajectory = new Trajectory();
     try {
         Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        logger.log(Constants.LOG_LEVEL_INFO, "Slalom tragectory path: " + trajectoryPath.toString());
+        logger.log(Constants.LOG_LEVEL_INFO, "GalaticSearch_B_Red tragectory path: " + trajectoryPath.toString());
         trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
     } catch (IOException ex) {
         DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());

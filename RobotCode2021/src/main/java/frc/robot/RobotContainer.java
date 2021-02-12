@@ -210,10 +210,7 @@ public class RobotContainer {
 
   // --Turret commands
   private final JoystickTurretCommand joystickTurretCommand; // For manual
-  
-  // --Auto commands
-  private final SaltAndPepperSkilletCommand saltAndPepperSkilletCommand;
-  private final FarmersBreakfastSkilletCommand farmersBreakfastSkilletCommand;
+
 
   // --Auto Simulation
   
@@ -295,16 +292,6 @@ public class RobotContainer {
     shuffleboardUtility = ShuffleboardUtility.getInstance();
 
     // TODO: Edit this to work with Shuffleboard utility
-    saltAndPepperSkilletCommand = new SaltAndPepperSkilletCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
-          towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem,
-          turretSubsystem);
-    farmersBreakfastSkilletCommand = new FarmersBreakfastSkilletCommand(driveSubsystem, flywheelSubsystem, intakeMotorSubsystem,
-          intakePistonSubsystem, turretSubsystem, limelightSubsystem, towerSubsystem, hopperSubsystem,
-          kickerSubsystem);
-
-    shuffleboardUtility.setDefaultAutonOptions("Farmers Breakfast", farmersBreakfastSkilletCommand);
-    
-    shuffleboardUtility.addAutonOptions("Salt and Pepper", saltAndPepperSkilletCommand);
     shuffleboardUtility.addAutonOptions("None", null);
     
 
