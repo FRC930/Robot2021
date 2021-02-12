@@ -10,28 +10,25 @@ public class SwerveMath {
     //radius: length from middle of robot to the wheel
     private double r;
 
+    //calculate 
     private  double calculateFrontAxle(double targetX, double rotation) {
         double Rtn = targetX + rotation * (wheelBase / r);
         return Rtn;
- 
     }
-
+    //calculate rear axle
     private  double calculateRearAxle(double targetX, double rotation) {
         double Rtn = targetX - rotation * (wheelBase / r);
         return Rtn;
- 
     }
 
    private double calculateLeftTrack(double targetY, double rotation) {
         double Rtn = targetY - rotation * (trackWidth / r);
         return Rtn;
- 
     }
 
     public  double calculateRightTrack(double targetY, double rotation) {
         double Rtn = targetY + rotation * (trackWidth / r);
         return Rtn;
- 
     }
     
     
