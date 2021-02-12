@@ -61,4 +61,4 @@ public class SetFlywheelSpeedCommand extends CommandBase {
         return true;
     }
 
-} // end of class KillFlywheelCommand
+} // end of class setFlywheelCommand

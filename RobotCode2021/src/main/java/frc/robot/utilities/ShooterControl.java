@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package edu.wpi.first.wpilibj.examples.statespaceflywheel;
+package frc.robot.utilities;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
@@ -28,6 +28,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  * This is a sample program to demonstrate how to use a state-space controller to control a
  * flywheel.
  */
+//TODO add constructor, method to set defult speed?
 public class ShooterControl {
   public static final int kMotorPort = 0;
   public static final int kEncoderAChannel = 0;
@@ -41,6 +42,9 @@ public class ShooterControl {
   // the motors, this number should be greater than one.
   private static final double kFlywheelGearing = 1.6666666667;
 
+  public ShooterControl(){
+        
+  }
   // The plant holds a state-space model of our flywheel. This system has the following properties:
   //
   // States: [velocity], in radians per second.
@@ -72,4 +76,21 @@ public class ShooterControl {
           // heavily penalize control effort, or make the controller less aggressive. 12 is a good
           // starting point because that is the (approximate) maximum voltage of a battery.
           0.020); // Nominal time between loops. 0.020 for TimedRobot, but can be
+
+     // The state-space loop combines a controller, observer, feedforward and plant for easy control.
+  private final LinearSystemLoop<N1, N1, N1> m_loop =
+  new LinearSystemLoop<>(m_flywheelPlant, m_controller, m_observer, 12.0, 0.020);
+
+  public double calculateVoltage() {
+    double returnVoltage;
+    // Update our LQR to generate new voltage commands and use the voltages to predict the next
+    // state with out Kalman filter.
+    m_loop.predict(0.020);
+
+    // Send the new calculated voltage to the motors.
+    // voltage = duty cycle * battery voltage, so
+    // duty cycle = voltage / battery voltage
+    returnVoltage = m_loop.getU(0);
+    return returnVoltage;
+  }
 }

@@ -11,6 +11,8 @@ package frc.robot.commands.shootercommands.flywheelcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FlywheelSubsystem;
+import frc.robot.utilities.ShooterControl;
+
 
 //-------- COMMAND CLASS --------\\
 
@@ -21,6 +23,7 @@ public class DefaultFlywheelCommand extends CommandBase {
     private FlywheelSubsystem m_FlywheelSubsystem;
 
     private double speed;
+    private ShooterControl defultSpeed;
 
     //-------- CONSTRUCTOR --------\\
 
@@ -28,6 +31,7 @@ public class DefaultFlywheelCommand extends CommandBase {
         m_FlywheelSubsystem = flywheelSubsystem;
         this.speed = speed;
         addRequirements(m_FlywheelSubsystem);
+        defultSpeed = new ShooterControl();
     }
 
     //-------- COMMANDBASE METHODS --------\\
@@ -35,7 +39,7 @@ public class DefaultFlywheelCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_FlywheelSubsystem.setSpeed(speed);     //Set flywheel to default speed.
+        m_FlywheelSubsystem.setVoltage(defultSpeed.calculateVoltage());   //ADD A DEFULT SPEED OR GET RID OF
     }
 
     // Called every time the scheduler runs while the command is scheduled.

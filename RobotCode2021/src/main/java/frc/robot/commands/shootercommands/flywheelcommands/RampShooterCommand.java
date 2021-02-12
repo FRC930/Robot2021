@@ -32,7 +32,7 @@ public class RampShooterCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_FlywheelSubsystem.setSpeed(1.0);
+        m_FlywheelSubsystem.setVoltage(1.0);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -47,7 +47,7 @@ public class RampShooterCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (m_FlywheelSubsystem.getPercentOutput() >= 0.5);
+        return (m_FlywheelSubsystem.getVoltage() >= 0.5);
     }
 
 } // end of class RunDefaultFlywheelCommand

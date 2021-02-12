@@ -11,6 +11,7 @@ package frc.robot.commands.shootercommands.flywheelcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FlywheelSubsystem;
+import frc.robot.utilities.ShooterControl;
 
 //-------- COMMANDBASE CLASS --------\\
 
@@ -20,6 +21,7 @@ public class FlywheelVelocityCommand extends CommandBase {
 
     private FlywheelSubsystem m_FlywheelSubsystem;
     private double m_Speed;
+    private ShooterControl motorControl;
 
     //-------- CONSTRUCTOR --------\\
 
@@ -27,6 +29,7 @@ public class FlywheelVelocityCommand extends CommandBase {
         m_FlywheelSubsystem = flywheelSubsystem;
         addRequirements(m_FlywheelSubsystem);
         m_Speed = speed;
+        motorControl = new ShooterControl();
     }
 
     //--------- COMMANDBASE METHODS ----------\\
@@ -35,7 +38,7 @@ public class FlywheelVelocityCommand extends CommandBase {
     @Override
     public void initialize() {
         // Set velocity in m/s of ball to shoot from shooter.
-        m_FlywheelSubsystem.setVelocity(m_Speed);
+        m_FlywheelSubsystem.setVoltage(motorControl.calculateVoltage());
     }
 
     // Called every time the scheduler runs while the command is scheduled.
