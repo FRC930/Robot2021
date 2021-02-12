@@ -29,7 +29,7 @@ public class SwerveModule {
 
     private final ProfiledPIDController m_turningPIDController =
             new ProfiledPIDController(
-                    0.25, //SJW 0.0025,  // SJW .01 seems to work better in simulation
+                    0.25,
                     0,
                     0,
                     new TrapezoidProfile.Constraints(
