@@ -30,7 +30,7 @@ public class SwerveModule {
     private final ProfiledPIDController m_turningPIDController =
             new ProfiledPIDController(
                     0.25,
-                    0,
+                    0.1,
                     0,
                     new TrapezoidProfile.Constraints(
                             6 * Math.PI,
@@ -97,6 +97,7 @@ public class SwerveModule {
 
         //SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
         SmartDashboard.putNumber("Rotation"+steerFx.getDeviceID(), rotation);
+        SmartDashboard.putNumber("Error"+steerFx.getDeviceID(), m_turningPIDController.getPositionError());
         //SmartDashboard.putNumber("Abs_Rotation"+steerFx.getDeviceID(), steerEncoder.getAbsolutePosition());
 
         logger.exiting(SwerveModule.class.getName(), "setAngle");
@@ -109,8 +110,27 @@ public class SwerveModule {
     }
 
     public void drive(double speed, double rotation) {
-        setSpeed(speed);
-        setAngle(rotation);
+
+        // Difference of the current and target angles
+        double diff = getAngle() - rotation;
+
+        // If we are more than 90 deg away...
+        if(Math.abs(diff) > 90) {
+            // Depending whether we are negative or positive target, add or subtract 180
+            //  This will just be the direct opposite rotation
+            if(rotation > 0) {
+                rotation -= 180;
+            } else {
+                rotation += 180;
+            }
+
+            // Set the speed to be the other way
+            setSpeed(-speed);
+            setAngle(rotation);
+        } else {
+            setSpeed(speed);
+            setAngle(rotation);
+        }
     }
 
     public double getAngle() {
