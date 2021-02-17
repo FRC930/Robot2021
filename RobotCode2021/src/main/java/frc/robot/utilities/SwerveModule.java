@@ -102,13 +102,13 @@ public class SwerveModule {
 
         logger.exiting(SwerveModule.class.getName(), "setAngle");
     }
-
+    //setting the speed of wheel
     public void setSpeed(double speed) {
         //if(canDrive) {
             driveFx.set(ControlMode.PercentOutput, speed);
         //}
     }
-
+    // setting speed and angle
     public void drive(double speed, double rotation) {
 
         // Difference of the current and target angles
@@ -132,15 +132,15 @@ public class SwerveModule {
             setAngle(rotation);
         }
     }
-
+    //gets the angle of wheel
     public double getAngle() {
         return steerEncoder.getAbsolutePosition();
     }
-
+    //gets speed  of wheel
     public double getSpeed() {
         return driveFx.getSelectedSensorVelocity();
     }
-
+    //gets loop error
     public double getClosedLoopError() {
         return steerFx.getClosedLoopError();
     }
