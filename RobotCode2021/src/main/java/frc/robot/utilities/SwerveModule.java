@@ -33,10 +33,12 @@ public class SwerveModule {
                     0,
                     0,
                     new TrapezoidProfile.Constraints(
-                            2 * Math.PI,
-                            2 * Math.PI));
+                            6 * Math.PI,
+                            6 * Math.PI));
 
     private static final Logger logger = Logger.getLogger(SwerveModule.class.getName());
+
+    private boolean canDrive = false;
     
     /**
      * Helper class for a swerve wheel. Holds two Falcon500's.
@@ -83,17 +85,27 @@ public class SwerveModule {
         //tab.addNumber("Turn"+steerFx.getDeviceID(), () -> turn);
         //SmartDashboard.putNumber("Turn"+steerFx.getDeviceID(), turn);
         logger.log(Level.INFO, "SetSpeed: " + turn + " | AbsPos: " + steerEncoder.getAbsolutePosition() + " | Rotation: " + rotation);
+
         steerFx.set(ControlMode.PercentOutput, turn);
 
+        //Wait till azmuith
+        // if(Math.abs(turn) > 0.08) {
+        //     canDrive = false;
+        // } else {
+        //     canDrive = true;
+        // }
+
         //SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
-        //SmartDashboard.putNumber("Rotation"+steerFx.getDeviceID(), rotation);
+        SmartDashboard.putNumber("Rotation"+steerFx.getDeviceID(), rotation);
         //SmartDashboard.putNumber("Abs_Rotation"+steerFx.getDeviceID(), steerEncoder.getAbsolutePosition());
 
         logger.exiting(SwerveModule.class.getName(), "setAngle");
     }
     //setting the speed of wheel
     public void setSpeed(double speed) {
-        driveFx.set(ControlMode.PercentOutput, speed);
+        //if(canDrive) {
+            driveFx.set(ControlMode.PercentOutput, speed);
+        //}
     }
     // setting speed and angle
     public void drive(double speed, double rotation) {
