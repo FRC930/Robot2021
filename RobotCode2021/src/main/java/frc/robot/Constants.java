@@ -154,22 +154,6 @@ public final class Constants {
 
     // DRIVE Constants --------------------------------]
 
-    //Drive type enum
-    public static enum DRIVE_TYPE {
-        TANK_DRIVE(0),
-        SWERVE_DRIVE(1);
-
-        private int driveType;
-
-        private DRIVE_TYPE(int _driveType) {
-            driveType = _driveType;
-        }
-        public int Get() {
-            return this.driveType;
-        }
-    }
-    public static final DRIVE_TYPE driveType = DRIVE_TYPE.SWERVE_DRIVE;
-
     //Drivetrain
     public static final double DRIVE_DEADBAND_JOYSTICK = 0.000125;
     public static final double DRIVE_TURNING_MULTIPLIER = 0.5;

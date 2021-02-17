@@ -79,7 +79,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     BRDrive = new SwerveModule(4, 8, 12);
     FLDrive = new SwerveModule(1, 5, 9);
     BLDrive = new SwerveModule(2, 6, 10);
-    }
+  }
 
   /**
    * Sets each swerve module's angle and speed

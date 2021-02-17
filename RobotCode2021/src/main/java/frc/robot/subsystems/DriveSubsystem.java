@@ -13,6 +13,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import frc.robot.utilities.SwerveModule;
+import frc.robot.utilities.SwerveMath;
+
 import frc.robot.Constants;
 //import frc.robot.utilities.ShuffleboardUtility;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -33,11 +36,16 @@ public class DriveSubsystem extends SubsystemBase {
   private static final Logger logger = Logger.getLogger(DriveSubsystem.class.getName());
 
   // -------- DECLARATIONS --------\\
-  private WPI_TalonFX right1;
-  private WPI_TalonFX right2;
-  private WPI_TalonFX left1;
-  private WPI_TalonFX left2;
+  private WPI_TalonFX tankRightFront;
+  private WPI_TalonFX tankRightBack;
+  private WPI_TalonFX tankLeftFront;
+  private WPI_TalonFX tankLeftBack;
   //private ShuffleboardUtility shuffleboardUtility;
+
+  private SwerveModule swerveRightFront;
+  private SwerveModule swerveRightBack;
+  private SwerveModule swerveLeftFront;
+  private SwerveModule swerveLeftBack;
 
   // The intake talon motor controller, has the gyro attached to it
   private WPI_TalonSRX gyroTalon;
@@ -57,21 +65,65 @@ public class DriveSubsystem extends SubsystemBase {
   // The differential drive object itself
   private DifferentialDrive differentialDrive;
 
+  private int[] driveRightFrontIDs;
+  private int[] driveLeftFrontIDs;
+  private int[] driveRightBackIDs;
+  private int[] driveLeftBackIDs;
+
+  //Drive type enum
+  public static enum DRIVE_TYPE {
+    TANK_DRIVE(0),
+    SWERVE_DRIVE(1);
+
+    private int driveType;
+
+    private DRIVE_TYPE(int _driveType) {
+        driveType = _driveType;
+    }
+    public int Get() {
+        return this.driveType;
+    }
+  }
+  public static DRIVE_TYPE driveType;
+
   // -------- CONSTRUCTOR --------\\
 
   public DriveSubsystem() {
     setDriveMotors();
   }
 
-  // -------- METHODS --------\\
+  public DriveSubsystem(int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, int _gyroID, DRIVE_TYPE _driveType) {
+    
+    driveType = _driveType;
+
+    driveRightFrontIDs = _driveRightFrontIDs;
+    driveLeftFrontIDs = _driveLeftFrontIDs;
+    driveRightBackIDs = _driveRightBackIDs;
+    driveLeftBackIDs = _driveLeftBackIDs;
+    
+    switch(driveType) {
+      case TANK_DRIVE:
+        setDriveMotors();
+        break;
+      case SWERVE_DRIVE:
+        setDriveMotors();
+        break;
+      default: // default is error logging
+        // TODO: find better error logging
+        System.out.println("FAILURE TO SELECT DRIVE TYPE");
+        break;
+    }
+  }
+
+  //-------- METHODS --------\\
 
   private void setDriveMotors() {
 
     // instantiates the drive motors
-    right1 = new WPI_TalonFX(Constants.DRIVE_RIGHT_FRONT_ID);
-    right2 = new WPI_TalonFX(Constants.DRIVE_RIGHT_BACK_ID);
-    left1 = new WPI_TalonFX(Constants.DRIVE_LEFT_FRONT_ID);
-    left2 = new WPI_TalonFX(Constants.DRIVE_LEFT_BACK_ID);
+    tankRightFront = new WPI_TalonFX(driveRightFrontIDs[0]);
+    tankRightBack = new WPI_TalonFX(driveRightBackIDs[0]);
+    tankLeftFront = new WPI_TalonFX(driveLeftFrontIDs[0]);
+    tankLeftBack = new WPI_TalonFX(driveLeftBackIDs[0]);
 
     // the talon that controls intake, used to get the piston
     // TODO: Change this because IntakeSubsystem already instantiates this!
@@ -94,31 +146,31 @@ public class DriveSubsystem extends SubsystemBase {
     driveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
     // Inverts the direction of the drive motors
-    left1.setInverted(true);
-    left2.setInverted(true);
-    right1.setInverted(false);
-    right2.setInverted(false);
+    tankLeftFront.setInverted(true);
+    tankLeftBack.setInverted(true);
+    tankRightFront.setInverted(false);
+    tankRightBack.setInverted(false);
 
     // Resets drive motor encoders to 0
-    left1.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
-    right1.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
+    tankLeftFront.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
+    tankRightFront.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
 
-    left1.setSensorPhase(true);
-    left2.setSensorPhase(true);
-    right1.setSensorPhase(false);
-    right2.setSensorPhase(false);
+    tankLeftFront.setSensorPhase(true);
+    tankLeftBack.setSensorPhase(true);
+    tankRightFront.setSensorPhase(false);
+    tankRightBack.setSensorPhase(false);
 
     // Mirror primary motor controllers on each side (Not when in simulation)
     if(RobotBase.isReal()){
-      left2.follow(left1);
-      right2.follow(right1);
+      tankLeftBack.follow(tankLeftFront);
+      tankRightBack.follow(tankRightFront);
     }
     
     // Sets the ramp rate of the robot, this will need to be configued
-    left1.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
-    right1.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
+    tankLeftFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
+    tankRightFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
     // Sets up the differntial drive
-    // drive = new DifferentialDrive(right1, left1);
+    // drive = new DifferentialDrive(tankRightFront, tankLeftFront);
     shifter.set(true);
     //endgameClamp.set(true);
   }
@@ -152,13 +204,13 @@ public class DriveSubsystem extends SubsystemBase {
       rightSpeed *= 0.3;
     }
     
-    left1.set(leftSpeed);
-    right1.set(rightSpeed);
+    tankLeftFront.set(leftSpeed);
+    tankRightFront.set(rightSpeed);
     
     // If we are simulating robot set motor speeds manually
     if(!RobotBase.isReal()){
-      left2.set(leftSpeed);
-      right2.set(rightSpeed);
+      tankLeftBack.set(leftSpeed);
+      tankRightBack.set(rightSpeed);
     }
 
     logger.exiting(DriveSubsystem.class.getName(), "runAt()");
@@ -170,7 +222,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The left drivetrain motor speed, ranging from -1 to 1
      */
   public double getLeftSpeed() {
-    return left1.getMotorOutputPercent();
+    return tankLeftFront.getMotorOutputPercent();
   }
 
   /**
@@ -179,7 +231,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The right drivetrain motor speed, ranging from -1 to 1
      */
   public double getRightSpeed() {
-    return right1.getMotorOutputPercent();
+    return tankRightFront.getMotorOutputPercent();
   }
 
   /**
@@ -198,7 +250,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return A double, the # of rotations from the left drivetrain
      */
   public double getLeftWheelRotations() {
-    return left1.getSelectedSensorPosition() * ((1.0 / 2048.0) * 0.152 * Math.PI) / DRIVE_GEAR_RATIO;
+    return tankLeftFront.getSelectedSensorPosition() * ((1.0 / 2048.0) * 0.152 * Math.PI) / DRIVE_GEAR_RATIO;
   }
 
   /**
@@ -207,7 +259,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return A double, the # of rotations from the right drivetrain
      */
   public double getRightWheelRotations() {
-      return right1.getSelectedSensorPosition() * ((1.0 / 2048.0) * 0.152 * Math.PI) / DRIVE_GEAR_RATIO;
+      return tankRightFront.getSelectedSensorPosition() * ((1.0 / 2048.0) * 0.152 * Math.PI) / DRIVE_GEAR_RATIO;
   }
 
   /**
@@ -236,12 +288,12 @@ public class DriveSubsystem extends SubsystemBase {
     logger.log(Constants.LOG_LEVEL_FINE, "Drivetrain Moving: " + leftVolts + " " + rightVolts);
 
     //TODO: Change for Prac Robot
-    // right1.setVoltage(rightVolts);
-    // left1.setVoltage(-leftVolts);
+    // tankRightFront.setVoltage(rightVolts);
+    // tankLeftFront.setVoltage(-leftVolts);
 
     //TODO: Change for Comp Robot
-    right1.setVoltage(rightVolts);
-    left1.setVoltage(leftVolts);
+    tankRightFront.setVoltage(rightVolts);
+    tankLeftFront.setVoltage(leftVolts);
 
     logger.exiting(DriveSubsystem.class.getName(), "tankDriveVolts()");
   } // end of method tankDriveVolts()
