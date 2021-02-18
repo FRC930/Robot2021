@@ -1,3 +1,8 @@
+/**
+ * This class simulates a drivetrain for desktop simulation of the robot.
+ */
+
+
 package frc.robot.utilities;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
@@ -23,16 +28,23 @@ import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpiutil.math.numbers.N2;
 
 @SuppressWarnings("PMD.TooManyFields")
+
+//-------- CLASS --------\\
+
 public class SimulatedDrivetrain {
-  // 3 meters per second.
+
+
+  //-------- CONSTANTS --------\\
+
   public static final double kMaxSpeed = 3.0;
-  // 1/2 rotation per second.
+  // 3 meters per second
   public static final double kMaxAngularSpeed = Math.PI;
 
   private static final double kTrackWidth = 0.381 * 2;
   private static final double kWheelRadius = 0.0508;
   private static final int kEncoderResolution = -4096;
 
+  //-------Simulated Hardware-------\\
   private final PWMVictorSPX m_leftLeader = new PWMVictorSPX(1);
   private final PWMVictorSPX m_leftFollower = new PWMVictorSPX(2);
   private final PWMVictorSPX m_rightLeader = new PWMVictorSPX(3);
@@ -60,7 +72,7 @@ public class SimulatedDrivetrain {
   // robot!
   private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1, 3);
 
-  // Simulation classes help us simulate our robot
+  // Simulation objects help us simulate our robot
   private final AnalogGyroSim m_gyroSim  = new AnalogGyroSim(m_gyro);
   private final EncoderSim m_leftEncoderSim = new EncoderSim(m_leftEncoder);
   private final EncoderSim m_rightEncoderSim = new EncoderSim(m_rightEncoder);
@@ -70,6 +82,9 @@ public class SimulatedDrivetrain {
   private final DifferentialDrivetrainSim m_drivetrainSimulator =
       new DifferentialDrivetrainSim(
           m_drivetrainSystem, DCMotor.getCIM(2), 8, kTrackWidth, kWheelRadius, null);
+
+  
+  //-------- CONSTRUCTOR --------\\
 
   public SimulatedDrivetrain() {
     // Set the distance per pulse for the drive encoders. We can simply use the

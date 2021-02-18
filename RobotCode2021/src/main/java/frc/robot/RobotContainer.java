@@ -535,29 +535,34 @@ public class RobotContainer {
     // shuffleboardUtility.putTestingTab();
   }
 
+  //This begins the robot sim and sets our a trajectory and paths.
   public void robotSimInit() {
     trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/Bounce.wpilib.json";
-      try {
-          Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-          logger.log(Constants.LOG_LEVEL_INFO, "Slalom tragectory path: " + trajectoryPath.toString());
-          m_trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      } catch (IOException ex) {
-          DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-          logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
-          throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
-      }
+    //Tries to create a trajectory from a JSON file. Logs and throws exception if fails.
+    try {
+        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+        logger.log(Constants.LOG_LEVEL_INFO, "Slalom tragectory path: " + trajectoryPath.toString());
+        m_trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    } catch (IOException ex) {
+        DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+        logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
+        throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
+    }
   }
 
+  //Updates simulated robot periodically.
   public void robotSimPeriodic() {
     m_simDrive.periodic();
   }
 
+  //Begins autonomous simulation. Resets position and timer.
   public void autoSimInit(){
     m_timer.reset();
     m_timer.start();
     m_simDrive.resetOdometry(m_trajectory.getInitialPose());
   }
 
+  //Updates the position of the simulated robot autonomous periodically.
   public void autoSimPeriodic(){
     double elapsed = m_timer.get();
     Trajectory.State reference = m_trajectory.sample(elapsed);
@@ -565,6 +570,7 @@ public class RobotContainer {
     m_simDrive.drive(speeds.vxMetersPerSecond, speeds.omegaRadiansPerSecond);
   }
 
+  //Updates simulation
   public void simPeriodic() {
     m_simDrive.simulationPeriodic();
   }

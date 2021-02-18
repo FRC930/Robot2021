@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
         ShuffleboardTab driveTab = Shuffleboard.getTab("Driver Station");
         driveTab.add("LL", limelightCamera);
 
-        //Runs simulation if robot is simulated
+        //Runs sim method if robot is simulated
         if(RobotBase.isSimulation()){
             // Flush NetworkTables every loop. This ensures that robot pose and other values
             // are sent during every iteration.
@@ -91,6 +91,7 @@ public class Robot extends TimedRobot {
 
         commandScheduler.run();
 
+        //Runs sim method if robot is simulated
         if(RobotBase.isSimulation()){
             m_robotContainer.robotSimPeriodic();
         }
@@ -125,6 +126,7 @@ public class Robot extends TimedRobot {
                 m_autonomousCommand.schedule();
             }
         } 
+        //Runs sim method if robot is simulated
         else {
             m_robotContainer.autoSimInit();
         }
@@ -135,6 +137,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
+        //Runs sim method if robot is simulated
         if(RobotBase.isSimulation()){
             m_robotContainer.autoSimPeriodic();
         }
@@ -152,6 +155,7 @@ public class Robot extends TimedRobot {
         }
     }
 
+    //Needed for robot simulation
     @Override
         public void simulationPeriodic() {
         m_robotContainer.simPeriodic();
