@@ -72,8 +72,8 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
     // -------- Trajectories -------- \\
 
     // Generates a trajectory for a path to move towards furthest ball in trench run
-    String trajectoryJSON = "../../../../../../Resource/BarrelRacing.wpilib.json";
-    Trajectory trajectory = new Trajectory();
+    String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/BarrelRacing.wpilib.json";
+    Trajectory trajectory;
     try {
         Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
         logger.log(Constants.LOG_LEVEL_INFO, "BarrelRacing tragectory path: " + trajectoryPath.toString());
@@ -81,6 +81,7 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
     } catch (IOException ex) {
         DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
         logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
+        throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
     }
 
     // -------- RAMSETE Commands -------- \\
