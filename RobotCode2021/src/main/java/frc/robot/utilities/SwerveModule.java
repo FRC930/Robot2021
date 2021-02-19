@@ -88,13 +88,6 @@ public class SwerveModule {
 
         steerFx.set(ControlMode.PercentOutput, turn);
 
-        //Wait till azmuith
-        // if(Math.abs(turn) > 0.08) {
-        //     canDrive = false;
-        // } else {
-        //     canDrive = true;
-        // }
-
         //SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
         SmartDashboard.putNumber("Rotation"+steerFx.getDeviceID(), rotation);
         SmartDashboard.putNumber("Error"+steerFx.getDeviceID(), m_turningPIDController.getPositionError());

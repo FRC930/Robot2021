@@ -13,6 +13,7 @@ import frc.robot.utilities.SwerveMath;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.AnalogEncoder;
@@ -43,7 +44,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   private SwerveModuleState swerveModuleState;
   
-  //private final PigeonIMU m_gyro = new PigeonIMU(0);
+  private final PigeonIMU gyro;
+  private boolean usingGyro;
+
+  private boolean slowSpeed;
 
   private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
   private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
@@ -67,8 +71,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 */
   // -------- CONSTRUCTOR --------\\
 
-  public SwerveDriveSubsystem() {
+  public SwerveDriveSubsystem(IntakeMotorSubsystem intake, boolean usingGyro, boolean slowSpeed) {
     setDriveMotors();
+    gyro = new PigeonIMU(intake.getIntakeMotor());
+
+    this.usingGyro = usingGyro;
+    this.slowSpeed = slowSpeed;
+
     swerveMath = new SwerveMath();
   }
 
@@ -81,7 +90,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     BRDrive = new SwerveModule(4, 8, 12);
     FLDrive = new SwerveModule(1, 5, 9);
     BLDrive = new SwerveModule(2, 6, 10);
-    }
+  }
 
   /**
    * Sets each swerve module's angle and speed
@@ -93,29 +102,64 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   public void drive(double targetX, double targetY, double rotation) {
     logger.entering(SwerveDriveSubsystem.class.getName(), "drive");
 
-    SmartDashboard.putNumber("FRAngle: ",swerveMath.getFrontRightAngle(targetX, targetY, rotation));
-    SmartDashboard.putNumber("BRAngle: ", swerveMath.getBackRightAngle(targetX, targetY, rotation));
-    SmartDashboard.putNumber("FLAngle: ",swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
-    SmartDashboard.putNumber("BLAngle: ",swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+    double FRAngle = swerveMath.getFrontRightAngle(targetX, targetY, rotation);
+    double BRAngle = swerveMath.getBackRightAngle(targetX, targetY, rotation);
+    double FLAngle = swerveMath.getFrontLeftAngle(targetX, targetY, rotation);
+    double BLAngle = swerveMath.getBackLeftAngle(targetX, targetY, rotation);
 
+    double FRSpeed = swerveMath.getFrontRightSpeed(targetX, targetY, rotation);
+    double BRSpeed = swerveMath.getBackRightSpeed(targetX, targetY, rotation);
+    double FLSpeed = swerveMath.getFrontLeftSpeed(targetX, targetY, rotation);
+    double BLSpeed = swerveMath.getBackLeftSpeed(targetX, targetY, rotation);
+
+    if(usingGyro) {
+      double gyroAngle = gyro.getFusedHeading();
+      //gyroAngle = gyroAngle % 360;
+      //gyroAngle -= 180;
+
+      gyroAngle = Math.IEEEremainder(gyroAngle, 360);
+
+      System.out.println(gyroAngle);
+
+      FRAngle += gyroAngle;
+      BRAngle += gyroAngle;
+      FLAngle += gyroAngle;
+      BLAngle += gyroAngle;
+    }
+
+    //System.out.println("BLAngle: " + BLAngle + " | FLAngle: " + FLAngle);
+
+    if(slowSpeed) {
+      FRSpeed *= 0.5;
+      BRSpeed *= 0.5;
+      FLSpeed *= 0.5;
+      BLSpeed *= 0.5;
+    }
+
+    SmartDashboard.putNumber("FRAngle: ", swerveMath.getFrontRightAngle(targetX, targetY, rotation));
+    SmartDashboard.putNumber("BRAngle: ", swerveMath.getBackRightAngle(targetX, targetY, rotation));
+    SmartDashboard.putNumber("FLAngle: ", swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
+    SmartDashboard.putNumber("BLAngle: ", swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+
+    /*
     logger.log(Level.INFO, "FRAngle: " + FRDrive.getAngle());
     logger.log(Level.INFO, "BRAngle: " + swerveMath.getBackRightAngle(targetX, targetY, rotation));
     logger.log(Level.INFO, "FLAngle: " + swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
     logger.log(Level.INFO, "BLAngle: " + swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+    */
 
     //logger.log(Level.INFO, "FR_CLE:" + FRDrive.getClosedLoopError());
     //logger.log(Level.INFO, "BR_CLE:" + BRDrive.getClosedLoopError());
     //logger.log(Level.INFO, "FL_CLE:" + FLDrive.getClosedLoopError());
     //logger.log(Level.INFO, "BL_CLE:" + BLDrive.getClosedLoopError());
-
     
     if(Math.abs(targetX) > Math.pow(0.1, 3) || Math.abs(targetY) > Math.pow(0.1, 3)){
       prevX = targetX;
       prevY = targetY;
-      FRDrive.drive(swerveMath.getFrontRightSpeed(targetX, targetY, rotation), swerveMath.getFrontRightAngle(targetX, targetY, rotation));
-      BRDrive.drive(swerveMath.getBackRightSpeed(targetX, targetY, rotation), swerveMath.getBackRightAngle(targetX, targetY, rotation));
-      FLDrive.drive(swerveMath.getFrontLeftSpeed(targetX, targetY, rotation), swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
-      BLDrive.drive(swerveMath.getBackLeftSpeed(targetX, targetY, rotation), swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+      FRDrive.drive(FRSpeed, FRAngle);
+      BRDrive.drive(BRSpeed, BRAngle);
+      FLDrive.drive(FLSpeed, FLAngle);
+      BLDrive.drive(BLSpeed, BLAngle);
     } else {
       FRDrive.drive(swerveMath.getFrontRightSpeed(targetX, targetY, rotation), swerveMath.getFrontRightAngle(prevX, prevY, rotation));
       BRDrive.drive(swerveMath.getBackRightSpeed(targetX, targetY, rotation), swerveMath.getBackRightAngle(prevX, prevY, rotation));
