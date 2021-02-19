@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.utilities.ShooterControl;
+import frc.robot.utilities.ShuffleboardUtility;
 import edu.wpi.first.wpiutil.math.Nat;
 import edu.wpi.first.wpiutil.math.VecBuilder;
 import edu.wpi.first.wpiutil.math.numbers.N1;
@@ -50,7 +51,8 @@ public class DefaultFlywheelCommand extends CommandBase {
     private KalmanFilter<N1, N1, N1> m_observer;
     private LinearQuadraticRegulator<N1, N1, N1> m_controller;
     private LinearSystemLoop<N1, N1, N1> m_loop;
-
+    
+    private ShuffleboardUtility ModelConfig = ShuffleboardUtility.getInstance();
 
     //-------- CONSTRUCTOR --------\\
     public DefaultFlywheelCommand(FlywheelSubsystem flywheelSubsystem) {
@@ -94,6 +96,7 @@ public class DefaultFlywheelCommand extends CommandBase {
         mMaxVoltage = maxVoltage;
         mDtSeconds = dtSeconds;
         m_FlywheelSubsystem = flywheelSubsystem;
+        ModelConfig.putControlConfig(mVelError, mControlTol, mModelAcc, mEncodAcc, mMaxVoltage, mDtSeconds);
         addRequirements(m_FlywheelSubsystem);
         m_flywheelPlant =
           LinearSystemId.createFlywheelSystem(
@@ -145,7 +148,7 @@ public class DefaultFlywheelCommand extends CommandBase {
   
       // Correct our Kalman filter's state vector estimate with encoder data.
       m_loop.correct(VecBuilder.fill(Units.rotationsPerMinuteToRadiansPerSecond(m_FlywheelSubsystem.getSpeed())));
-  
+
       // Update our LQR to generate new voltage commands and use the voltages to predict the next
       // state with out Kalman filter.
       m_loop.predict(0.020);
@@ -154,7 +157,9 @@ public class DefaultFlywheelCommand extends CommandBase {
       // voltage = duty cycle * battery voltage, so
       // duty cycle = voltage / battery voltage
       double nextVoltage = m_loop.getU(0);
-      m_FlywheelSubsystem.setVoltage(nextVoltage);
+      m_FlywheelSubsystem.setVoltage(nextVoltage); 
+      ModelConfig.putFlywheelVoltage(m_FlywheelSubsystem.getVoltage());
+      ModelConfig.putFlywheelSpeed(m_FlywheelSubsystem.getSpeed());
     }
 
     // Called once the command ends or is interrupted.
