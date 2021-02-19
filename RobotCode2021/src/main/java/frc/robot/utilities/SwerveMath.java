@@ -28,25 +28,44 @@ public class SwerveMath {
     *                BACK
     */
 
-    // returning b
+    /**
+   * returning b
+   * @param targetX  The X postion of the controller  (Left stick)
+   * @param rotation The Y position of the controller (Right stick)
+   */
     private  double calculateFrontAxle(double targetX, double rotation) {
         double Rtn = targetX + rotation * (wheelBase / r);
         return Rtn;
     }
 
-    //returning a
+    /**
+   * returns a
+   * 
+   * @param targetX  The X postion of the controller  (Left stick)
+   * @param rotation The Y position of the controller (Right stick)
+   */
     private  double calculateRearAxle(double targetX, double rotation) {
         double Rtn = targetX - rotation * (wheelBase / r);
         return Rtn;
     }
 
-    //returning c
+    /**
+   * returns c
+   * 
+   * @param targetY  The Y position of the controller (Left stick)
+   * @param rotation The Y position of the controller (Right stick)
+   */
    private double calculateLeftTrack(double targetY, double rotation) {
         double Rtn = targetY - rotation * (trackWidth / r);
         return Rtn;
     }
 
-    //returning d
+    /**
+   * returns d
+   * 
+   * @param targetY  The Y position of the controller (Left stick)
+   * @param rotation The Y position of the controller (Right stick)
+   */
     public  double calculateRightTrack(double targetY, double rotation) {
         double Rtn = targetY + rotation * (trackWidth / r);
         return Rtn;
@@ -61,7 +80,13 @@ public class SwerveMath {
         r = Math.sqrt((wheelBase * wheelBase) + (trackWidth * trackWidth));
     }
 
-    //getting back right speed
+    /**
+   * gets back right speed
+   * 
+   * @param targetX  The X postion of the controller  (Left stick)
+   * @param targetY  The Y position of the controller (Left stick)
+   * @param rotation The Y position of the controller (Right stick)
+   */
     public double getBackRightSpeed(double targetX, double targetY, double rotation) {
         double a = calculateRearAxle(targetX, rotation);
         double d = calculateRightTrack(targetY, rotation);
@@ -71,7 +96,13 @@ public class SwerveMath {
         return BRSpeed;
     }
     
-    //getting back left speed
+    /**
+   * gets back left speed
+   * 
+   * @param targetX  The X postion of the controller  (Left stick)
+   * @param targetY  The Y position of the controller (Left stick)
+   * @param rotation The Y position of the controller (Right stick)
+   */
     public double getBackLeftSpeed(double targetX, double targetY, double rotation) {
         double a = calculateRearAxle(targetX, rotation);
         double c =  calculateLeftTrack(targetY, rotation);
@@ -81,7 +112,13 @@ public class SwerveMath {
         return BLSpeed;
     }
 
-    //getting front right speed
+    /**
+   * gets front right speed
+   * 
+   * @param targetX  The X postion of the controller  (Left stick)
+   * @param targetY  The Y position of the controller (Left stick)
+   * @param rotation The Y position of the controller (Right stick)
+   */
     public double getFrontRightSpeed(double targetX, double targetY, double rotation) {
         double b = calculateFrontAxle(targetX, rotation);
         double d = calculateRightTrack(targetY, rotation);
@@ -91,7 +128,13 @@ public class SwerveMath {
         return FRSpeed;
     }
 
-    //getting front left speed
+    /**
+   * gets front left speed
+   * 
+   * @param targetX  The X postion of the controller  (Left stick)
+   * @param targetY  The Y position of the controller (Left stick)
+   * @param rotation The Y position of the controller (Right stick)
+   */
     public double getFrontLeftSpeed(double targetX, double targetY, double rotation) {
         double b = calculateFrontAxle(targetX, rotation);
         double c = calculateLeftTrack(targetY, rotation);
@@ -101,7 +144,13 @@ public class SwerveMath {
         return FLSpeed;
     }
 
-    //getting back right angle
+    /**
+   * gets back right angle
+   * 
+   * @param targetX  The X postion of the controller  (Left stick)
+   * @param targetY  The Y position of the controller (Left stick)
+   * @param rotation The Y position of the controller (Right stick)
+   */
     public double getBackRightAngle(double targetX, double targetY, double rotation) {
         double a = calculateRearAxle(targetX, rotation);
         double d = calculateRightTrack(targetY, rotation);
@@ -113,7 +162,13 @@ public class SwerveMath {
         return BRAngle;
     }
 
-    //getting back left angle
+    /**
+   * gets back left angle
+   * 
+   * @param targetX  The X postion of the controller  (Left stick)
+   * @param targetY  The Y position of the controller (Left stick)
+   * @param rotation The Y position of the controller (Right stick)
+   */
     public double getBackLeftAngle(double targetX, double targetY, double rotation) {
         double a = calculateRearAxle(targetX, rotation);
         double c = calculateLeftTrack(targetY, rotation);
@@ -124,7 +179,13 @@ public class SwerveMath {
         return BLAngle;
     }
 
-    //getting front right angle
+    /**
+   * get front right angle
+   * 
+   * @param targetX  The X postion of the controller  (Left stick)
+   * @param targetY  The Y position of the controller (Left stick)
+   * @param rotation The Y position of the controller (Right stick)
+   */
     public double getFrontRightAngle(double targetX, double targetY, double rotation) {
         double b = calculateFrontAxle(targetX, rotation);
         double d = calculateRightTrack(targetY, rotation);
@@ -135,7 +196,13 @@ public class SwerveMath {
         return FRAngle;
     }
 
-    //getting front left axle
+    /**
+   * gets front left axle
+   * 
+   * @param targetX  The X postion of the controller  (Left stick)
+   * @param targetY  The Y position of the controller (Left stick)
+   * @param rotation The Y position of the controller (Right stick)
+   */
     public double getFrontLeftAngle(double targetX, double targetY, double rotation) {
         double b = calculateFrontAxle(targetX, rotation);
         double c = calculateLeftTrack(targetY, rotation);
