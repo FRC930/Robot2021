@@ -46,6 +46,8 @@ public class TurretSubsystem extends SubsystemBase {
 
     public TurretSubsystem() {
         this.turretMotor = new WPI_TalonSRX(Constants.TURRET_ID);
+
+        // Dont use encoder in robot sim
         if(RobotBase.isReal()){
             this.encoder = new DutyCycleEncoder(Constants.ENCODER_PORT_ID);
         }
@@ -56,11 +58,12 @@ public class TurretSubsystem extends SubsystemBase {
     // -------- METHODS --------\\
 
     public void setSpeed(double speed) {
+        // Dont use encoder in robot sim
         if(RobotBase.isReal()){
             encoderPosition = encoder.get();
         }
 
-        encoderPosition = 0.0;
+        //encoderPosition = 0.0;
 
 
         SmartDashboard.putNumber("Turret speed unclamped", speed);
@@ -86,6 +89,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     // converts encoder units to degrees
     public double unitsToDegrees(double units) {
+        // Dont use encoder in robot sim
         if(RobotBase.isReal()){
             return this.encoder.get() / DEGREE_CONVERSION_NUMBER;
         } else {
@@ -100,6 +104,7 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     public double getRawEncoderPosition() {
+        // Dont use encoder in robot sim
         if(RobotBase.isReal()){
             return this.encoder.get();
         } else {
