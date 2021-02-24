@@ -541,7 +541,7 @@ public class RobotContainer {
     //Tries to create a trajectory from a JSON file. Logs and throws exception if fails.
     try {
         Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        logger.log(Constants.LOG_LEVEL_INFO, "Slalom tragectory path: " + trajectoryPath.toString());
+        logger.log(Constants.LOG_LEVEL_INFO, "Bounce tragectory path: " + trajectoryPath.toString());
         m_trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
     } catch (IOException ex) {
         DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
