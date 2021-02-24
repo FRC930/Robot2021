@@ -49,10 +49,23 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   private boolean slowSpeed;
 
-  private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
-  private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
-  private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
-  private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
+  private final Translation2d m_frontLeftLocation = new Translation2d(
+    Units.inchesToMeters(10.625),
+    Units.inchesToMeters(9.25)
+  );
+  private final Translation2d m_frontRightLocation = new Translation2d(
+    Units.inchesToMeters(10.625),
+    Units.inchesToMeters(-9.25)
+  );
+  private final Translation2d m_backLeftLocation = new Translation2d(
+    Units.inchesToMeters(-10.625),
+    Units.inchesToMeters(9.25)
+  );
+  private final Translation2d m_backRightLocation = new Translation2d(
+    Units.inchesToMeters(-10.625),
+    Units.inchesToMeters(-9.25)
+  );
+
   private double prevX = 0;
   private double prevY = 0;
 
@@ -62,7 +75,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 /*
   private final SwerveDrivePoseEstimator m_poseEstimator =
       new SwerveDrivePoseEstimator(
-          new Rotation2d(Units.degreesToRadians(m_gyro.getAbsoluteCompassHeading())),
+          new Rotation2d(Units.degreesToRadians(gyro.getAbsoluteCompassHeading())),
           new Pose2d(),
           m_kinematics,
           VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
@@ -90,6 +103,22 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     BRDrive = new SwerveModule(4, 8, 12);
     FLDrive = new SwerveModule(1, 5, 9);
     BLDrive = new SwerveModule(2, 6, 10);
+  }
+
+  // Assumption --  rotation: (-180 - 180) and gyroAngle: (-180 - 180)
+  public double applyGyroAngle( double rotation, double gyroAngle) {
+    boolean addAngle = false;
+    // NOTE: May want to add instead gyroAngle
+    double newRotation = rotation + ((addAngle?1:-1) * gyroAngle);
+    if (newRotation > 180 )  {
+      // example 225 -> -135
+      newRotation = newRotation - 360;
+    } else if (newRotation < -180 ) {
+      // example -225 -> 135
+      newRotation = newRotation + 360;
+    }
+    // Output needs to be between -180 and 180
+    return newRotation;
   }
 
   /**
@@ -121,10 +150,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
       System.out.println(gyroAngle);
 
-      FRAngle += gyroAngle;
-      BRAngle += gyroAngle;
-      FLAngle += gyroAngle;
-      BLAngle += gyroAngle;
+      FRAngle = applyGyroAngle(FRAngle, gyroAngle);
+      BRAngle = applyGyroAngle(BRAngle, gyroAngle);
+      FLAngle = applyGyroAngle(FLAngle, gyroAngle);
+      BLAngle = applyGyroAngle(BLAngle, gyroAngle);
     }
 
     //System.out.println("BLAngle: " + BLAngle + " | FLAngle: " + FLAngle);

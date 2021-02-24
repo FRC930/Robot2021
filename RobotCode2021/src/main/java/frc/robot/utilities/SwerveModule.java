@@ -90,7 +90,7 @@ public class SwerveModule {
 
         //SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
         SmartDashboard.putNumber("Rotation"+steerFx.getDeviceID(), rotation);
-        SmartDashboard.putNumber("Error"+steerFx.getDeviceID(), m_turningPIDController.getPositionError());
+        //SmartDashboard.putNumber("Error"+steerFx.getDeviceID(), m_turningPIDController.getPositionError());
         //SmartDashboard.putNumber("Abs_Rotation"+steerFx.getDeviceID(), steerEncoder.getAbsolutePosition());
 
         logger.exiting(SwerveModule.class.getName(), "setAngle");
@@ -98,7 +98,8 @@ public class SwerveModule {
     //setting the speed of wheel
     public void setSpeed(double speed) {
         //if(canDrive) {
-            driveFx.set(ControlMode.PercentOutput, speed);
+        driveFx.set(ControlMode.PercentOutput, speed);
+        SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
         //}
     }
     // setting speed and angle
