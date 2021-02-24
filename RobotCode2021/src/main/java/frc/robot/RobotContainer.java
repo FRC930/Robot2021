@@ -216,21 +216,21 @@ public class RobotContainer {
     // colorSensorSubsystem = new ColorSensorSubsystem();
     // colorWheelSpinnerSubsystem = new ColorWheelSpinnerSubsystem();
 
+    // (INTAKE_ID)
+    intakeMotorSubsystem = new IntakeMotorSubsystem(Constants.INTAKE_ID);
+    // (INTAKE_SOLENOID_ID)
+    intakePistonSubsystem = new IntakePistonSubsystem(0);
+
     int[] drfid = {3, 7, 11};
     int[] dlfid = {1, 5, 9};
     int[] drbid = {4, 8, 12};
     int[] dlbid = {2, 6, 10};
 
-    swerveDriveSubsystem = new SwerveDriveSubsystem();
+    swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
     driveSubsystem = new DriveSubsystem(drfid, dlfid, drbid, dlbid, 0, DRIVE_TYPE.SWERVE_DRIVE);
 
     // (HOPPER_ID)
     hopperSubsystem = new HopperSubsystem(13);
-
-    // (INTAKE_ID)
-    intakeMotorSubsystem = new IntakeMotorSubsystem(Constants.INTAKE_ID);
-    // (INTAKE_SOLENOID_ID)
-    intakePistonSubsystem = new IntakePistonSubsystem(0);
 
     // (KICKER_ID)
     kickerSubsystem = new KickerSubsystem(14);
