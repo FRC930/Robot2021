@@ -49,7 +49,7 @@ public class ClimbCommand extends CommandBase {
             climbSpeed = 0;
         }
 
-        driveSubsystem.runAt(climbSpeed, -climbSpeed);
+        driveSubsystem.tankDrive(climbSpeed, -climbSpeed);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

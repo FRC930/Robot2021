@@ -15,6 +15,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 
 import frc.robot.utilities.SwerveModule;
 import frc.robot.utilities.SwerveMath;
+import edu.wpi.first.wpilibj.estimator.SwerveDrivePoseEstimator;
 
 import frc.robot.Constants;
 //import frc.robot.utilities.ShuffleboardUtility;
@@ -26,6 +27,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpiutil.math.VecBuilder;
+
+
+//TODO: Organize all of the importants including these new imports due to merging of SwerveDriveSubsystem and DriveSubsystem
+import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
 
 //-------- SUBSYSTEM CLASS --------\\
 
@@ -65,10 +78,33 @@ public class DriveSubsystem extends SubsystemBase {
   // The differential drive object itself
   private DifferentialDrive differentialDrive;
 
+  //TODO: ORGANIZE SWERVE DRIVE VARIABLES
   private int[] driveRightFrontIDs;
   private int[] driveLeftFrontIDs;
   private int[] driveRightBackIDs;
   private int[] driveLeftBackIDs;
+
+  private SwerveMath swerveMath;
+
+  private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
+  private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
+  private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
+  private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
+  private double prevX = 0;
+  private double prevY = 0;
+
+  private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+
+  /*
+  private final SwerveDrivePoseEstimator m_poseEstimator =
+      new SwerveDrivePoseEstimator(
+          new Rotation2d(Units.degreesToRadians(m_gyro.getAbsoluteCompassHeading())),
+          new Pose2d(),
+          m_kinematics,
+          VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+          VecBuilder.fill(Units.degreesToRadians(0.01)),
+          VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+  */
 
   //Drive type enum
   public static enum DRIVE_TYPE {
@@ -88,10 +124,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   // -------- CONSTRUCTOR --------\\
 
-  public DriveSubsystem() {
-    setDriveMotors();
-  }
-
   public DriveSubsystem(int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, int _gyroID, DRIVE_TYPE _driveType) {
     
     driveType = _driveType;
@@ -102,16 +134,21 @@ public class DriveSubsystem extends SubsystemBase {
     driveLeftBackIDs = _driveLeftBackIDs;
     
     switch(driveType) {
+
       case TANK_DRIVE:
         setDriveMotors();
         break;
+
       case SWERVE_DRIVE:
         setDriveMotors();
+        swerveMath = new SwerveMath();
         break;
+
       default: // default is error logging
         // TODO: find better error logging
         System.out.println("FAILURE TO SELECT DRIVE TYPE");
         break;
+
     }
   }
 
@@ -119,70 +156,98 @@ public class DriveSubsystem extends SubsystemBase {
 
   private void setDriveMotors() {
 
-    // instantiates the drive motors
-    tankRightFront = new WPI_TalonFX(driveRightFrontIDs[0]);
-    tankRightBack = new WPI_TalonFX(driveRightBackIDs[0]);
-    tankLeftFront = new WPI_TalonFX(driveLeftFrontIDs[0]);
-    tankLeftBack = new WPI_TalonFX(driveLeftBackIDs[0]);
+    switch(driveType) {
+      case TANK_DRIVE:
+        // instantiates the drive motors
+        tankRightFront = new WPI_TalonFX(driveRightFrontIDs[0]);
+        tankRightBack = new WPI_TalonFX(driveRightBackIDs[0]);
+        tankLeftFront = new WPI_TalonFX(driveLeftFrontIDs[0]);
+        tankLeftBack = new WPI_TalonFX(driveLeftBackIDs[0]);
 
-    // the talon that controls intake, used to get the piston
-    // TODO: Change this because IntakeSubsystem already instantiates this!
-    // Move gyro to port 16 so simulator does not break
-    if(RobotBase.isReal())
-    {
-      gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
+        // the talon that controls intake, used to get the piston
+        // TODO: Change this because IntakeSubsystem already instantiates this!
+        // Move gyro to port 16 so simulator does not break
+        if(RobotBase.isReal())
+        {
+          gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
+        } else {
+          gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID + 10);
+        }
+
+        // the gyro attached to the talon, used to track position and rotation
+        // TODO: Change this because GyroSubsystem already instantiates this!
+        gyro = new PigeonIMU(gyroTalon);
+      
+        shifter = new Solenoid(Constants.SHIFTER_SOLENOID_ID);
+
+        //shuffleboardUtility = ShuffleboardUtility.getInstance();
+
+        driveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+
+        // Inverts the direction of the drive motors
+        tankLeftFront.setInverted(true);
+        tankLeftBack.setInverted(true);
+        tankRightFront.setInverted(false);
+        tankRightBack.setInverted(false);
+
+        // Resets drive motor encoders to 0
+        tankLeftFront.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
+        tankRightFront.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
+
+        tankLeftFront.setSensorPhase(true);
+        tankLeftBack.setSensorPhase(true);
+        tankRightFront.setSensorPhase(false);
+        tankRightBack.setSensorPhase(false);
+
+        // Mirror primary motor controllers on each side (Not when in simulation)
+        if(RobotBase.isReal()){
+          tankLeftBack.follow(tankLeftFront);
+          tankRightBack.follow(tankRightFront);
+        }
+        
+        // Sets the ramp rate of the robot, this will need to be configued
+        tankLeftFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
+        tankRightFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
+        // Sets up the differntial drive
+        // drive = new DifferentialDrive(tankRightFront, tankLeftFront);
+        shifter.set(true);
+        //endgameClamp.set(true);
+        break;
+
+      case SWERVE_DRIVE:
+        // instantiates the swerve modules on the robot (We use 4)
+        swerveRightFront = new SwerveModule(driveRightFrontIDs[0], driveRightFrontIDs[1], driveRightFrontIDs[2]);
+        swerveRightBack = new SwerveModule(driveRightBackIDs[0], driveRightBackIDs[1], driveRightBackIDs[2]);
+        swerveLeftFront = new SwerveModule(driveLeftFrontIDs[0], driveLeftFrontIDs[1], driveLeftFrontIDs[2]);
+        swerveLeftBack = new SwerveModule(driveLeftBackIDs[0], driveLeftBackIDs[1], driveLeftBackIDs[2]);
+        break;
+    }
+  }
+
+  // TANK DRIVE
+  // this is involved with shifting the gear for endgame
+  public void setShifterState(boolean state) throws RuntimeException {
+    if(shifter != null) {
+      logger.log(Constants.LOG_LEVEL_FINE, "New shifter state: " + state);
+      shifter.set(state);
     } else {
-      gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID + 10);
+      // TODO: get LOG_LEVEL_ERROR
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null shifter");
+      throw new RuntimeException("calling null shifter");
     }
-
-    // the gyro attached to the talon, used to track position and rotation
-    // TODO: Change this because GyroSubsystem already instantiates this!
-    gyro = new PigeonIMU(gyroTalon);
-   
-    shifter = new Solenoid(Constants.SHIFTER_SOLENOID_ID);
-
-    //shuffleboardUtility = ShuffleboardUtility.getInstance();
-
-    driveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
-
-    // Inverts the direction of the drive motors
-    tankLeftFront.setInverted(true);
-    tankLeftBack.setInverted(true);
-    tankRightFront.setInverted(false);
-    tankRightBack.setInverted(false);
-
-    // Resets drive motor encoders to 0
-    tankLeftFront.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
-    tankRightFront.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
-
-    tankLeftFront.setSensorPhase(true);
-    tankLeftBack.setSensorPhase(true);
-    tankRightFront.setSensorPhase(false);
-    tankRightBack.setSensorPhase(false);
-
-    // Mirror primary motor controllers on each side (Not when in simulation)
-    if(RobotBase.isReal()){
-      tankLeftBack.follow(tankLeftFront);
-      tankRightBack.follow(tankRightFront);
-    }
-    
-    // Sets the ramp rate of the robot, this will need to be configued
-    tankLeftFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
-    tankRightFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
-    // Sets up the differntial drive
-    // drive = new DifferentialDrive(tankRightFront, tankLeftFront);
-    shifter.set(true);
-    //endgameClamp.set(true);
   }
 
-  public void setShifterState(boolean state) {
-    logger.log(Constants.LOG_LEVEL_FINE, "New shifter state: " + state);
-    shifter.set(state);
-  }
-
-  public void setEndgameClampState(boolean state) {
+  // TANK DRIVE
+  // this is involved with the clampstate for endgame
+  public void setEndgameClampState(boolean state) throws RuntimeException {
+    if(endgameClamp != null) {
     logger.log(Constants.LOG_LEVEL_FINE, "Endgame clamp state: " + state);
     //endgameClamp.set(state);
+    } else {
+      // TODO: get LOG_LEVEL_ERROR
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null endgameClamp");
+      throw new RuntimeException("calling null endgameClamp");
+    }
   }
 
   /**
@@ -192,8 +257,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @param leftSpeed  The speed of the left drivetrain motors
    * @param rightSpeed The speed of the right drivetrain motors
    */
-  public void runAt(double leftSpeed, double rightSpeed) {
-    logger.entering(DriveSubsystem.class.getName(), "runAt()");
+  public void tankDrive(double leftSpeed, double rightSpeed) {
+    logger.entering(DriveSubsystem.class.getName(), "tankDrive()");
 
     //TODO: We should be seeing this on the Shuffleboard
     logger.log(Constants.LOG_LEVEL_FINE, "New left speed: " + leftSpeed + "|| New right speed: " + rightSpeed);
@@ -213,27 +278,84 @@ public class DriveSubsystem extends SubsystemBase {
       tankRightBack.set(rightSpeed);
     }
 
-    logger.exiting(DriveSubsystem.class.getName(), "runAt()");
+    logger.exiting(DriveSubsystem.class.getName(), "tankDrive()");
   } // end of method runAt()
 
+  public void swerveDrive(double targetX, double targetY, double rotation) {
+    logger.entering(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
+
+    SmartDashboard.putNumber("FRAngle: ",swerveMath.getFrontRightAngle(targetX, targetY, rotation));
+    SmartDashboard.putNumber("BRAngle: ", swerveMath.getBackRightAngle(targetX, targetY, rotation));
+    SmartDashboard.putNumber("FLAngle: ",swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
+    SmartDashboard.putNumber("BLAngle: ",swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+
+    logger.log(Level.INFO, "FRAngle: " + swerveRightFront.getAngle());
+    logger.log(Level.INFO, "BRAngle: " + swerveMath.getBackRightAngle(targetX, targetY, rotation));
+    logger.log(Level.INFO, "FLAngle: " + swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
+    logger.log(Level.INFO, "BLAngle: " + swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+
+    //logger.log(Level.INFO, "FR_CLE:" + swerveRightFront.getClosedLoopError());
+    //logger.log(Level.INFO, "BR_CLE:" + swerveRightBack.getClosedLoopError());
+    //logger.log(Level.INFO, "FL_CLE:" + swerveLeftFront.getClosedLoopError());
+    //logger.log(Level.INFO, "BL_CLE:" + swerveLeftBack.getClosedLoopError());
+
+    
+    if(Math.abs(targetX) > Math.pow(0.1, 3) || Math.abs(targetY) > Math.pow(0.1, 3)){
+      prevX = targetX;
+      prevY = targetY;
+      swerveRightFront.drive(swerveMath.getFrontRightSpeed(targetX, targetY, rotation), swerveMath.getFrontRightAngle(targetX, targetY, rotation));
+      swerveRightBack.drive(swerveMath.getBackRightSpeed(targetX, targetY, rotation), swerveMath.getBackRightAngle(targetX, targetY, rotation));
+      swerveLeftFront.drive(swerveMath.getFrontLeftSpeed(targetX, targetY, rotation), swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
+      swerveLeftBack.drive(swerveMath.getBackLeftSpeed(targetX, targetY, rotation), swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+    } else {
+      swerveRightFront.drive(swerveMath.getFrontRightSpeed(targetX, targetY, rotation), swerveMath.getFrontRightAngle(prevX, prevY, rotation));
+      swerveRightBack.drive(swerveMath.getBackRightSpeed(targetX, targetY, rotation), swerveMath.getBackRightAngle(prevX, prevY, rotation));
+      swerveLeftFront.drive(swerveMath.getFrontLeftSpeed(targetX, targetY, rotation), swerveMath.getFrontLeftAngle(prevX, prevY, rotation));
+      swerveLeftBack.drive(swerveMath.getBackLeftSpeed(targetX, targetY, rotation), swerveMath.getBackLeftAngle(prevX, prevY, rotation));
+    }
+
+    logger.exiting(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
+  } // end of method drive()
+
+  // TANK DRIVE
   /**
-     * Returns the speed of the left drivetrain motors
-     * 
-     * @return The left drivetrain motor speed, ranging from -1 to 1
-     */
-  public double getLeftSpeed() {
-    return tankLeftFront.getMotorOutputPercent();
+   * Returns the speed of the left drivetrain motors
+   * 
+   * @return The left drivetrain motor speed, ranging from -1 to 1
+   * @throws Exception
+   */
+  public double getLeftSpeed() throws RuntimeException {
+    double motorOutputPercent = 0;
+    if(tankLeftFront != null) {
+      motorOutputPercent = tankLeftFront.getMotorOutputPercent();
+    } else {
+      // TODO: get LOG_LEVEL_ERROR
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null tankLeftFront");
+      throw new RuntimeException("calling null tankLeftFront");
+    }
+    return motorOutputPercent;
   }
 
+  // TANK DRIVE
   /**
-     * Returns the speed of the right drivetrain motors
-     * 
-     * @return The right drivetrain motor speed, ranging from -1 to 1
-     */
-  public double getRightSpeed() {
-    return tankRightFront.getMotorOutputPercent();
+   * Returns the speed of the right drivetrain motors
+   * 
+   * @return The right drivetrain motor speed, ranging from -1 to 1
+   * @throws Exception
+   */
+  public double getRightSpeed() throws RuntimeException {
+    double motorOutputPercent = 0;
+    if(tankRightFront != null) {
+      motorOutputPercent = tankRightFront.getMotorOutputPercent();
+    } else {
+      // TODO: get LOG_LEVEL_ERROR
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null tankRightFront");
+      throw new RuntimeException("calling null tankRightFront");
+    }
+    return motorOutputPercent;
   }
 
+  // TANK DRIVE???
   /**
      * Returns the gyro's yaw, in degrees
      * 
@@ -244,24 +366,46 @@ public class DriveSubsystem extends SubsystemBase {
     return Math.IEEEremainder(yawPitchRollValues[0], 360);
   }
 
+  // TANK DRIVE
   /**
-     * Returns the number of rotations from the left side of the drivetrain
-     * 
-     * @return A double, the # of rotations from the left drivetrain
-     */
-  public double getLeftWheelRotations() {
-    return tankLeftFront.getSelectedSensorPosition() * ((1.0 / 2048.0) * 0.152 * Math.PI) / DRIVE_GEAR_RATIO;
+   * Returns the number of rotations from the left side of the drivetrain
+   * 
+   * @return A double, the # of rotations from the left drivetrain
+   * @throws Exception
+   */
+  public double getLeftWheelRotations() throws RuntimeException {
+    double leftWheelRotationsReturn = 0;
+    if(tankLeftFront != null) {
+      leftWheelRotationsReturn = tankLeftFront.getSelectedSensorPosition() * ((1.0 / 2048.0) * 0.152 * Math.PI) / DRIVE_GEAR_RATIO;
+    } else {
+      // TODO: get LOG_LEVEL_ERROR
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null tankLeftFront");
+      throw new RuntimeException("calling null tankLeftFront");
+    }
+    return leftWheelRotationsReturn;
   }
 
+  // TANK DRIVE
   /**
-     * Returns the number of rotations from the right side of the drivetrain
-     * 
-     * @return A double, the # of rotations from the right drivetrain
-     */
-  public double getRightWheelRotations() {
-      return tankRightFront.getSelectedSensorPosition() * ((1.0 / 2048.0) * 0.152 * Math.PI) / DRIVE_GEAR_RATIO;
+   * Returns the number of rotations from the right side of the drivetrain
+   * 
+   * @return A double, the # of rotations from the right drivetrain
+   * @throws Exception
+   */
+  public double getRightWheelRotations() throws RuntimeException {
+    double rightWheelRotationsReturn = 0;
+    if(tankLeftFront != null) {
+      rightWheelRotationsReturn = tankRightFront.getSelectedSensorPosition() * ((1.0 / 2048.0) * 0.152 * Math.PI) / DRIVE_GEAR_RATIO;
+    } else {
+      // TODO: get LOG_LEVEL_ERROR
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null tankRightFront");
+      throw new RuntimeException("calling null tankRightFront");
+    }
+    return rightWheelRotationsReturn;
   }
 
+  // TANK DRIVE
+  // TODO: error handling
   /**
      * Returns the speeds in the differential drive
      * 
@@ -272,13 +416,23 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-     * Resets the gyro
-     */
-  public void resetOdometry(Pose2d pose) {
-    driveOdometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
-    logger.log(Constants.LOG_LEVEL_FINE, "Odometer reset");
+   * Resets the gyro
+   * 
+   * @throws Exception
+   */
+  public void resetOdometry(Pose2d pose) throws RuntimeException {
+    if(driveOdometry != null) {
+      driveOdometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+      logger.log(Constants.LOG_LEVEL_FINE, "Odometer reset");
+    } else {
+      // TODO: get LOG_LEVEL_ERROR
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null driveOdometry");
+      throw new RuntimeException("calling null driveOdometry");
+    }
   }
 
+  // TANK DRIVE
+  // TODO: Error creation and handling
   /**
      * Runs the drivetrain motors, but by sending the voltage amount instead  
      */
@@ -300,6 +454,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   //-- TODO: Update getLeftEncoder() and getRightEncoder()
 
+  // TANK DRIVE
+  // TODO: Error handling
   /**
      * Gets the left drivetrain encoder value
      * 
@@ -309,6 +465,8 @@ public class DriveSubsystem extends SubsystemBase {
     return getLeftWheelRotations();
   }
 
+  // TANK DRIVE
+  // TODO: Error handling
   /**
      * Gets the right drivetrain encoder value
      * 
@@ -318,30 +476,57 @@ public class DriveSubsystem extends SubsystemBase {
     return getRightWheelRotations();
   }
 
+  // TANK DRIVE
+  // TODO: Error creation and handling
   /**
      * Returns the position from the odometry
      * 
      * @return A Pose2d object, from the drive odometry
      */
   public Pose2d getPose() {
-    return driveOdometry.getPoseMeters();
+    Pose2d VRtn = new Pose2d();
+    if(driveOdometry != null) {
+      VRtn = driveOdometry.getPoseMeters();
+    } else {
+      // TODO: get LOG_LEVEL_ERROR
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null driveOdometry");
+      throw new RuntimeException("calling null driveOdometry");
+    }
+    return VRtn;
   }
 
+  // TANK DRIVE
   /**
-     * Sets the max output the differential drive can give
-     * 
-     * @param maxOutput A double, specifying the maxiumum power that can be given by the differential drive
-     */
-  public void setMaxOutput(double maxOutput) {
-    differentialDrive.setMaxOutput(maxOutput);
-    logger.log(Constants.LOG_LEVEL_FINE, "New max output: " + maxOutput);
+   * Sets the max output the differential drive can give
+   * 
+   * @param maxOutput A double, specifying the maxiumum power that can be given by
+   *                  the differential drive
+   * @throws Exception
+   */
+  public void setMaxOutput(double maxOutput) throws RuntimeException {
+    if(differentialDrive != null) {
+      differentialDrive.setMaxOutput(maxOutput);
+      logger.log(Constants.LOG_LEVEL_FINE, "New max output: " + maxOutput);
+    } else {
+      // TODO: get LOG_LEVEL_ERROR
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null differentialDrive");
+      throw new RuntimeException("calling null differentialDrive");
+    }
   }
 
   @Override
-  public void periodic() {
+  // TANK DRIVE
+  // TODO: Error creation and handling
+  public void periodic() throws RuntimeException{
     //logger.entering(DriveSubsystem.class.getName(), "periodic()");
 
-    driveOdometry.update(Rotation2d.fromDegrees(getHeading()), getLeftWheelRotations(), getRightWheelRotations());
+    if(driveOdometry != null) {
+      driveOdometry.update(Rotation2d.fromDegrees(getHeading()), getLeftWheelRotations(), getRightWheelRotations());
+    } else {
+      // TODO: get LOG_LEVEL_ERROR
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null driveOdometry");
+      throw new RuntimeException("calling null driveOdometry");
+    }
     //shuffleboardUtility.setGyroYaw(getHeading());
 
     //logger.log(Constants.LOG_LEVEL_FINE, "Rotations: " + Rotation2d.fromDegrees(getHeading()) + "|| Left wheel rotations: " + getLeftWheelRotations() + "|| Right wheel rotations " + getRightWheelRotations());

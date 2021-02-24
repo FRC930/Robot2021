@@ -49,6 +49,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
   private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
   private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
+  private double prevX = 0;
+  private double prevY = 0;
 
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
@@ -92,9 +94,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     logger.entering(SwerveDriveSubsystem.class.getName(), "drive");
 
     SmartDashboard.putNumber("FRAngle: ",swerveMath.getFrontRightAngle(targetX, targetY, rotation));
-    logger.log(Level.INFO, "BRAngle: " + swerveMath.getBackRightAngle(targetX, targetY, rotation));
-    logger.log(Level.INFO, "FLAngle: " + swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
-    logger.log(Level.INFO, "BLAngle: " + swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+    SmartDashboard.putNumber("BRAngle: ", swerveMath.getBackRightAngle(targetX, targetY, rotation));
+    SmartDashboard.putNumber("FLAngle: ",swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
+    SmartDashboard.putNumber("BLAngle: ",swerveMath.getBackLeftAngle(targetX, targetY, rotation));
 
     logger.log(Level.INFO, "FRAngle: " + FRDrive.getAngle());
     logger.log(Level.INFO, "BRAngle: " + swerveMath.getBackRightAngle(targetX, targetY, rotation));
@@ -106,10 +108,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     //logger.log(Level.INFO, "FL_CLE:" + FLDrive.getClosedLoopError());
     //logger.log(Level.INFO, "BL_CLE:" + BLDrive.getClosedLoopError());
 
-    double prevX = targetX;
-    double prevY = targetY;
-
-    if(targetX > 0.1){
+    
+    if(Math.abs(targetX) > Math.pow(0.1, 3) || Math.abs(targetY) > Math.pow(0.1, 3)){
+      prevX = targetX;
+      prevY = targetY;
       FRDrive.drive(swerveMath.getFrontRightSpeed(targetX, targetY, rotation), swerveMath.getFrontRightAngle(targetX, targetY, rotation));
       BRDrive.drive(swerveMath.getBackRightSpeed(targetX, targetY, rotation), swerveMath.getBackRightAngle(targetX, targetY, rotation));
       FLDrive.drive(swerveMath.getFrontLeftSpeed(targetX, targetY, rotation), swerveMath.getFrontLeftAngle(targetX, targetY, rotation));

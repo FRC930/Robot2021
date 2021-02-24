@@ -29,7 +29,7 @@ import frc.robot.commands.endgamecommands.*;
 
 // --Subsystem imports
 import frc.robot.subsystems.*;
-
+import frc.robot.subsystems.DriveSubsystem.DRIVE_TYPE;
 // --Trigger imports
 import frc.robot.triggers.*;
 
@@ -216,8 +216,13 @@ public class RobotContainer {
     // colorSensorSubsystem = new ColorSensorSubsystem();
     // colorWheelSpinnerSubsystem = new ColorWheelSpinnerSubsystem();
 
+    int[] drfid = {3, 7, 11};
+    int[] dlfid = {1, 5, 9};
+    int[] drbid = {4, 8, 12};
+    int[] dlbid = {2, 6, 10};
+
     swerveDriveSubsystem = new SwerveDriveSubsystem();
-    driveSubsystem = new DriveSubsystem();
+    driveSubsystem = new DriveSubsystem(drfid, dlfid, drbid, dlbid, 0, DRIVE_TYPE.SWERVE_DRIVE);
 
     // (HOPPER_ID)
     hopperSubsystem = new HopperSubsystem(13);

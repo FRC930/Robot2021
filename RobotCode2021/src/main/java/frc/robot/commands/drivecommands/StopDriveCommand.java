@@ -18,7 +18,7 @@ public class StopDriveCommand extends CommandBase {
     }
     @Override
     public void initialize() {  
-        driveSubsystem.runAt(0, 0); 
+        driveSubsystem.tankDrive(0, 0); 
     }
     // Called every time the scheduler runs while the command is scheduled.
     @Override
