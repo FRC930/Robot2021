@@ -29,15 +29,15 @@ public final class Constants {
     public static final int DRIVE_LEFT_FRONT_ID = 1;
     public static final int DRIVE_LEFT_BACK_ID = 2;
 
-    public static final int TURRET_ID = 5;
-    public static final int INTAKE_ID = 6;
+    public static final int TURRET_ID = 15;
+    public static final int INTAKE_ID = 17;
 
-    public static final int SHOOTER_LEAD_ID = 8;
-    public static final int SHOOTER_SLAVE_ID = 7;
+    public static final int SHOOTER_LEAD_ID = 18;
+    public static final int SHOOTER_SLAVE_ID = 19;
 
-    public static final int HOPPER_ID = 9;
-    public static final int TOWER_ID = 10;
-    public static final int KICKER_ID = 11;
+    public static final int HOPPER_ID = 13;
+    public static final int TOWER_ID = 16;
+    public static final int KICKER_ID = 14;
 
     public static final int COLOR_WHEEL_ID = 333;
 
@@ -99,8 +99,8 @@ public final class Constants {
 
     // When the turret encoder is reset, the turret faces forward and the encoder is
     // reset to 180 degrees. These units are in raw values.
-    public static final double UPPER_LIMIT = 0.640;
-    public static final double LOWER_LIMIT = 0.247;
+    public static final double UPPER_LIMIT = 0.697;
+    public static final double LOWER_LIMIT = 0.335;
 
     public static final double TURRET_MAX_SPEED = 0.6;
     public static final double TURRET_MAX_SET_POSITION_SPEED = 0.4;

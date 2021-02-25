@@ -77,7 +77,7 @@ public class FlywheelSubsystem extends SubsystemBase {
         // this.pidcontroller.setP(PID_P);
         // this.pidcontroller.setD(PID_D);
 
-        // Follow lead reverse speed
+        // Follow lead reverse speed (Not in simulator)
         if(RobotBase.isReal()){
             motor2.follow(motorLead, true);
         }
