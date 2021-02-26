@@ -66,8 +66,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     Units.inchesToMeters(-9.25)
   );
 
-  private double prevX = 0;
-  private double prevY = 0;
+  private double prevX = 0.0;
+  private double prevY = 0.0;
 
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
@@ -106,17 +106,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   }
 
   // Assumption --  rotation: (-180 - 180) and gyroAngle: (-180 - 180)
-  public double applyGyroAngle( double rotation, double gyroAngle) {
+   public double applyGyroAngle( double rotation, double gyroAngle) {
     boolean addAngle = false;
     // NOTE: May want to add instead gyroAngle
-    double newRotation = rotation + ((addAngle?1:-1) * gyroAngle);
-    if (newRotation > 180 )  {
-      // example 225 -> -135
-      newRotation = newRotation - 360;
-    } else if (newRotation < -180 ) {
-      // example -225 -> 135
-      newRotation = newRotation + 360;
-    }
+    double newRotation = addAngle?
+    (Rotation2d.fromDegrees(rotation).plus(Rotation2d.fromDegrees(gyroAngle))).getDegrees()
+    :
+    (Rotation2d.fromDegrees(rotation).minus(Rotation2d.fromDegrees(gyroAngle))).getDegrees();
+
     // Output needs to be between -180 and 180
     return newRotation;
   }
@@ -146,7 +143,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       //gyroAngle = gyroAngle % 360;
       //gyroAngle -= 180;
 
-      gyroAngle = Math.IEEEremainder(gyroAngle, 360);
+      gyroAngle = Math.IEEEremainder(gyroAngle, 360.0);
 
       System.out.println(gyroAngle);
 

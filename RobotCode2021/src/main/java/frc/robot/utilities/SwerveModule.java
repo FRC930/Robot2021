@@ -13,6 +13,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -106,16 +107,16 @@ public class SwerveModule {
     public void drive(double speed, double rotation) {
 
         // Difference of the current and target angles
-        double diff = getAngle() - rotation;
+        double diff = (Rotation2d.fromDegrees(getAngle()).minus(Rotation2d.fromDegrees(rotation))).getDegrees();
 
         // If we are more than 90 deg away...
-        if(Math.abs(diff) > 90) {
+        if(Math.abs(diff) > 90.0) {
             // Depending whether we are negative or positive target, add or subtract 180
             //  This will just be the direct opposite rotation
-            if(rotation > 0) {
-                rotation -= 180;
+            if(rotation > 0.0) {
+                rotation -= 180.0;
             } else {
-                rotation += 180;
+                rotation += 180.0;
             }
 
             // Set the speed to be the other way

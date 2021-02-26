@@ -56,8 +56,8 @@ public class SwerveMath {
     //constructer 
     // --initializeing the radius 
     public SwerveMath(){
-        wheelBase = 22.5;
-        trackWidth = 24.5;
+        wheelBase = 9.25 * 2.0; // 22.5; //  TODO 9.25 * 2.0 
+        trackWidth = 10.625 * 2.0; // 24.5; // TODO 10.625 * 2.0
         
         r = Math.sqrt((wheelBase * wheelBase) + (trackWidth * trackWidth));
     }
@@ -106,7 +106,7 @@ public class SwerveMath {
         double a = calculateRearAxle(targetX, rotation);
         double d = calculateRightTrack(targetY, rotation);
 
-        double BRAngle = (Math.atan2(a, d) / Math.PI) * 180;
+        double BRAngle = (Math.atan2(a, d) / Math.PI) * 180.0;
 
         return BRAngle;
     }
@@ -116,7 +116,7 @@ public class SwerveMath {
         double a = calculateRearAxle(targetX, rotation);
         double c = calculateLeftTrack(targetY, rotation);
        
-        double BLAngle = (Math.atan2(a, c) / Math.PI) * 180;
+        double BLAngle = (Math.atan2(a, c) / Math.PI) * 180.0;
 
         return BLAngle;
     }
@@ -126,7 +126,7 @@ public class SwerveMath {
         double b = calculateFrontAxle(targetX, rotation);
         double d = calculateRightTrack(targetY, rotation);
        
-        double FRAngle = (Math.atan2(b, d) / Math.PI) * 180;
+        double FRAngle = (Math.atan2(b, d) / Math.PI) * 180.0;
              
         return FRAngle;
     }
@@ -136,7 +136,7 @@ public class SwerveMath {
         double b = calculateFrontAxle(targetX, rotation);
         double c = calculateLeftTrack(targetY, rotation);
             
-        double FLAngle = (Math.atan2(b, c) / Math.PI) * 180;
+        double FLAngle = (Math.atan2(b, c) / Math.PI) * 180.0;
 
         return FLAngle;
     }
