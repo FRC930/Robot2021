@@ -35,10 +35,11 @@ public class DefaultFlywheelCommand extends CommandBase {
     private FlywheelSubsystem m_FlywheelSubsystem;
 
     private final double neoEncoderRate = 42;
-    private final double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(3000.0);
-    public final double kFlywheelMomentOfInertia = 0.00094610399; 
-    private final double kFlywheelGearing = 1.6666666667;
-
+    private final double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(2000.0);
+    public final double kFlywheelMomentOfInertia = 0.00094610399;  //(new from CAD) 614.207709 kg * m^2
+    private final double kFlywheelGearing = 1.6666666667;   
+                                                //Try> 34.406481 | 614.207709 | 24190.1501335 | 
+                                                
 
 
     private double mVelError = 8.0;

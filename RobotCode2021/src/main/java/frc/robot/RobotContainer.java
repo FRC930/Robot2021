@@ -109,6 +109,7 @@ public class RobotContainer {
 
   // -------- DECLARATIONS --------\\
   private static final Logger logger = Logger.getLogger(RobotContainer.class.toString());
+  private static final Logger frcRobotLogger = Logger.getLogger(RobotContainer.class.getPackageName());
 
   // -------- DECLARATIONS --------\\
   private static boolean inManualMode = false; // Default, this should be false
@@ -201,6 +202,7 @@ public class RobotContainer {
     new CameraUtil().startCapture();
     // Setting Log level for entire robot code
     // TODO: Edit this in Shuffleboard...?
+    frcRobotLogger.setLevel(Level.OFF);
     
     // --Drive controllers
     driverController = new Joystick(DRIVER_CONTROLLER_ID);
