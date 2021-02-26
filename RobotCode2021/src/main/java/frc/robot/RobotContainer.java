@@ -108,7 +108,6 @@ public class RobotContainer {
   private final int CODRIVER_CONTROLLER_ID = 1; // The xbox controller
 
   // -------- DECLARATIONS --------\\
-  private static final Logger logger = Logger.getLogger(RobotContainer.class.toString());
   private static final Logger frcRobotLogger = Logger.getLogger(RobotContainer.class.getPackageName());
 
   // -------- DECLARATIONS --------\\
@@ -285,8 +284,8 @@ public class RobotContainer {
 
   // -------- LOGGER ---------\\
   private void robotLogger() {
-    logger.entering(RobotContainer.class.getName(), "robotLogger()");
-    	logger.log(Constants.LOG_LEVEL_FINE, "Test if you can see this");
+    frcRobotLogger.entering(RobotContainer.class.getName(), "robotLogger()");
+    frcRobotLogger.log(Constants.LOG_LEVEL_FINE, "Test if you can see this");
   }
 
   private void configureButtonBindings() {
