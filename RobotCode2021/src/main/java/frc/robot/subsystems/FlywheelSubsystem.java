@@ -73,5 +73,11 @@ public class FlywheelSubsystem extends SubsystemBase {
     public void setVoltage(double outputVolts) {
         motorLead.setVoltage(outputVolts);
     }
+
+    public double getSpeed() {
+        return motorLead.getEncoder().getVelocity();
+        
+    }
+
 }
 // end of class ShooterSubsystem

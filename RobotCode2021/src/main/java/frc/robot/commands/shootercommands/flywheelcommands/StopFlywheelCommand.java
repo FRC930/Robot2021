@@ -35,7 +35,7 @@ public class StopFlywheelCommand extends CommandBase {
 
     public void initialize() {
         //Stop the flywheel, automatically returning to default.
-        flyWheelSubsystem.stop();
+        //flyWheelSubsystem.stop();
     }
 
     // Called every time the scheduler runs while the command is scheduled.

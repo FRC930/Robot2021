@@ -42,8 +42,8 @@ public class SetFlywheelSpeedCommand extends CommandBase {
     public void initialize() {
         //Kil default command
         scheduler.unregisterSubsystem(m_FlywheelSubsystem);
-        new DefaultFlywheelCommand(m_FlywheelSubsystem, shuffleboardUtility.getShooterSpeed());
-        scheduler.setDefaultCommand(m_FlywheelSubsystem, new DefaultFlywheelCommand(m_FlywheelSubsystem, Constants.FLYWHEEL_AUTON_SPEED));
+        //new DefaultFlywheelCommand(m_FlywheelSubsystem, shuffleboardUtility.getShooterSpeed());
+        //scheduler.setDefaultCommand(m_FlywheelSubsystem, new DefaultFlywheelCommand(m_FlywheelSubsystem, Constants.FLYWHEEL_AUTON_SPEED));
     }
 
     // Called every time the scheduler runs while the command is scheduled.
