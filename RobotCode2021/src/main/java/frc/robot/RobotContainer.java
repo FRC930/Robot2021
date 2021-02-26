@@ -211,12 +211,13 @@ public class RobotContainer {
     // colorSensorSubsystem = new ColorSensorSubsystem();
     // colorWheelSpinnerSubsystem = new ColorWheelSpinnerSubsystem();
 
-    swerveDriveSubsystem = new SwerveDriveSubsystem();
-
     hopperSubsystem = new HopperSubsystem();
 
     intakeMotorSubsystem = new IntakeMotorSubsystem();
     intakePistonSubsystem = new IntakePistonSubsystem();
+
+    // Must be initialized after intake
+    swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
 
     kickerSubsystem = new KickerSubsystem();
 
