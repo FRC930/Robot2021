@@ -129,7 +129,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    * @param rotation The Y position of the controller (Right stick)
    */
   public void drive(double targetX, double targetY, double rotation) {
-    logger.entering(SwerveDriveSubsystem.class.getName(), "drive");
+    logger.entering(SwerveDriveSubsystem.class.getName(), "drive()");
 
     double FRAngle = swerveMath.getFrontRightAngle(targetX, targetY, rotation);
     double BRAngle = swerveMath.getBackRightAngle(targetX, targetY, rotation);
@@ -196,7 +196,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       BLDrive.drive(swerveMath.getBackLeftSpeed(targetX, targetY, rotation), swerveMath.getBackLeftAngle(prevX, prevY, rotation));
     }
 
-    logger.exiting(SwerveDriveSubsystem.class.getName(), "drive");
+    logger.exiting(SwerveDriveSubsystem.class.getName(), "drive()");
   } // end of method drive()
 
 } // end of the class DriveSubsystem
