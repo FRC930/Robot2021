@@ -56,6 +56,10 @@ public class IntakeMotorSubsystem extends SubsystemBase {
         logger.log(Constants.LOG_LEVEL_FINE,"sets motor speed");
     }
 
+    public WPI_TalonSRX getIntakeMotor() {
+        return intakeMotorController;
+    }
+
     /**
      * <h3>getMotorSpeed</h3>
      * This method returns the intake motor speed
