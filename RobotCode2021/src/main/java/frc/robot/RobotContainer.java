@@ -18,7 +18,7 @@ import frc.robot.commands.kickercommands.*;
 import frc.robot.commands.limelightcommands.*;
 import frc.robot.commands.shootercommands.*;
 import frc.robot.commands.shootercommands.flywheelcommands.*;
-//import frc.robot.commands.shootercommands.pistoncommands.*;
+import frc.robot.commands.shootercommands.pistoncommands.*;
 import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
 
 import frc.robot.commands.towercommands.*;
@@ -108,7 +108,6 @@ public class RobotContainer {
   private final int CODRIVER_CONTROLLER_ID = 1; // The xbox controller
 
   // -------- DECLARATIONS --------\\
-  private static final Logger logger = Logger.getLogger(RobotContainer.class.toString());
   private static final Logger frcRobotLogger = Logger.getLogger(RobotContainer.class.getPackageName());
 
   // -------- DECLARATIONS --------\\
@@ -134,7 +133,8 @@ public class RobotContainer {
   // private final ColorWheelSpinnerSubsystem colorWheelSpinnerSubsystem;
 
   // --Drive subsystem
-  private final DriveSubsystem driveSubsystem;
+  //private final DriveSubsystem driveSubsystem;
+  private final SwerveDriveSubsystem swerveDriveSubsystem;
 
   // --Shooter stuff subsystems
   private final FlywheelSubsystem flywheelSubsystem;
@@ -170,7 +170,7 @@ public class RobotContainer {
   // -------- COMMANDS --------\\
 
   // --Drive commands
-  private final DriveCommand driveCommand;
+  private final SwerveDriveCommand driveCommand;
   private final ClimberArmCommandGroup climberArmCommandGroup;
 
   // --Hopper commands
@@ -190,8 +190,9 @@ public class RobotContainer {
   private final JoystickTurretCommand joystickTurretCommand; // For manual
   
   // --Auto commands
-  private final SaltAndPepperSkilletCommand saltAndPepperSkilletCommand;
-  private final FarmersBreakfastSkilletCommand farmersBreakfastSkilletCommand;
+  //TODO: PUT BACK
+  //private final SaltAndPepperSkilletCommand saltAndPepperSkilletCommand;
+  //private final FarmersBreakfastSkilletCommand farmersBreakfastSkilletCommand;
 
   // --Utilities
   private final ShuffleboardUtility shuffleboardUtility;
@@ -211,12 +212,13 @@ public class RobotContainer {
     // colorSensorSubsystem = new ColorSensorSubsystem();
     // colorWheelSpinnerSubsystem = new ColorWheelSpinnerSubsystem();
 
-    driveSubsystem = new DriveSubsystem();
-
     hopperSubsystem = new HopperSubsystem();
 
     intakeMotorSubsystem = new IntakeMotorSubsystem();
     intakePistonSubsystem = new IntakePistonSubsystem();
+
+    // Must be initialized after intake
+    swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
 
     kickerSubsystem = new KickerSubsystem();
 
@@ -240,7 +242,7 @@ public class RobotContainer {
         new JoystickButton(coDriverController, XB_RB));
 
     // drive (NOTE: This is where we bind the driver controls to the drivetrain)
-    driveCommand = new DriveCommand(driveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_RIGHT_Y);
+    driveCommand = new SwerveDriveCommand(swerveDriveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
 
     // hopper
     defaultStopHopperCommand = new DefaultStopHopperCommand(hopperSubsystem);
@@ -258,18 +260,18 @@ public class RobotContainer {
 
     shuffleboardUtility = ShuffleboardUtility.getInstance();
 
-    // TODO: Edit this to work with Shuffleboard utility
-    saltAndPepperSkilletCommand = new SaltAndPepperSkilletCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
-          towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem,
-          turretSubsystem);
-    farmersBreakfastSkilletCommand = new FarmersBreakfastSkilletCommand(driveSubsystem, flywheelSubsystem, intakeMotorSubsystem,
-          intakePistonSubsystem, turretSubsystem, limelightSubsystem, towerSubsystem, hopperSubsystem,
-          kickerSubsystem);
+    // TODO: Edit this to work with Shuffleboard utility (ADD IT BACK TOO)
+    //saltAndPepperSkilletCommand = new SaltAndPepperSkilletCommand(swerveDriveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+    //      towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem,
+    //      turretSubsystem);
+    //farmersBreakfastSkilletCommand = new FarmersBreakfastSkilletCommand(swerveDriveSubsystem, flywheelSubsystem, intakeMotorSubsystem,
+    //      intakePistonSubsystem, turretSubsystem, limelightSubsystem, towerSubsystem, hopperSubsystem,
+    //      kickerSubsystem);
 
-    shuffleboardUtility.setDefaultAutonOptions("Farmers Breakfast", farmersBreakfastSkilletCommand);
+    //shuffleboardUtility.setDefaultAutonOptions("Farmers Breakfast", farmersBreakfastSkilletCommand);
     
-    shuffleboardUtility.addAutonOptions("Salt and Pepper", saltAndPepperSkilletCommand);
-    shuffleboardUtility.addAutonOptions("None", null);
+    //shuffleboardUtility.addAutonOptions("Salt and Pepper", saltAndPepperSkilletCommand);
+    //shuffleboardUtility.addAutonOptions("None", null);
     
 
     // --Bindings
@@ -282,8 +284,8 @@ public class RobotContainer {
 
   // -------- LOGGER ---------\\
   private void robotLogger() {
-    logger.entering(RobotContainer.class.getName(), "robotLogger()");
-    	logger.log(Constants.LOG_LEVEL_FINE, "Test if you can see this");
+    frcRobotLogger.entering(RobotContainer.class.getName(), "robotLogger()");
+    frcRobotLogger.log(Constants.LOG_LEVEL_FINE, "Test if you can see this");
   }
 
   private void configureButtonBindings() {
@@ -321,7 +323,7 @@ public class RobotContainer {
     // B Button
     //JoystickButton positionalButton = new JoystickButton(driverController, GC_B);
     // L Button
-    JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
+    //JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
     // ZR Button
     AxisTrigger shootButton = new AxisTrigger(driverController, XB_AXIS_RT);
 
@@ -339,7 +341,7 @@ public class RobotContainer {
     // positionalButton.whileActiveOnce(positionalControlCommandGroup);
 
     // Drive command binds
-    driveCommand.setTurningAndThrottleAxis(XB_AXIS_RIGHT_X, XB_AXIS_LEFT_Y);
+    driveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
 
     // Shooter command binds
     shootButton.whenActive(new ShootPowerCellCommandGroup(flywheelSubsystem, towerSubsystem, hopperSubsystem,
@@ -350,7 +352,7 @@ public class RobotContainer {
     // shootButton.whenPressed(new RunFlywheelCommand(flywheelSubsystem, 0.8));
 
     // Endgame command binds
-    toggleEndgame.toggleWhenActive(new EndgameCommandGroup(driveSubsystem, flywheelSubsystem, turretSubsystem));
+    //toggleEndgame.toggleWhenActive(new EndgameCommandGroup(swerveDriveSubsystem, flywheelSubsystem, turretSubsystem));
 
     // ---- BUTTONS AND TRIGGERS (MANUAL) ----\\
 
@@ -373,8 +375,8 @@ public class RobotContainer {
     Trigger manualFlywheelButton = new JoystickButton(driverController, XB_AXIS_RT).and(inManualModeTrigger);
     
     // ZL Button
-    // AxisTrigger manualFlywheelPistonButton = new AxisTrigger(coDriverController,
-    // XB_AXIS_LT);// .and(inManualModeTrigger);
+    AxisTrigger manualFlywheelPistonButton = new AxisTrigger(driverController,
+    XB_AXIS_LT);// .and(inManualModeTrigger);
 
     // --Command binds
 
@@ -394,9 +396,9 @@ public class RobotContainer {
         .whenInactive(new StopFlywheelCommand(flywheelSubsystem));
 
     // manual flywheel piston stuff
-    // manualFlywheelPistonButton.whenActive(new
-    // ExtendFlywheelPistonCommand(flywheelPistonSubsystem)).whenInactive(new
-    // RetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    manualFlywheelPistonButton.whenActive(new
+    ExtendFlywheelPistonCommand(flywheelPistonSubsystem)).whenInactive(new
+    RetractFlywheelPistonCommand(flywheelPistonSubsystem));
 
     reverseHopperButton.whileActiveOnce(new SetHopperCommand(hopperSubsystem, Constants.HOPPER_REVERSE_SPEED, true));
     // manual
@@ -461,7 +463,7 @@ public class RobotContainer {
       // ManualIntakeCommand(intakeMotorSubsystem, coDriverController,
       // XB_AXIS_RIGHT_Y));
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
-      scheduler.setDefaultCommand(driveSubsystem, driveCommand);
+      scheduler.setDefaultCommand(swerveDriveSubsystem, driveCommand);
       scheduler.setDefaultCommand(hopperSubsystem, defaultHopperCommand);
       scheduler.setDefaultCommand(flywheelSubsystem,
           new DefaultFlywheelCommand(flywheelSubsystem));
@@ -482,7 +484,7 @@ public class RobotContainer {
                                                                         // PIDController(Constants.TURRET_P,
                                                                         // Constants.TURRET_I, Constants.TURRET_D),
                                                                         // coDriverController, XB_AXIS_LEFT_X));
-    scheduler.setDefaultCommand(driveSubsystem, driveCommand);
+    scheduler.setDefaultCommand(swerveDriveSubsystem, driveCommand);
     scheduler.setDefaultCommand(hopperSubsystem, defaultStopHopperCommand);
     scheduler.setDefaultCommand(flywheelSubsystem,
         new DefaultFlywheelCommand(flywheelSubsystem));

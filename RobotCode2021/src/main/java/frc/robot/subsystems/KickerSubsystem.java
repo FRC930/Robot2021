@@ -39,6 +39,8 @@ public class KickerSubsystem extends SubsystemBase {
 
     public KickerSubsystem() {
         kickerMotor = new WPI_VictorSPX(Constants.KICKER_ID);  
+
+        //Dont use encoder in simulation
         if(RobotBase.isReal()){
             this.encoder = new DutyCycleEncoder(Constants.HOPPER_ENCODER_PORT_ID);
             kickerMotor.setInverted(true);
@@ -67,6 +69,7 @@ public class KickerSubsystem extends SubsystemBase {
     }
 
     public double getEncoder(){
+        //Dont use encoder in simulation
         if(RobotBase.isReal()){
             return encoder.get();
         }
