@@ -55,8 +55,8 @@ public class SimulatedDrivetrain {
   private final SpeedControllerGroup m_rightGroup =
       new SpeedControllerGroup(m_rightLeader, m_rightFollower);
 
-  private final Encoder m_leftEncoder = new Encoder(0, 1);
-  private final Encoder m_rightEncoder = new Encoder(2, 3);
+  private final Encoder m_leftEncoder = new Encoder(6, 7);
+  private final Encoder m_rightEncoder = new Encoder(8, 9);
 
   private final PIDController m_leftPIDController = new PIDController(8.5, 0, 0);
   private final PIDController m_rightPIDController = new PIDController(8.5, 0, 0);

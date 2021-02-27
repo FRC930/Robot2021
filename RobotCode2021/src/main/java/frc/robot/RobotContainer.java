@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.*;
 
 // --Our Commands
 import frc.robot.commands.autocommands.paths.*;
-
+import frc.robot.commands.autocommands.paths.TestCommand;
 import frc.robot.commands.drivecommands.*;
 
 import frc.robot.commands.hoppercommands.*;
@@ -536,7 +536,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return shuffleboardUtility.getSelectedAutonPath();
+    return new TestCommand(swerveDriveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+        towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, turretSubsystem);
     // Run path following command, then stop at the end.
   }
 

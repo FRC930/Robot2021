@@ -13,6 +13,8 @@ import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -106,7 +108,7 @@ public class SwerveModule {
     public void drive(double speed, double rotation) {
 
         // Difference of the current and target angles
-        double diff = getAngle() - rotation;
+        double diff = getAngle().getDegrees() - rotation;
 
         // If we are more than 90 deg away...
         if(Math.abs(diff) > 90) {
@@ -126,13 +128,32 @@ public class SwerveModule {
             setAngle(rotation);
         }
     }
+
+    // setting speed and angle
+    public void drive(SwerveModuleState states) {
+        SwerveModuleState optimized = SwerveModuleState.optimize(states, getAngle())      ;
+
+        double angle = optimized.angle.getDegrees();
+        double speed = optimized.speedMetersPerSecond / Constants.KMAXSPEED;
+
+        //Maintains previous angle when robot is at rest
+        if(speed != 0){
+            setAngle(angle);
+        }
+
+        setSpeed(speed);
+    }
+
     //gets the angle of wheel
-    public double getAngle() {
-        return steerEncoder.getAbsolutePosition();
+    public Rotation2d getAngle() {
+        return Rotation2d.fromDegrees(steerEncoder.getAbsolutePosition());
     }
     //gets speed  of wheel
     public double getSpeed() {
         return driveFx.getSelectedSensorVelocity();
+    }
+    public SwerveModuleState getSwerveStates(){
+        return new SwerveModuleState(getSpeed(), getAngle());
     }
     //gets loop error
     public double getClosedLoopError() {
