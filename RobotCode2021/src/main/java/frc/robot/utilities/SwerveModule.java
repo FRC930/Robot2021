@@ -13,6 +13,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -77,6 +78,11 @@ public class SwerveModule {
         }
     }
 
+    /**
+    * Sets swerve module's angle 
+    * 
+    * @param rotation The rotation from -180 to 180
+    */
     public void setAngle(double rotation) {
         logger.entering(SwerveModule.class.getName(), "setAngle");
 
@@ -95,18 +101,30 @@ public class SwerveModule {
 
         logger.exiting(SwerveModule.class.getName(), "setAngle");
     }
-    //setting the speed of wheel
+
+    /**
+    * Sets swerve module's  speed
+    * 
+    * @param speed The speed from -1 to 1
+    */
     public void setSpeed(double speed) {
         //if(canDrive) {
         driveFx.set(ControlMode.PercentOutput, speed);
         SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
         //}
     }
-    // setting speed and angle
+    
+    /**
+    * Sets each swerve module's angle and speed
+    * 
+    * @param speed The speed from -1 to 1
+    * @param rotation The Y position of the controller (Right stick)
+    */
     public void drive(double speed, double rotation) {
 
         // Difference of the current and target angles
-        double diff = getAngle() - rotation;
+        double diff = (Rotation2d.fromDegrees(getAngle()).minus(Rotation2d.fromDegrees(rotation))).getDegrees();
+
 
         // If we are more than 90 deg away...
         if(Math.abs(diff) > 90) {
@@ -126,15 +144,24 @@ public class SwerveModule {
             setAngle(rotation);
         }
     }
-    //gets the angle of wheel
+
+    /**
+     * Sets swerve module's angle
+     */
     public double getAngle() {
         return steerEncoder.getAbsolutePosition();
     }
-    //gets speed  of wheel
+
+    /**
+     * Sets swerve module's speed
+     */
     public double getSpeed() {
         return driveFx.getSelectedSensorVelocity();
     }
-    //gets loop error
+
+    /**
+     * gets closed looperror
+     */
     public double getClosedLoopError() {
         return steerFx.getClosedLoopError();
     }

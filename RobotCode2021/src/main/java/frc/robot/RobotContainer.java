@@ -217,6 +217,8 @@ public class RobotContainer {
     intakePistonSubsystem = new IntakePistonSubsystem();
 
     // Must be initialized after intake
+    //the first boolean determines to use field orientation if true
+    // the second boolean if true halves the speed
     swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
 
     kickerSubsystem = new KickerSubsystem();
