@@ -127,6 +127,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       double FLSpeed = swerveMath.getFrontLeftSpeed();
       double BLSpeed = swerveMath.getBackLeftSpeed();
 
+      //
+      //  scaling speed to be between -1 - 1
       double max = FRSpeed;
       if(BRSpeed > max) { max = BRSpeed; }
       if(FLSpeed > max) { max = FLSpeed; }
@@ -140,7 +142,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       }
 
       //System.out.println("BLAngle: " + BLAngle + " | FLAngle: " + FLAngle);
-
+      //
+      //  slow speed if need be.
       if(slowSpeed) {
         FRSpeed *= 0.5;
         BRSpeed *= 0.5;
@@ -164,6 +167,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       //logger.log(Level.INFO, "BR_CLE:" + BRDrive.getClosedLoopError());
       //logger.log(Level.INFO, "FL_CLE:" + FLDrive.getClosedLoopError());
       //logger.log(Level.INFO, "BL_CLE:" + BLDrive.getClosedLoopError());
+      FRDrive.drive(FRSpeed, FRAngle);
+      BRDrive.drive(BRSpeed, BRAngle);
+      FLDrive.drive(FLSpeed, FLAngle);
+      BLDrive.drive(BLSpeed, BLAngle);
     } else {
       FRDrive.drive(0.0, swerveMath.getFrontRightAngle());
       BRDrive.drive(0.0, swerveMath.getBackRightAngle());
