@@ -13,6 +13,9 @@ import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,6 +23,8 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import frc.robot.Constants;
 
 public class SwerveModule {
+
+    private static final double maxSpeed = Units.feetToMeters(16.2);
 
     private WPI_TalonFX driveFx;
 
@@ -143,11 +148,17 @@ public class SwerveModule {
         }
     }
 
+    public void drive(SwerveModuleState state) {
+        SwerveModuleState optimized = SwerveModuleState.optimize(state, getAngle());
+        setAngle(optimized.angle.getDegrees());
+        setSpeed(optimized.speedMetersPerSecond / maxSpeed);
+    }
+
     /**
      * Sets swerve module's angle
      */
-    public double getAngle() {
-        return steerEncoder.getAbsolutePosition();
+    public Rotation2d getAngle() {
+        return Rotation2d.fromDegrees(steerEncoder.getAbsolutePosition());
     }
 
     /**
