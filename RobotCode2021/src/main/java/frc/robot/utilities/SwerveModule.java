@@ -39,7 +39,7 @@ public class SwerveModule {
                             6 * Math.PI));
 
     private static final Logger logger = Logger.getLogger(SwerveModule.class.getName());
-
+    private final double RADIUS = 0.1016;
     private boolean canDrive = false;
     
     /**
@@ -150,7 +150,7 @@ public class SwerveModule {
     }
     //gets speed  of wheel
     public double getSpeed() {
-        return driveFx.getSelectedSensorVelocity();
+        return ((driveFx.getSelectedSensorVelocity() * 10 / 2048) * RADIUS * Math.PI) / 6.86;
     }
     public SwerveModuleState getSwerveStates(){
         return new SwerveModuleState(getSpeed(), getAngle());

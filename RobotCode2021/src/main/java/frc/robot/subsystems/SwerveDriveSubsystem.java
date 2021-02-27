@@ -222,6 +222,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   public void drive(SwerveModuleState[] states) {
     logger.entering(SwerveDriveSubsystem.class.getName(), "drive");
 
+    System.out.println("Set FL:" + states[0].toString());
+    System.out.println("Set FR:" + states[1].toString());
+    System.out.println("Set BL:" + states[2].toString());
+    System.out.println("Set BR:" + states[3].toString());
     FLDrive.drive(states[0]);
     FRDrive.drive(states[1]);
     BLDrive.drive(states[2]);
@@ -235,6 +239,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     BLDrive.setSpeed(0);
     BRDrive.setSpeed(0);
   }
+
+  public void resetWheels(){
+    FLDrive.setAngle(0);
+    FRDrive.setAngle(0);
+    BLDrive.setAngle(0);
+    BRDrive.setAngle(0);
+  }
   
   public SwerveDriveKinematics getKinematics() {
     return m_kinematics;
@@ -245,6 +256,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   }
   @Override
   public void periodic() {
+    System.out.println("Get FL:" + FLDrive.getSwerveStates());
+    System.out.println("Get FR:" + FRDrive.getSwerveStates());
+    System.out.println("Get BL:" + BLDrive.getSwerveStates());
+    System.out.println("Get BR:" + BRDrive.getSwerveStates());
+    System.out.println("Pose: " + od.getPoseMeters());
     od.update(Rotation2d.fromDegrees(gyroAngle), FLDrive.getSwerveStates(), FRDrive.getSwerveStates(), BLDrive.getSwerveStates(), BRDrive.getSwerveStates());
   }
 

@@ -43,7 +43,7 @@ import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.commands.hoppercommands.SetAutonomousHopperCommand;
 import frc.robot.commands.hoppercommands.SetHopperCommand;
 import frc.robot.commands.turretcommads.AutoTurretTurnCommand;
-
+import frc.robot.commands.drivecommands.ResetSwerveDriveCommand;
 import frc.robot.commands.drivecommands.StopDriveCommand;
 import frc.robot.commands.turretcommads.AutoAimAutonomousCommand;
 import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
@@ -68,7 +68,7 @@ public class TestCommand extends SequentialCommandGroup {
         // this is our config for how much power goes to the motors
         var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getKinematics(), Constants.KMAXSPEED);
         //PID values
-        int kP = 1;
+        int kP = 0;
         int kI = 0;
         int kD = 0;
         double maxV = Math.PI * 2;
@@ -106,7 +106,7 @@ public class TestCommand extends SequentialCommandGroup {
         // -------- Trajectories -------- \\
         // Generates a trajectory 
 
-        String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/GalaticSearch_A_Red.wpilib.json";
+        String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/Test.wpilib.json";
     Trajectory trajectory;
     try {
         Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
@@ -144,8 +144,9 @@ public class TestCommand extends SequentialCommandGroup {
 
         // add commands here to run during auto
         addCommands(
-        command1,
-        new StopDriveCommand(dSubsystem)
+            new ResetSwerveDriveCommand(dSubsystem),
+            command1,
+            new StopDriveCommand(dSubsystem)
         );
         //returnIntakeCommand);
     }
