@@ -13,6 +13,7 @@ import frc.robot.subsystems.ColorSensorSubsystem;
 
 import com.revrobotics.ColorSensorV3;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -22,6 +23,7 @@ public class PositionalControlTrackerCommandTest {
     PositionalControlTrackerCommand positionalControlTrackerCommand = new PositionalControlTrackerCommand(subsystem);
 
     @Test
+    @Ignore
     public void getNearestColorTest() {
         //all color tests need to run initalized
         positionalControlTrackerCommand.initialize();

@@ -37,8 +37,6 @@ public class SwerveModule {
                             6 * Math.PI));
 
     private static final Logger logger = Logger.getLogger(SwerveModule.class.getName());
-
-    private boolean canDrive = false;
     
     /**
      * Helper class for a swerve wheel. Holds two Falcon500's.
@@ -97,16 +95,14 @@ public class SwerveModule {
     }
     //setting the speed of wheel
     public void setSpeed(double speed) {
-        //if(canDrive) {
         driveFx.set(ControlMode.PercentOutput, speed);
         SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
-        //}
     }
     // setting speed and angle
     public void drive(double speed, double rotation) {
 
         // Difference of the current and target angles
-        double diff = getAngle() - rotation;
+        /*double diff = getAngle() - rotation;
 
         // If we are more than 90 deg away...
         if(Math.abs(diff) > 90) {
@@ -121,10 +117,10 @@ public class SwerveModule {
             // Set the speed to be the other way
             setSpeed(-speed);
             setAngle(rotation);
-        } else {
+        } else {*/
             setSpeed(speed);
             setAngle(rotation);
-        }
+        //}
     }
     //gets the angle of wheel
     public double getAngle() {

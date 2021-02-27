@@ -217,7 +217,7 @@ public class RobotContainer {
     intakePistonSubsystem = new IntakePistonSubsystem();
 
     // Must be initialized after intake
-    swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
+    swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, true, true);
 
     kickerSubsystem = new KickerSubsystem();
 
