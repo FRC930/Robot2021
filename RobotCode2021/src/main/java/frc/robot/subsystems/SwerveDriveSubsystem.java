@@ -165,10 +165,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       BLSpeed *= 0.5;
     }
 
-    SmartDashboard.putNumber("FRAngle: ", swerveMath.getFrontRightAngle(targetX, targetY, rotation));
-    SmartDashboard.putNumber("BRAngle: ", swerveMath.getBackRightAngle(targetX, targetY, rotation));
-    SmartDashboard.putNumber("FLAngle: ", swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
-    SmartDashboard.putNumber("BLAngle: ", swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+    SmartDashboard.putNumber("FRAngle: ", FRAngle); 
+    SmartDashboard.putNumber("BRAngle: ", BRAngle); 
+    SmartDashboard.putNumber("FLAngle: ", FLAngle); 
+    SmartDashboard.putNumber("BLAngle: ", BLAngle);
 
     /*
     logger.log(Level.INFO, "FRAngle: " + FRDrive.getAngle());
