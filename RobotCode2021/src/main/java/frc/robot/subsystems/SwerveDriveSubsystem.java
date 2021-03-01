@@ -7,29 +7,19 @@
 //DO NOT GO BACK TO ZERO AFTER LET GO
 package frc.robot.subsystems;
 
-import frc.robot.utilities.SwerveModule;
-import frc.robot.utilities.SwerveMath;
-
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
-import edu.wpi.first.wpilibj.AnalogEncoder;
-import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpiutil.math.VecBuilder;
+import frc.robot.utilities.SwerveModule;
 
 //-------- SUBSYSTEM CLASS --------\\
 
@@ -43,11 +33,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   
   private final PigeonIMU gyro;
   private boolean usingGyro;
-
   private boolean slowSpeed;
 
-  private static final double maxSpeed = Units.feetToMeters(16.2);
-  private static final double maxAngularSpeed = 3 * Math.PI;
+  private static final double maxSpeed = .75;
+  private static final double maxAngularSpeed = 1;
 
   private final Translation2d m_frontLeftLocation = new Translation2d(
     Units.inchesToMeters(10.625),
@@ -65,9 +54,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     Units.inchesToMeters(-10.625),
     Units.inchesToMeters(-9.25)
   );
-
-  private double prevX = 0;
-  private double prevY = 0;
 
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
@@ -99,12 +85,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    * @param rotation The Y position of the controller (Right stick)
    */
   public void drive(double targetX, double targetY, double rotation) {
-    double heading = Rotation2d.fromDegrees(gyro.getFusedHeading());
-    double speedForward = targetX * maxSpeed;
-    double speedStrafe = targetY * maxSpeed;
+    Rotation2d heading = Rotation2d.fromDegrees(gyro.getFusedHeading());
+    double speedForward = targetY * maxSpeed;
+    double speedStrafe = targetX * maxSpeed;
     double speedRotation = rotation * maxAngularSpeed;
 
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speedForward, speedStrafe, speedRotation, heading)
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speedForward, speedStrafe, speedRotation, heading);
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(speeds);
 
     FLDrive.drive(states[0]);
