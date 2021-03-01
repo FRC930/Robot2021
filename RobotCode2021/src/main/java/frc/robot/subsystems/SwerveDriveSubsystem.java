@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.utilities.SwerveModule;
 
 //-------- SUBSYSTEM CLASS --------\\
@@ -34,9 +36,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private final PigeonIMU gyro;
   private boolean usingGyro;
   private boolean slowSpeed;
-
-  private static final double maxSpeed = .75;
-  private static final double maxAngularSpeed = 1;
+  private SwerveDriveOdometry od;
+  private double gyroAngle;
 
   private final Translation2d m_frontLeftLocation = new Translation2d(
     Units.inchesToMeters(10.625),
@@ -64,6 +65,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     setDriveMotors();
     gyro = new PigeonIMU(intake.getIntakeMotor());
     this.usingGyro = usingGyro;
+    this.slowSpeed = slowSpeed;
+    od = new SwerveDriveOdometry(m_kinematics, Rotation2d.fromDegrees(0.0));
   }
 
   // -------- METHODS --------\\
@@ -85,10 +88,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    * @param rotation The Y position of the controller (Right stick)
    */
   public void drive(double targetX, double targetY, double rotation) {
+    logger.entering(SwerveDriveSubsystem.class.getName(), "drive");
+
     Rotation2d heading = Rotation2d.fromDegrees(gyro.getFusedHeading());
-    double speedForward = targetY * maxSpeed;
-    double speedStrafe = targetX * maxSpeed;
-    double speedRotation = rotation * maxAngularSpeed;
+    double speedForward = targetY * Constants.KMAXSPEED;
+    double speedStrafe = targetX * Constants.KMAXSPEED;
+    double speedRotation = rotation * Constants.KMAXANGULARSPEED;
 
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speedForward, speedStrafe, speedRotation, heading);
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(speeds);
@@ -97,6 +102,43 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     FRDrive.drive(states[1]);
     BLDrive.drive(states[2]);
     BRDrive.drive(states[3]);
+    logger.exiting(SwerveDriveSubsystem.class.getName(), "drive");
   } // end of method drive()
 
+  public void drive(SwerveModuleState[] states) {
+    logger.entering(SwerveDriveSubsystem.class.getName(), "drive");
+
+    FLDrive.drive(states[0]);
+    FRDrive.drive(states[1]);
+    BLDrive.drive(states[2]);
+    BRDrive.drive(states[3]);
+    logger.exiting(SwerveDriveSubsystem.class.getName(), "drive");
+  } // end of method drive()
+
+  public void stop(){
+    FLDrive.setSpeed(0);
+    FRDrive.setSpeed(0);
+    BLDrive.setSpeed(0);
+    BRDrive.setSpeed(0);
+  }
+
+  public void resetWheels(){
+    FLDrive.setAngle(0);
+    FRDrive.setAngle(0);
+    BLDrive.setAngle(0);
+    BRDrive.setAngle(0);
+  }
+
+  public SwerveDriveKinematics getKinematics() {
+    return m_kinematics;
+  }
+  
+  public Pose2d getPose(){
+    return od.getPoseMeters();
+  }
+
+  @Override
+  public void periodic() {
+    od.update(Rotation2d.fromDegrees(gyroAngle), FLDrive.getSwerveStates(), FRDrive.getSwerveStates(), BLDrive.getSwerveStates(), BRDrive.getSwerveStates());
+  }
 } // end of the class DriveSubsystem

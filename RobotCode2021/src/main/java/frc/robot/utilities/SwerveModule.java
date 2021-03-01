@@ -10,6 +10,8 @@ import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import frc.robot.Constants;
@@ -33,6 +35,7 @@ public class SwerveModule {
 
     private static final Logger logger = Logger.getLogger(SwerveModule.class.getName());
 
+    private final double RADIUS = 0.1016;
     
     /**
      * Helper class for a swerve wheel. Holds two Falcon500's.
@@ -44,14 +47,9 @@ public class SwerveModule {
         driveFx = new WPI_TalonFX(driveID);
         steerFx = new WPI_TalonFX(turnID);
         steerEncoder = new CANCoder(encID);
-        //steerEncoder.
-
-        //steerFx.configSelectedFeedbackSensor(RemoteFeedbackDevice);
 
         //Set PID limits 
         m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
-
-        driveFx.configOpenloopRamp(2);
     }
 
     /**
@@ -92,7 +90,7 @@ public class SwerveModule {
     public void drive(SwerveModuleState state) {
         SwerveModuleState optimized = SwerveModuleState.optimize(state, getAngle());
         double angle = optimized.angle.getDegrees();
-        double speed = optimized.speedMetersPerSecond;
+        double speed = optimized.speedMetersPerSecond / Constants.KMAXSPEED;
 
         if (speed != 0) {
             setAngle(angle);
@@ -103,18 +101,18 @@ public class SwerveModule {
         setSpeed(speed);
     }
 
-    /**
-     * Sets swerve module's angle
-     */
+    //gets the angle of wheel
     public Rotation2d getAngle() {
         return Rotation2d.fromDegrees(steerEncoder.getAbsolutePosition());
     }
 
-    /**
-     * Sets swerve module's speed
-     */
+    //gets speed  of wheel
     public double getSpeed() {
-        return driveFx.getSelectedSensorVelocity();
+        return ((driveFx.getSelectedSensorVelocity() * 10 / 2048) * RADIUS * Math.PI) / 6.86;
+    }
+    
+    public SwerveModuleState getSwerveStates(){
+        return new SwerveModuleState(getSpeed(), getAngle());
     }
 
     /**

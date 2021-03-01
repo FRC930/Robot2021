@@ -155,6 +155,7 @@ public final class Constants {
     public static final double KAVOLT = 0.0249; //this is in seconds squared per meter 
     public static final double KMAXSPEED = 3.5; //in meters per second
     public static final double KMAXACCELERATION = 3; //in meters per seconds squared 
+    public static final double KMAXANGULARSPEED = Math.PI;
     //gyro values
     public static final double KRAMSETEB = 2;
     public static final double KRAMSETEZETA = 0.7;
