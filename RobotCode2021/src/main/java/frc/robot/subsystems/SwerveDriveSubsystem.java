@@ -31,9 +31,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.VecBuilder;
 
 //-------- SUBSYSTEM CLASS --------\\
-
+/*
 public class SwerveDriveSubsystem extends SubsystemBase {
-
+/*
   // -------- DECLARATIONS --------\\
   private SwerveModule FRDrive;
   private SwerveModule BRDrive;
@@ -49,10 +49,23 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   private boolean slowSpeed;
 
-  private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
-  private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
-  private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
-  private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
+  private final Translation2d m_frontLeftLocation = new Translation2d(
+    Units.inchesToMeters(10.625),
+    Units.inchesToMeters(9.25)
+  );
+  private final Translation2d m_frontRightLocation = new Translation2d(
+    Units.inchesToMeters(10.625),
+    Units.inchesToMeters(-9.25)
+  );
+  private final Translation2d m_backLeftLocation = new Translation2d(
+    Units.inchesToMeters(-10.625),
+    Units.inchesToMeters(9.25)
+  );
+  private final Translation2d m_backRightLocation = new Translation2d(
+    Units.inchesToMeters(-10.625),
+    Units.inchesToMeters(-9.25)
+  );
+
   private double prevX = 0;
   private double prevY = 0;
 
@@ -62,7 +75,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 /*
   private final SwerveDrivePoseEstimator m_poseEstimator =
       new SwerveDrivePoseEstimator(
-          new Rotation2d(Units.degreesToRadians(m_gyro.getAbsoluteCompassHeading())),
+          new Rotation2d(Units.degreesToRadians(gyro.getAbsoluteCompassHeading())),
           new Pose2d(),
           m_kinematics,
           VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
@@ -70,7 +83,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
           VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 */
   // -------- CONSTRUCTOR --------\\
-
+/*
   public SwerveDriveSubsystem(IntakeMotorSubsystem intake, boolean usingGyro, boolean slowSpeed) {
     setDriveMotors();
     gyro = new PigeonIMU(intake.getIntakeMotor());
@@ -92,6 +105,22 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     BLDrive = new SwerveModule(2, 6, 10);
   }
 
+  // Assumption --  rotation: (-180 - 180) and gyroAngle: (-180 - 180)
+  public double applyGyroAngle( double rotation, double gyroAngle) {
+    boolean addAngle = false;
+    // NOTE: May want to add instead gyroAngle
+    double newRotation = rotation + ((addAngle?1:-1) * gyroAngle);
+    if (newRotation > 180 )  {
+      // example 225 -> -135
+      newRotation = newRotation - 360;
+    } else if (newRotation < -180 ) {
+      // example -225 -> 135
+      newRotation = newRotation + 360;
+    }
+    // Output needs to be between -180 and 180
+    return newRotation;
+  }
+
   /**
    * Sets each swerve module's angle and speed
    * 
@@ -99,6 +128,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    * @param targetY  The Y position of the controller (Left stick)
    * @param rotation The Y position of the controller (Right stick)
    */
+/*
   public void drive(double targetX, double targetY, double rotation) {
     logger.entering(SwerveDriveSubsystem.class.getName(), "drive");
     /*
@@ -107,6 +137,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("FLAngle: ",swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
     SmartDashboard.putNumber("BLAngle: ",swerveMath.getBackLeftAngle(targetX, targetY, rotation));
     */
+/*
     double FRAngle = swerveMath.getFrontRightAngle(targetX, targetY, rotation);
     double BRAngle = swerveMath.getBackRightAngle(targetX, targetY, rotation);
     double FLAngle = swerveMath.getFrontLeftAngle(targetX, targetY, rotation);
@@ -126,10 +157,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
       System.out.println(gyroAngle);
 
-      FRAngle += gyroAngle;
-      BRAngle += gyroAngle;
-      FLAngle += gyroAngle;
-      BLAngle += gyroAngle;
+      FRAngle = applyGyroAngle(FRAngle, gyroAngle);
+      BRAngle = applyGyroAngle(BRAngle, gyroAngle);
+      FLAngle = applyGyroAngle(FLAngle, gyroAngle);
+      BLAngle = applyGyroAngle(BLAngle, gyroAngle);
     }
 
     //System.out.println("BLAngle: " + BLAngle + " | FLAngle: " + FLAngle);
@@ -141,10 +172,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       BLSpeed *= 0.5;
     }
 
-    SmartDashboard.putNumber("FRAngle: ", swerveMath.getFrontRightAngle(targetX, targetY, rotation));
-    SmartDashboard.putNumber("BRAngle: ", swerveMath.getBackRightAngle(targetX, targetY, rotation));
-    SmartDashboard.putNumber("FLAngle: ", swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
-    SmartDashboard.putNumber("BLAngle: ", swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+    SmartDashboard.putNumber("FRAngle: ", FRAngle); 
+    SmartDashboard.putNumber("BRAngle: ", BRAngle); 
+    SmartDashboard.putNumber("FLAngle: ", FLAngle); 
+    SmartDashboard.putNumber("BLAngle: ", BLAngle);
 
     /*
     logger.log(Level.INFO, "FRAngle: " + FRDrive.getAngle());
@@ -157,7 +188,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     //logger.log(Level.INFO, "BR_CLE:" + BRDrive.getClosedLoopError());
     //logger.log(Level.INFO, "FL_CLE:" + FLDrive.getClosedLoopError());
     //logger.log(Level.INFO, "BL_CLE:" + BLDrive.getClosedLoopError());
-    
+/*
     if(Math.abs(targetX) > Math.pow(0.1, 3) || Math.abs(targetY) > Math.pow(0.1, 3)){
       prevX = targetX;
       prevY = targetY;
@@ -167,6 +198,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       FLDrive.drive(swerveMath.getFrontLeftSpeed(targetX, targetY, rotation), swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
       BLDrive.drive(swerveMath.getBackLeftSpeed(targetX, targetY, rotation), swerveMath.getBackLeftAngle(targetX, targetY, rotation));
       */
+/*
       FRDrive.drive(FRSpeed, FRAngle);
       BRDrive.drive(BRSpeed, BRAngle);
       FLDrive.drive(FLSpeed, FLAngle);
@@ -182,3 +214,4 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   } // end of method drive()
 
 } // end of the class DriveSubsystem
+*/

@@ -86,12 +86,28 @@ public class DriveSubsystem extends SubsystemBase {
 
   private SwerveMath swerveMath;
 
-  private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
-  private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
-  private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
-  private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
+  private final Translation2d m_frontLeftLocation = new Translation2d(
+    Units.inchesToMeters(10.625),
+    Units.inchesToMeters(9.25)
+  );
+  private final Translation2d m_frontRightLocation = new Translation2d(
+    Units.inchesToMeters(10.625),
+    Units.inchesToMeters(-9.25)
+  );
+  private final Translation2d m_backLeftLocation = new Translation2d(
+    Units.inchesToMeters(-10.625),
+    Units.inchesToMeters(9.25)
+  );
+  private final Translation2d m_backRightLocation = new Translation2d(
+    Units.inchesToMeters(-10.625),
+    Units.inchesToMeters(-9.25)
+  );
   private double prevX = 0;
   private double prevY = 0;
+
+  private boolean usingGyro;
+
+  private boolean slowSpeed;
 
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
@@ -124,7 +140,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // -------- CONSTRUCTOR --------\\
 
-  public DriveSubsystem(int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, int _gyroID, DRIVE_TYPE _driveType) {
+  public DriveSubsystem(int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, int _gyroID, DRIVE_TYPE _driveType, IntakeMotorSubsystem _intake, boolean _usingGyro, boolean _slowSpeed) {
     
     driveType = _driveType;
 
@@ -136,12 +152,15 @@ public class DriveSubsystem extends SubsystemBase {
     switch(driveType) {
 
       case TANK_DRIVE:
-        setDriveMotors();
+        setTankDriveMotors();
         break;
 
       case SWERVE_DRIVE:
-        setDriveMotors();
+        setSwerveDriveMotors();
         swerveMath = new SwerveMath();
+        gyro = new PigeonIMU(_intake.getIntakeMotor());
+        usingGyro = _usingGyro;
+        slowSpeed = _slowSpeed;
         break;
 
       default: // default is error logging
@@ -154,74 +173,71 @@ public class DriveSubsystem extends SubsystemBase {
 
   //-------- METHODS --------\\
 
-  private void setDriveMotors() {
+  // TANK DRIVE
+  public void setTankDriveMotors() {
+    // instantiates the drive motors
+    tankRightFront = new WPI_TalonFX(driveRightFrontIDs[0]);
+    tankRightBack = new WPI_TalonFX(driveRightBackIDs[0]);
+    tankLeftFront = new WPI_TalonFX(driveLeftFrontIDs[0]);
+    tankLeftBack = new WPI_TalonFX(driveLeftBackIDs[0]);
 
-    switch(driveType) {
-      case TANK_DRIVE:
-        // instantiates the drive motors
-        tankRightFront = new WPI_TalonFX(driveRightFrontIDs[0]);
-        tankRightBack = new WPI_TalonFX(driveRightBackIDs[0]);
-        tankLeftFront = new WPI_TalonFX(driveLeftFrontIDs[0]);
-        tankLeftBack = new WPI_TalonFX(driveLeftBackIDs[0]);
-
-        // the talon that controls intake, used to get the piston
-        // TODO: Change this because IntakeSubsystem already instantiates this!
-        // Move gyro to port 16 so simulator does not break
-        if(RobotBase.isReal())
-        {
-          gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
-        } else {
-          gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID + 10);
-        }
-
-        // the gyro attached to the talon, used to track position and rotation
-        // TODO: Change this because GyroSubsystem already instantiates this!
-        gyro = new PigeonIMU(gyroTalon);
-      
-        shifter = new Solenoid(Constants.SHIFTER_SOLENOID_ID);
-
-        //shuffleboardUtility = ShuffleboardUtility.getInstance();
-
-        driveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
-
-        // Inverts the direction of the drive motors
-        tankLeftFront.setInverted(true);
-        tankLeftBack.setInverted(true);
-        tankRightFront.setInverted(false);
-        tankRightBack.setInverted(false);
-
-        // Resets drive motor encoders to 0
-        tankLeftFront.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
-        tankRightFront.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
-
-        tankLeftFront.setSensorPhase(true);
-        tankLeftBack.setSensorPhase(true);
-        tankRightFront.setSensorPhase(false);
-        tankRightBack.setSensorPhase(false);
-
-        // Mirror primary motor controllers on each side (Not when in simulation)
-        if(RobotBase.isReal()){
-          tankLeftBack.follow(tankLeftFront);
-          tankRightBack.follow(tankRightFront);
-        }
-        
-        // Sets the ramp rate of the robot, this will need to be configued
-        tankLeftFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
-        tankRightFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
-        // Sets up the differntial drive
-        // drive = new DifferentialDrive(tankRightFront, tankLeftFront);
-        shifter.set(true);
-        //endgameClamp.set(true);
-        break;
-
-      case SWERVE_DRIVE:
-        // instantiates the swerve modules on the robot (We use 4)
-        swerveRightFront = new SwerveModule(driveRightFrontIDs[0], driveRightFrontIDs[1], driveRightFrontIDs[2]);
-        swerveRightBack = new SwerveModule(driveRightBackIDs[0], driveRightBackIDs[1], driveRightBackIDs[2]);
-        swerveLeftFront = new SwerveModule(driveLeftFrontIDs[0], driveLeftFrontIDs[1], driveLeftFrontIDs[2]);
-        swerveLeftBack = new SwerveModule(driveLeftBackIDs[0], driveLeftBackIDs[1], driveLeftBackIDs[2]);
-        break;
+    // the talon that controls intake, used to get the piston
+    // TODO: Change this because IntakeSubsystem already instantiates this!
+    // Move gyro to port 16 so simulator does not break
+    if(RobotBase.isReal())
+    {
+      gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
+    } else {
+      gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID + 10);
     }
+
+    // the gyro attached to the talon, used to track position and rotation
+    // TODO: Change this because GyroSubsystem already instantiates this!
+    gyro = new PigeonIMU(gyroTalon);
+  
+    shifter = new Solenoid(Constants.SHIFTER_SOLENOID_ID);
+
+    //shuffleboardUtility = ShuffleboardUtility.getInstance();
+
+    driveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+
+    // Inverts the direction of the drive motors
+    tankLeftFront.setInverted(true);
+    tankLeftBack.setInverted(true);
+    tankRightFront.setInverted(false);
+    tankRightBack.setInverted(false);
+
+    // Resets drive motor encoders to 0
+    tankLeftFront.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
+    tankRightFront.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
+
+    tankLeftFront.setSensorPhase(true);
+    tankLeftBack.setSensorPhase(true);
+    tankRightFront.setSensorPhase(false);
+    tankRightBack.setSensorPhase(false);
+
+    // Mirror primary motor controllers on each side (Not when in simulation)
+    if(RobotBase.isReal()){
+      tankLeftBack.follow(tankLeftFront);
+      tankRightBack.follow(tankRightFront);
+    }
+    
+    // Sets the ramp rate of the robot, this will need to be configued
+    tankLeftFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
+    tankRightFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
+    // Sets up the differntial drive
+    // drive = new DifferentialDrive(tankRightFront, tankLeftFront);
+    shifter.set(true);
+    //endgameClamp.set(true);
+  }
+
+  // SWERVE DRIVE
+  public void setSwerveDriveMotors() {
+    // instantiates the swerve modules on the robot (We use 4)
+    swerveRightFront = new SwerveModule(driveRightFrontIDs[0], driveRightFrontIDs[1], driveRightFrontIDs[2]);
+    swerveRightBack = new SwerveModule(driveRightBackIDs[0], driveRightBackIDs[1], driveRightBackIDs[2]);
+    swerveLeftFront = new SwerveModule(driveLeftFrontIDs[0], driveLeftFrontIDs[1], driveLeftFrontIDs[2]);
+    swerveLeftBack = new SwerveModule(driveLeftBackIDs[0], driveLeftBackIDs[1], driveLeftBackIDs[2]);
   }
 
   // TANK DRIVE
@@ -250,6 +266,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
+  // TANK DRIVE: Drive method
   /**
    * Sets the left and right drivetrain motors to the speeds passed through the
    * parameters
@@ -281,8 +298,43 @@ public class DriveSubsystem extends SubsystemBase {
     logger.exiting(DriveSubsystem.class.getName(), "tankDrive()");
   } // end of method runAt()
 
+  // SWERVE DRIVE: Drive method
   public void swerveDrive(double targetX, double targetY, double rotation) {
-    logger.entering(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
+    logger.entering(DriveSubsystem.class.getName(), "swerveDrive()");
+
+    double FRAngle = swerveMath.getFrontRightAngle(targetX, targetY, rotation);
+    double BRAngle = swerveMath.getBackRightAngle(targetX, targetY, rotation);
+    double FLAngle = swerveMath.getFrontLeftAngle(targetX, targetY, rotation);
+    double BLAngle = swerveMath.getBackLeftAngle(targetX, targetY, rotation);
+
+    double FRSpeed = swerveMath.getFrontRightSpeed(targetX, targetY, rotation);
+    double BRSpeed = swerveMath.getBackRightSpeed(targetX, targetY, rotation);
+    double FLSpeed = swerveMath.getFrontLeftSpeed(targetX, targetY, rotation);
+    double BLSpeed = swerveMath.getBackLeftSpeed(targetX, targetY, rotation);
+
+    if(usingGyro) {
+      double gyroAngle = gyro.getFusedHeading();
+      //gyroAngle = gyroAngle % 360;
+      //gyroAngle -= 180;
+
+      gyroAngle = Math.IEEEremainder(gyroAngle, 360);
+
+      System.out.println(gyroAngle);
+
+      FRAngle = applyGyroAngle(FRAngle, gyroAngle);
+      BRAngle = applyGyroAngle(BRAngle, gyroAngle);
+      FLAngle = applyGyroAngle(FLAngle, gyroAngle);
+      BLAngle = applyGyroAngle(BLAngle, gyroAngle);
+    }
+
+    //System.out.println("BLAngle: " + BLAngle + " | FLAngle: " + FLAngle);
+
+    if(slowSpeed) {
+      FRSpeed *= 0.5;
+      BRSpeed *= 0.5;
+      FLSpeed *= 0.5;
+      BLSpeed *= 0.5;
+    }
 
     SmartDashboard.putNumber("FRAngle: ",swerveMath.getFrontRightAngle(targetX, targetY, rotation));
     SmartDashboard.putNumber("BRAngle: ", swerveMath.getBackRightAngle(targetX, targetY, rotation));
@@ -303,10 +355,16 @@ public class DriveSubsystem extends SubsystemBase {
     if(Math.abs(targetX) > Math.pow(0.1, 3) || Math.abs(targetY) > Math.pow(0.1, 3)){
       prevX = targetX;
       prevY = targetY;
+      /*
       swerveRightFront.drive(swerveMath.getFrontRightSpeed(targetX, targetY, rotation), swerveMath.getFrontRightAngle(targetX, targetY, rotation));
       swerveRightBack.drive(swerveMath.getBackRightSpeed(targetX, targetY, rotation), swerveMath.getBackRightAngle(targetX, targetY, rotation));
       swerveLeftFront.drive(swerveMath.getFrontLeftSpeed(targetX, targetY, rotation), swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
       swerveLeftBack.drive(swerveMath.getBackLeftSpeed(targetX, targetY, rotation), swerveMath.getBackLeftAngle(targetX, targetY, rotation));
+      */
+      swerveRightFront.drive(FRSpeed, FRAngle);
+      swerveRightBack.drive(BRSpeed, BRAngle);
+      swerveLeftFront.drive(FLSpeed, FLAngle);
+      swerveLeftBack.drive(BLSpeed, BLAngle);
     } else {
       swerveRightFront.drive(swerveMath.getFrontRightSpeed(targetX, targetY, rotation), swerveMath.getFrontRightAngle(prevX, prevY, rotation));
       swerveRightBack.drive(swerveMath.getBackRightSpeed(targetX, targetY, rotation), swerveMath.getBackRightAngle(prevX, prevY, rotation));
@@ -314,7 +372,7 @@ public class DriveSubsystem extends SubsystemBase {
       swerveLeftBack.drive(swerveMath.getBackLeftSpeed(targetX, targetY, rotation), swerveMath.getBackLeftAngle(prevX, prevY, rotation));
     }
 
-    logger.exiting(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
+    logger.exiting(DriveSubsystem.class.getName(), "swerveDrive()");
   } // end of method drive()
 
   // TANK DRIVE
@@ -477,7 +535,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   // TANK DRIVE
-  // TODO: Error creation and handling
   /**
      * Returns the position from the odometry
      * 
@@ -516,7 +573,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   // TANK DRIVE
-  // TODO: Error creation and handling
+  // TODO: Figure out what the heck this does
   public void periodic() throws RuntimeException{
     //logger.entering(DriveSubsystem.class.getName(), "periodic()");
 
@@ -531,6 +588,23 @@ public class DriveSubsystem extends SubsystemBase {
 
     //logger.log(Constants.LOG_LEVEL_FINE, "Rotations: " + Rotation2d.fromDegrees(getHeading()) + "|| Left wheel rotations: " + getLeftWheelRotations() + "|| Right wheel rotations " + getRightWheelRotations());
     //logger.exiting(DriveSubsystem.class.getName(), "periodic()");  
+  }
+
+  // SWERVE DRIVE: helper method (no need for error creation and handling)
+  // Assumption --  rotation: (-180 - 180) and gyroAngle: (-180 - 180)
+  public double applyGyroAngle( double rotation, double gyroAngle) {
+    boolean addAngle = false;
+    // NOTE: May want to add instead gyroAngle
+    double newRotation = rotation + ((addAngle?1:-1) * gyroAngle);
+    if (newRotation > 180 )  {
+      // example 225 -> -135
+      newRotation = newRotation - 360;
+    } else if (newRotation < -180 ) {
+      // example -225 -> 135
+      newRotation = newRotation + 360;
+    }
+    // Output needs to be between -180 and 180
+    return newRotation;
   }
 
 } // end of the class DriveSubsystem

@@ -2,7 +2,7 @@ package frc.robot.commands.drivecommands;
 
 import frc.robot.Constants;
 
-import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,7 +15,7 @@ public class SwerveDriveCommand extends CommandBase{
 
   //-------- DECLARATIONS --------\\
 
-  private final SwerveDriveSubsystem sdSubsystem;
+  private final DriveSubsystem sdSubsystem;
   private final Joystick driveStick;
   private int driverLeftX;
   private int driverLeftY;
@@ -25,7 +25,7 @@ public class SwerveDriveCommand extends CommandBase{
 
   //-------- CONSTRUCTOR --------\\
 
-  public SwerveDriveCommand(SwerveDriveSubsystem _sdSubsystem, Joystick _driverStick, int _driverLeftX, int _driverLeftY, int _driverRightX) {
+  public SwerveDriveCommand(DriveSubsystem _sdSubsystem, Joystick _driverStick, int _driverLeftX, int _driverLeftY, int _driverRightX) {
     sdSubsystem = _sdSubsystem;
     driveStick = _driverStick;
     setSwerveAxis(_driverLeftX, _driverLeftY, _driverRightX);
@@ -64,15 +64,15 @@ public class SwerveDriveCommand extends CommandBase{
 
     // TODO: Create deadband constants for each axis
     // Set value to zero if under deadband limit
-    if (Math.abs(leftX) < 0.01) {
+    if (Math.abs(leftX) < 0.1) {
         logger.log(Level.INFO, "leftX < Left Joystick's X-Axis Deadband");
         leftX = 0;
     }
-    if (Math.abs(leftY) < 0.01) {
+    if (Math.abs(leftY) < 0.1) {
         logger.log(Level.INFO, "leftY < Left Joystick's Y-Axis Deadband");
         leftY = 0;
     }
-    if (Math.abs(rightX) < 0.01) {
+    if (Math.abs(rightX) < 0.1) {
         logger.log(Level.INFO, "rightX < Right Joystick's Y-Axis Deadband");
         rightX = 0;
     }
@@ -87,7 +87,7 @@ public class SwerveDriveCommand extends CommandBase{
     SmartDashboard.putNumber("Drive Rightx", rightX);
   
     // Sends resulting values to SwerveDriveSubsystem for the values to be translated into physical movement
-    sdSubsystem.drive(leftX, leftY, rightX);
+    sdSubsystem.swerveDrive(leftX, leftY, rightX);
 
   } // End of run() method
 

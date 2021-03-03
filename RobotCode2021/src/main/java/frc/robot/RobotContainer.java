@@ -137,7 +137,7 @@ public class RobotContainer {
 
   // --Drive subsystem
   private DriveSubsystem driveSubsystem;
-  private SwerveDriveSubsystem swerveDriveSubsystem;
+  //private SwerveDriveSubsystem swerveDriveSubsystem;
 
   // --Shooter stuff subsystems
   private final FlywheelSubsystem flywheelSubsystem;
@@ -226,8 +226,10 @@ public class RobotContainer {
     int[] drbid = {4, 8, 12};
     int[] dlbid = {2, 6, 10};
 
-    swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
-    driveSubsystem = new DriveSubsystem(drfid, dlfid, drbid, dlbid, 0, DRIVE_TYPE.SWERVE_DRIVE);
+    // Must be initialized after intake
+    //the first boolean determines to use field orientation if true
+    // the second boolean if true halves the speed
+    driveSubsystem = new DriveSubsystem(drfid, dlfid, drbid, dlbid, 0, DRIVE_TYPE.SWERVE_DRIVE, intakeMotorSubsystem, false, true);
 
     // (HOPPER_ID)
     hopperSubsystem = new HopperSubsystem(13);
@@ -260,7 +262,7 @@ public class RobotContainer {
     climberArmCommandGroup = new ClimberArmCommandGroup(climberArmSubsystem, coDriverController, XB_AXIS_LEFT_Y,
         new JoystickButton(coDriverController, XB_RB));
     // drive (NOTE: This is where we bind the driver controls to the drivetrain)
-    swerveDriveCommand = new SwerveDriveCommand(swerveDriveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
+    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
 
     // hopper
     defaultStopHopperCommand = new DefaultStopHopperCommand(hopperSubsystem);
@@ -475,7 +477,7 @@ public class RobotContainer {
       // ManualIntakeCommand(intakeMotorSubsystem, coDriverController,
       // XB_AXIS_RIGHT_Y));
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
-      scheduler.setDefaultCommand(swerveDriveSubsystem, driveCommand);
+      scheduler.setDefaultCommand(driveSubsystem, driveCommand);
       scheduler.setDefaultCommand(hopperSubsystem, defaultHopperCommand);
       scheduler.setDefaultCommand(flywheelSubsystem,
           new DefaultFlywheelCommand(flywheelSubsystem, Constants.FLYWHEEL_TELEOP_SPEED));
@@ -496,7 +498,7 @@ public class RobotContainer {
                                                                         // PIDController(Constants.TURRET_P,
                                                                         // Constants.TURRET_I, Constants.TURRET_D),
                                                                         // coDriverController, XB_AXIS_LEFT_X));
-    scheduler.setDefaultCommand(swerveDriveSubsystem, driveCommand);
+    scheduler.setDefaultCommand(driveSubsystem, driveCommand);
     scheduler.setDefaultCommand(hopperSubsystem, defaultStopHopperCommand);
     scheduler.setDefaultCommand(flywheelSubsystem,
         new DefaultFlywheelCommand(flywheelSubsystem, Constants.FLYWHEEL_TELEOP_SPEED));
