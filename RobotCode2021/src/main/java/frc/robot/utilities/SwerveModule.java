@@ -138,9 +138,9 @@ public class SwerveModule {
     public double getAngle() {
         return steerEncoder.getAbsolutePosition();
         
-        logger.entering(SwerveModule.class.getName(), "setSpeed()");
-        logger.log(Constants.LOG_LEVEL_FINER, "Angle \"" + steerEncoder.getAbsolutePosition() + "\" got.");
-        logger.exiting(SwerveModule.class.getName(), "setSpeed()");
+        //logger.entering(SwerveModule.class.getName(), "setSpeed()");
+        //logger.log(Constants.LOG_LEVEL_FINER, "Angle \"" + steerEncoder.getAbsolutePosition() + "\" got.");
+        //logger.exiting(SwerveModule.class.getName(), "setSpeed()");
     }
     //gets speed  of wheel
     public double getSpeed() {

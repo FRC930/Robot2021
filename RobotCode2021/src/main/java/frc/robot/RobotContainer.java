@@ -184,7 +184,7 @@ public class RobotContainer {
 
   // --Shooter commands
   // --Flywheel commands
-  // private final DefaultFlywheelCommand defaultFlywheelCommand;
+   private final DefaultFlywheelCommand defaultFlywheelCommand;
 
   // --Turret commands
   private final JoystickTurretCommand joystickTurretCommand; // For manual
@@ -253,7 +253,7 @@ public class RobotContainer {
     // TODO: Add LED commands here
 
     // Flywheel
-    // defaultFlywheelCommand = new DefaultFlywheelCommand(flywheelSubsystem);
+     defaultFlywheelCommand = new DefaultFlywheelCommand(flywheelSubsystem);
 
     // turret
     joystickTurretCommand = new JoystickTurretCommand(turretSubsystem, coDriverController, XB_AXIS_LEFT_X);
@@ -454,7 +454,7 @@ public class RobotContainer {
 
     scheduler.unregisterSubsystem(limelightSubsystem, hopperSubsystem, turretSubsystem, flywheelSubsystem,
         kickerSubsystem, towerSubsystem);
-
+    
     if (inManualMode) {
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
     } else {
@@ -465,8 +465,7 @@ public class RobotContainer {
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
       scheduler.setDefaultCommand(swerveDriveSubsystem, driveCommand);
       scheduler.setDefaultCommand(hopperSubsystem, defaultHopperCommand);
-      scheduler.setDefaultCommand(flywheelSubsystem,
-          new DefaultFlywheelCommand(flywheelSubsystem));
+      scheduler.setDefaultCommand(flywheelSubsystem, defaultFlywheelCommand);
       scheduler.setDefaultCommand(limelightSubsystem,
           new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
     }

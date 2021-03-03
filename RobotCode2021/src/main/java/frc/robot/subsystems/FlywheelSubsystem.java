@@ -10,14 +10,13 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
-//import frc.robot.utilities.ShuffleboardUtility;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.util.logging.Logger;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
-//import com.revrobotics.CANPIDController;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -38,7 +37,8 @@ public class FlywheelSubsystem extends SubsystemBase {
     private final CANSparkMax motorLead;
     private final CANSparkMax motor2;
 
-    //private CANPIDController pidcontroller;
+    private final CANEncoder encoder;
+
 
     // -------- CONSTRUCTOR --------\\
 
@@ -60,7 +60,7 @@ public class FlywheelSubsystem extends SubsystemBase {
         if(RobotBase.isReal()){
             motor2.follow(motorLead, true);
         }
-
+        encoder = motorLead.getEncoder();
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
     }
 
@@ -75,7 +75,7 @@ public class FlywheelSubsystem extends SubsystemBase {
     }
 
     public double getSpeed() {
-        return motorLead.getEncoder().getVelocity();
+        return encoder.getVelocity();
         
     }
 
