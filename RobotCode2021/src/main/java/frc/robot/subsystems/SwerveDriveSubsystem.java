@@ -98,6 +98,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speedForward, speedStrafe, speedRotation, heading);
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(speeds);
 
+    SwerveDriveKinematics.normalizeWheelSpeeds(states, Constants.KMAXSPEED);
+
     FLDrive.drive(states[0]);
     FRDrive.drive(states[1]);
     BLDrive.drive(states[2]);

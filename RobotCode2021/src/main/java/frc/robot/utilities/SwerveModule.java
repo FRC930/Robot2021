@@ -92,10 +92,12 @@ public class SwerveModule {
         double angle = optimized.angle.getDegrees();
         double speed = optimized.speedMetersPerSecond / Constants.KMAXSPEED;
 
-        if (speed != 0) {
+        if (speed > 0.00178 || speed < -0.00178) {
             setAngle(angle);
+            System.out.println("Speed:" + speed);
         } else {
             setAngle(previousAngle);
+            System.out.println("Previous:" + speed);
         }
 
         setSpeed(speed);

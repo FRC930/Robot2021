@@ -8,6 +8,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.util.Units;
+
 import java.util.logging.*;
 
 /**
@@ -153,7 +155,7 @@ public final class Constants {
     public static final double KSVOLTS = 0.411;
     public static final double KVVOLT = 0.227; 
     public static final double KAVOLT = 0.0249; //this is in seconds squared per meter 
-    public static final double KMAXSPEED = 3.5; //in meters per second
+    public static final double KMAXSPEED = Units.feetToMeters(16.2); //in meters per second
     public static final double KMAXACCELERATION = 3; //in meters per seconds squared 
     public static final double KMAXANGULARSPEED = Math.PI;
     //gyro values
