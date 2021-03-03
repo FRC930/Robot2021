@@ -229,7 +229,7 @@ public class RobotContainer {
     // Must be initialized after intake
     //the first boolean determines to use field orientation if true
     // the second boolean if true halves the speed
-    driveSubsystem = new DriveSubsystem(drfid, dlfid, drbid, dlbid, 0, DRIVE_TYPE.SWERVE_DRIVE, intakeMotorSubsystem, false, true);
+    driveSubsystem = new DriveSubsystem(drfid, dlfid, drbid, dlbid, DRIVE_TYPE.SWERVE_DRIVE, intakeMotorSubsystem, false, true);
 
     // (HOPPER_ID)
     hopperSubsystem = new HopperSubsystem(13);

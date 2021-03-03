@@ -140,7 +140,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // -------- CONSTRUCTOR --------\\
 
-  public DriveSubsystem(int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, int _gyroID, DRIVE_TYPE _driveType, IntakeMotorSubsystem _intake, boolean _usingGyro, boolean _slowSpeed) {
+  public DriveSubsystem(int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, DRIVE_TYPE _driveType, IntakeMotorSubsystem _intake, boolean _usingGyro, boolean _slowSpeed) {
     
     driveType = _driveType;
 
