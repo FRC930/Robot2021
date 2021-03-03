@@ -55,9 +55,9 @@ public class PositionalControlTrackerCommandTest {
         assertEquals("Yellow", outputString); //checks that the color Yellow is returned when yellowColor is sent through
 
         //when class getSensorColor() gets called in ColorSensorSubsystem.class, makes it return Unknown for the test
-        when(subsystem.getSensorColor()).thenReturn(blackColor);
-        outputString = positionalControlTrackerCommand.getNearestColor(blackColor); //tests color Black with getNearestColor
-        assertEquals("Unknown", outputString); //checks that the color Black is returned when blackColor is sent through
+        // when(subsystem.getSensorColor()).thenReturn(blackColor);
+        // outputString = positionalControlTrackerCommand.getNearestColor(blackColor); //tests color Black with getNearestColor
+        // assertEquals("Unknown", outputString); //checks that the color Black is returned when blackColor is sent through
 
         // //when class getSensorColor() gets called in ColorSensorSubsystem.class, makes it return Unknown for the test
         // when(subsystem.getSensorColor()).thenReturn(whiteColor);
