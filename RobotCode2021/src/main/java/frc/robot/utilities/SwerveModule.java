@@ -22,8 +22,7 @@ public class SwerveModule {
     private WPI_TalonFX steerFx;
 
     private CANCoder steerEncoder;
-    private double previousAngle = 0;
-
+    
     private final ProfiledPIDController m_turningPIDController =
             new ProfiledPIDController(
                     0.25,
@@ -73,7 +72,6 @@ public class SwerveModule {
         //SmartDashboard.putNumber("Error"+steerFx.getDeviceID(), m_turningPIDController.getPositionError());
         //SmartDashboard.putNumber("Abs_Rotation"+steerFx.getDeviceID(), steerEncoder.getAbsolutePosition());
 
-        previousAngle = rotation;
         logger.exiting(SwerveModule.class.getName(), "setAngle");
     }
 
@@ -92,12 +90,11 @@ public class SwerveModule {
         double angle = optimized.angle.getDegrees();
         double speed = optimized.speedMetersPerSecond / Constants.KMAXSPEED;
 
-        if (speed > 0.00178 || speed < -0.00178) {
+        //if (speed > 0.00178 || speed < -0.00178) {
+        if (speed != 0.0) {
             setAngle(angle);
-            System.out.println("Speed:" + speed);
         } else {
-            setAngle(previousAngle);
-            System.out.println("Previous:" + speed);
+            setAngle(getAngle().getDegrees());
         }
 
         setSpeed(speed);
