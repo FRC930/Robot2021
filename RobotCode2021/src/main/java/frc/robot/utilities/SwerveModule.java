@@ -43,6 +43,10 @@ public class SwerveModule {
      * @param turnID   ID for the turning motor
      */
     public SwerveModule(int driveID, int turnID, int encID) {
+        logger.entering(SwerveModule.class.getName(), "SwerveModule()");
+        logger.log(Constants.LOG_LEVEL_FINER, "Creating SwerveModule...");
+        logger.exiting(SwerveModule.class.getName(), "SwerveModule()");
+
         driveFx = new WPI_TalonFX(driveID);
         steerFx = new WPI_TalonFX(turnID);
         steerEncoder = new CANCoder(encID);
@@ -88,8 +92,14 @@ public class SwerveModule {
     * @param speed The speed from -1 to 1
     */
     public void setSpeed(double speed) {
+        logger.entering(SwerveModule.class.getName(), "setSpeed()");
+        
         driveFx.set(ControlMode.PercentOutput, speed);
         SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
+        
+        logger.log(Constants.LOG_LEVEL_FINER, "Set Wheel Speed to " + speed);
+        logger.exiting(SwerveModule.class.getName(), "setSpeed()");
+        //}
     }
 
     public void drive(SwerveModuleState state) {

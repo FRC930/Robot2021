@@ -105,7 +105,7 @@ public class LoadedSkilletCommand extends SequentialCommandGroup {
     // Creates RAMSETE Command for first trajectory
     RamseteCommand ramseteCommand1 = new RamseteCommand(
         initLineToTrench5Trajectory,
-        dSubsystem::getPose,
+        dSubsystem::getTankPose,
         new RamseteController(Constants.KRAMSETEB, Constants.KRAMSETEZETA),
         new SimpleMotorFeedforward(Constants.KSVOLTS,
                                    Constants.KVVOLT,
@@ -122,7 +122,7 @@ public class LoadedSkilletCommand extends SequentialCommandGroup {
     // Creates RAMSETE Command for second trajectory
     RamseteCommand ramseteCommand2 = new RamseteCommand(
         trench5ToRendezvous2Trajectory,
-        dSubsystem::getPose,
+        dSubsystem::getTankPose,
         new RamseteController(Constants.KRAMSETEB, Constants.KRAMSETEZETA),
         new SimpleMotorFeedforward(Constants.KSVOLTS,
                                    Constants.KVVOLT,
@@ -139,7 +139,7 @@ public class LoadedSkilletCommand extends SequentialCommandGroup {
     // Creates RAMSETE Command for third trajectory
     RamseteCommand ramseteCommand3 = new RamseteCommand(
         trajectory3,
-        dSubsystem::getPose,
+        dSubsystem::getTankPose,
         new RamseteController(Constants.KRAMSETEB, Constants.KRAMSETEZETA),
         new SimpleMotorFeedforward(Constants.KSVOLTS,
                                    Constants.KVVOLT,

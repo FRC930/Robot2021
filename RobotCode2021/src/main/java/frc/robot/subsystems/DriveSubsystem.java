@@ -133,10 +133,11 @@ public class DriveSubsystem extends SubsystemBase {
     private int driveType;
 
     private DRIVE_TYPE(int _driveType) {
-        driveType = _driveType;
+      driveType = _driveType;
     }
+    
     public int Get() {
-        return this.driveType;
+      return this.driveType;
     }
   }
   public static DRIVE_TYPE driveType;
@@ -248,7 +249,7 @@ public class DriveSubsystem extends SubsystemBase {
   // this is involved with shifting the gear for endgame
   public void setShifterState(boolean state) throws RuntimeException {
     if(shifter != null) {
-      logger.log(Constants.LOG_LEVEL_FINE, "New shifter state: " + state);
+      logger.log(Constants.LOG_LEVEL_FINER, "New shifter state: " + state);
       shifter.set(state);
     } else {
       // TODO: get LOG_LEVEL_ERROR

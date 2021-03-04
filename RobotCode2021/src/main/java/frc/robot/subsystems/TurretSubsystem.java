@@ -80,7 +80,7 @@ public class TurretSubsystem extends SubsystemBase {
 
         this.turretMotor.set(ControlMode.PercentOutput, speed);
         
-        logger.log(Constants.LOG_LEVEL_INFO, "Set speed to " + getSpeed());
+        logger.log(Constants.LOG_LEVEL_FINER, "Set speed to " + getSpeed());
     }
 
     public double getSpeed() {

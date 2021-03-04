@@ -138,7 +138,7 @@ public class SaltAndPepperSkilletCommand extends SequentialCommandGroup {
     // This is our first atuo command this will run the drivetrain using the first trajectory we made
     RamseteCommand ramseteCommand1 = new RamseteCommand(
         trajectory1,
-        dSubsystem::getPose,
+        dSubsystem::getTankPose,
         new RamseteController(Constants.KRAMSETEB, Constants.KRAMSETEZETA),
         new SimpleMotorFeedforward(Constants.KSVOLTS,
                                    Constants.KVVOLT,
@@ -156,7 +156,7 @@ public class SaltAndPepperSkilletCommand extends SequentialCommandGroup {
     // this is our second auto command it uses the second trajectory which is an inverse of the first one as seen earlier
     RamseteCommand ramseteCommand2 = new RamseteCommand(
         trajectory2,
-        dSubsystem::getPose,
+        dSubsystem::getTankPose,
         new RamseteController(Constants.KRAMSETEB, Constants.KRAMSETEZETA),
         new SimpleMotorFeedforward(Constants.KSVOLTS,
                                    Constants.KVVOLT,
@@ -173,7 +173,7 @@ public class SaltAndPepperSkilletCommand extends SequentialCommandGroup {
     
     RamseteCommand ramseteCommand3 = new RamseteCommand(
         trajectory3,
-        dSubsystem::getPose,
+        dSubsystem::getTankPose,
         new RamseteController(Constants.KRAMSETEB, Constants.KRAMSETEZETA),
         new SimpleMotorFeedforward(Constants.KSVOLTS,
                                    Constants.KVVOLT,
@@ -213,7 +213,7 @@ public class SaltAndPepperSkilletCommand extends SequentialCommandGroup {
         new ParallelRaceGroup(ramseteCommand3, new SetAutonomousHopperCommand(hSubsystem)),
         new StopDriveCommand(dSubsystem),
         new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
-        new ParallelRaceGroup(new WaitCommand(1.5), new ShootPowerCellCommandGroup(towSubsystem, hSubsystem, kSubsystem), new DefaultFlywheelCommand(fSubsystem, AUTO_SHOOTER_SPEED)), 
+        new ParallelRaceGroup(new WaitCommand(1.5), new ShootPowerCellCommandGroup(towSubsystem, hSubsystem, kSubsystem), new DefaultFlywheelCommand(fSubsystem)), 
         new StopTowerKickerCommandGroup(towSubsystem, kSubsystem),
         new ReturnIntakeCommand(iPistonSubsystem, iMotorSubsystem),
         new RunFlywheelAutoCommand(fSubsystem, Constants.FLYWHEEL_TELEOP_SPEED),

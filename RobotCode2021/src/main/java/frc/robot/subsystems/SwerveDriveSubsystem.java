@@ -105,7 +105,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    */
 
   public void drive(double targetX, double targetY, double rotation) {
-    logger.entering(SwerveDriveSubsystem.class.getName(), "drive");
+    logger.entering(SwerveDriveSubsystem.class.getName(), "drive()");
 
     Rotation2d heading = Rotation2d.fromDegrees(gyro.getFusedHeading());
     double speedForward = targetY * Constants.KMAXSPEED;
@@ -121,7 +121,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     FRDrive.drive(states[1]);
     BLDrive.drive(states[2]);
     BRDrive.drive(states[3]);
-    logger.exiting(SwerveDriveSubsystem.class.getName(), "drive");
+    
+    logger.exiting(SwerveDriveSubsystem.class.getName(), "drive()");
   } // end of method drive()
 
   public void drive(SwerveModuleState[] states) {

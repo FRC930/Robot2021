@@ -77,7 +77,7 @@ public class FlywheelPistonSubsystem extends SubsystemBase {
      * @return the solenoid position using the custom enum
      */
     public boolean get() {
-        logger.log(Constants.LOG_LEVEL_FINE, "getPistonValue: " + (flywheelPiston.get() ? "True" : "False"));
+        logger.log(Constants.LOG_LEVEL_FINER, "getPistonValue: " + (flywheelPiston.get() ? "True" : "False"));
         return flywheelPiston.get();
     }
 } // end of class FlywheelPistonSubsystem

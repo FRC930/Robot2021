@@ -15,6 +15,7 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.hal.simulation.DriverStationDataJNI;
 import edu.wpi.first.networktables.NetworkTableEntry;
 
 //-------- CLASS --------\\
@@ -38,6 +39,14 @@ public class ShuffleboardUtility {
 	private double distanceFromTarget;
     private String shotType;
     private boolean shooterUpToSpeed;
+    private double flywheelSpeed;
+    private double flywheelVoltage;
+    private double velError;
+    private double controlTol;
+    private double modelAcc;
+    private double encodAcc;
+    private double maxVoltage;
+    private double dtSeconds;
     // private String fmsColor;
     // private String logger;
     // private String fmsColorDebug;
@@ -63,6 +72,15 @@ public class ShuffleboardUtility {
     private NetworkTableEntry turretEncoderPositionEntry;
     private NetworkTableEntry gyroYawEntry;
     private NetworkTableEntry shooterSetEntry;
+    private NetworkTableEntry flywheelSpeedEntry;
+    private NetworkTableEntry flywheelVoltageEntry;
+    private NetworkTableEntry velErrorEntry;
+    private NetworkTableEntry controlTolEntry;
+    private NetworkTableEntry modelAccEntry;
+    private NetworkTableEntry encodAccEntry;
+    private NetworkTableEntry maxVoltageEntry;
+    private NetworkTableEntry dtSecondsEntry;
+
 
     //-------- CONSTRUCTOR --------\\
 
@@ -76,6 +94,14 @@ public class ShuffleboardUtility {
         distanceFromTarget = 0.0;
         shotType = "";
         shooterUpToSpeed = false;
+        flywheelSpeed = 0.0;
+        flywheelVoltage = 0.0;
+        velError = 0.0;
+        controlTol = 0.0;
+        modelAcc = 0.0;
+        encodAcc = 0.0;
+        maxVoltage = 12.0;
+        dtSeconds = 0.0;
         // fmsColor = "";
         // logger = "";
         // fmsColorDebug = "";
@@ -106,7 +132,14 @@ public class ShuffleboardUtility {
         turretEncoderPositionEntry = testDebugTab.add("Turret Encoder Position", turretEncoderPosition).getEntry();
         gyroYawEntry = testDebugTab.add("Gyro Yaw", gyroYaw).getEntry();
         shooterSetEntry = driverStationTab.add("set Shooter DEFUALT IS 0.8",shootSpeed).getEntry();
-
+        flywheelSpeedEntry = driverStationTab.add("Flywheel Speed", flywheelSpeed).getEntry();
+        flywheelVoltageEntry = driverStationTab.add("Flywheel Voltage", flywheelVoltage).getEntry();
+        velErrorEntry = driverStationTab.add("Velocity Error", velError).getEntry();
+        controlTolEntry = driverStationTab.add("Control Tolerance", controlTol).getEntry();
+        maxVoltageEntry = driverStationTab.add("Max Voltage", maxVoltage).getEntry();
+        modelAccEntry = driverStationTab.add("Model accuracy", modelAcc).getEntry();
+        encodAccEntry = driverStationTab.add("Encoder Accuracy", encodAcc).getEntry();
+        dtSecondsEntry = driverStationTab.add("DT Seconds", dtSeconds).getEntry();
         sendableChooser = new SendableChooser<Command>();
     }
 
@@ -158,6 +191,34 @@ public class ShuffleboardUtility {
         shooterUpToSpeedEntry.setBoolean(shooterUpToSpeed);
     }
 
+    public void putFlywheelSpeed(double FlywheelSpeed){
+		flywheelSpeed = FlywheelSpeed;
+        flywheelSpeedEntry.setNumber(flywheelSpeed);
+    }
+ 
+    public void putFlywheelVoltage(double FlywheelVoltage){
+		flywheelVoltage = FlywheelVoltage;
+        flywheelVoltageEntry.setNumber(flywheelVoltage);
+    }
+
+    public void putControlConfig(double mVelError, double mControlTol , double mModelAcc, double mEncodAcc , double mMaxVoltage ,
+     double mDtSeconds){
+        velError = mVelError;
+        controlTol = mControlTol;
+        modelAcc = mModelAcc;
+        encodAcc = mEncodAcc;
+        maxVoltage = mMaxVoltage;
+        dtSeconds = mDtSeconds;
+        velErrorEntry.setNumber(velError);
+        controlTolEntry.setNumber(controlTol);
+        modelAccEntry.setNumber(modelAcc);
+        encodAccEntry.setNumber(encodAcc);
+        maxVoltageEntry.setNumber(maxVoltage);
+        dtSecondsEntry.setNumber(dtSeconds);
+        
+    }
+ 
+ 
     // public String getFMSColor(){
 	// 	fmsColor = SmartDashboard.getString("FMS Color", "No Color Available");
 	// 	return fmsColor;
@@ -215,113 +276,4 @@ public class ShuffleboardUtility {
         return sendableChooser.getSelected();
     }
     
-    // TODO: figure out how to get PID values into code
-    // public String getShooterP(){
-    //     //  return string : set to error string, changes to valid string if object is found.
-    //     String rtn = "Nothing to Return...";
-    //     if (pidController.size() > 0){
-    //         for (int i = 0; i < pidController.size(); i++){
-    //             if (pidController.get(i).getTitle() == "Flywheel PID"){
-    //                 rtn = pidController.get(0).toString();
-    //             }
-    //         }
-    //     }
-    //     return rtn;
-    // }
-    // public String getShooterI(){
-    //     //  return string : set to error string, changes to valid string if object is found.
-    //     String rtn = "Nothing to Return...";
-    //     if (pidController.size() > 0){
-    //         for (int i = 0; i < pidController.size(); i++){
-    //             if (pidController.get(i).getTitle() == "Flywheel PID"){
-    //                 rtn = pidController.get(1).toString();
-    //             }
-    //         }
-    //     }
-    //     return rtn;
-    // }
-    // public String getShooterD(){
-    //     //  return string : set to error string, changes to valid string if object is found.
-    //     String rtn = "Nothing to Return...";
-    //     if (pidController.size() > 0){
-    //         for (int i = 0; i < pidController.size(); i++){
-    //             if (pidController.get(i).getTitle() == "Flywheel PID"){
-    //                 rtn = pidController.get(2).toString();
-    //             }
-    //         }
-    //     }
-    //     return rtn;
-    // }
-    // public String getShooterF(){
-    //     //  return string : set to error string, changes to valid string if object is found.
-    //     String rtn = "Nothing to Return...";
-    //     if (pidController.size() > 0){
-    //         for (int i = 0; i < pidController.size(); i++){
-    //             if (pidController.get(i).getTitle() == "Flywheel PID"){
-    //                 rtn = pidController.get(3).toString();
-    //             }
-    //         }
-    //     }
-    //     return rtn;
-    // }
-    // public String getShooterSetpoint(){
-    //     //  return string : set to error string, changes to valid string if object is found.
-    //     String rtn = "Nothing to Return...";
-    //     if (pidController.size() > 0){
-    //         for (int i = 0; i < pidController.size(); i++){
-    //             if (pidController.get(i).getTitle() == "Flywheel PID"){
-    //                 rtn = pidController.get(4).toString();
-    //             }
-    //         }
-    //     }
-    //     return rtn;
-    // }
-    /**
-     * May or may not be applied later
-     */
-    // public void setShooterP(double kP){
-    //      if (pidController.size() > 0){
-    //          for (int i = 0; i < pidController.size(); i++){
-    //              if (pidController.get(i).getTitle() == "Flywheel PID"){
-    //                  pidController.get(i).withProperties(Map.of("P", kP));
-    //              }
-    //          }
-    //      }
-    // }
-    // public void setShooterI(double kI){
-    //     if (pidController.size() > 0){
-    //         for (int i = 0; i < pidController.size(); i++){
-    //             if (pidController.get(i).getTitle() == "Flywheel PID"){
-    //                 pidController.get(i).withProperties(Map.of("I", kI));
-    //             }
-    //         }
-    //     }
-    // }
-    // public void setShooterD(double kD){
-    //     if (pidController.size() > 0){
-    //         for (int i = 0; i < pidController.size(); i++){
-    //             if (pidController.get(i).getTitle() == "Flywheel PID"){
-    //                 pidController.get(i).withProperties(Map.of("D", kD));
-    //             }
-    //         }
-    //     }
-    // }
-    // public void setShooterF(double kF){
-    //     if (pidController.size() > 0){
-    //         for (int i = 0; i < pidController.size(); i++){
-    //             if (pidController.get(i).getTitle() == "Flywheel PID"){
-    //                 pidController.get(i).withProperties(Map.of("F", kF));
-    //             }
-    //         }
-    //     }
-    // }
-    // public void setShooterSetpoint(double kSetpoint){
-    //     if (pidController.size() > 0){
-    //         for (int i = 0; i < pidController.size(); i++){
-    //             if (pidController.get(i).getTitle() == "Flywheel PID"){
-    //                 pidController.get(i).withProperties(Map.of("Setpoint", kSetpoint));
-    //             }
-    //         }
-    //     }
-    // }    
 } //end of class Shuffleboard
