@@ -51,7 +51,7 @@ public class ShooterLEDs extends CommandBase {
     for (int i = 0; i < buffer.getLength(); i++) {
       buffer.setRGB(i, 0, 0, 255);
     }
-    m_LEDSubsystem.updateBuffer(buffer);
+    m_LEDSubsystem.setBuffer(buffer);
   }
 
   private void moveLEDs() {
@@ -76,7 +76,7 @@ public class ShooterLEDs extends CommandBase {
       buffer.setRGB(index1, 0, 0, 255);
       moveLEDs();
       buffer.setRGB(index2, 0, 255, 0);
-      m_LEDSubsystem.updateBuffer(buffer);
+      m_LEDSubsystem.setBuffer(buffer);
     }
   }
 

@@ -95,7 +95,7 @@ public class AutonLEDs extends CommandBase {
             counter = 0;
         }
 
-        m_LEDSubsystem.updateBuffer(buffer);
+        m_LEDSubsystem.setBuffer(buffer);
     }
 
     // Returns true when the command should end.

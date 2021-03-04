@@ -44,11 +44,11 @@ public class KillFlywheelCommand extends CommandBase {
         
         state = !state;
         if(state){
-            m_FlywheelSubsystem.setSpeed(0.0);
+            m_FlywheelSubsystem.setVoltage(0.0);
         }
         else{
             //Kil default command
-            m_FlywheelSubsystem.setSpeed(shuffleboardUtility.getShooterSpeed());
+            m_FlywheelSubsystem.setVoltage(shuffleboardUtility.getShooterSpeed());
         }
     }
 
