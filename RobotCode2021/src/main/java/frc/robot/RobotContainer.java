@@ -129,7 +129,7 @@ public class RobotContainer {
   // -------- SUBSYSTEMS --------\\
 
   // --Endgame subsystem
-  private final ClimberArmSubsystem climberArmSubsystem;
+  // private final ClimberArmSubsystem climberArmSubsystem;
 
   // --Color wheel stuff subsystems
   // private final ColorSensorSubsystem colorSensorSubsystem;
@@ -174,7 +174,7 @@ public class RobotContainer {
 
   // --Drive commands
   private DriveCommand driveCommand;
-  private final ClimberArmCommandGroup climberArmCommandGroup;
+  //private final ClimberArmCommandGroup climberArmCommandGroup;
   private SwerveDriveCommand swerveDriveCommand;
 
   // --Hopper commands
@@ -230,6 +230,7 @@ public class RobotContainer {
     //the first boolean determines to use field orientation if true
     // the second boolean if true halves the speed
     driveSubsystem = new DriveSubsystem(drfid, dlfid, drbid, dlbid, DRIVE_TYPE.SWERVE_DRIVE, intakeMotorSubsystem, false, true);
+    //swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
 
     // (HOPPER_ID)
     hopperSubsystem = new HopperSubsystem(13);
@@ -238,7 +239,7 @@ public class RobotContainer {
     kickerSubsystem = new KickerSubsystem(14);
 
     // (CLIMBER_ARM_ID)
-    climberArmSubsystem = new ClimberArmSubsystem(12);
+    //climberArmSubsystem = new ClimberArmSubsystem(12);
 
     // ledSubsystem = new LEDSubsystem();
 
@@ -259,8 +260,9 @@ public class RobotContainer {
     // --Commands
 
     // endgame
-    climberArmCommandGroup = new ClimberArmCommandGroup(climberArmSubsystem, coDriverController, XB_AXIS_LEFT_Y,
-        new JoystickButton(coDriverController, XB_RB));
+    // climberArmCommandGroup = new ClimberArmCommandGroup(climberArmSubsystem, coDriverController, XB_AXIS_LEFT_Y,
+    //     new JoystickButton(coDriverController, XB_RB));
+
     // drive (NOTE: This is where we bind the driver controls to the drivetrain)
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
 
@@ -339,7 +341,7 @@ public class RobotContainer {
     // L Button
     JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
     // ZR Button
-    AxisTrigger shootButton = new AxisTrigger(driverController, XB_AXIS_RT);
+    JoystickButton shootButton = new JoystickButton(coDriverController, XB_RB);
 
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
@@ -453,7 +455,7 @@ public class RobotContainer {
     turretFrontRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.FRONT_RIGHT_POSITION));
     turretBackRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.BACK_RIGHT_POSITION));
 
-    endgameSafetyButton.whileActiveOnce(climberArmCommandGroup);
+    // endgameSafetyButton.whileActiveOnce(climberArmCommandGroup);
     intakePistonTrigger.toggleWhenActive(new ExtendIntakePistonCommand(intakePistonSubsystem))
         .whenInactive(new RetractIntakePistonCommand(intakePistonSubsystem));
     intakeMotorTrigger.toggleWhenActive(new RunIntakeMotorsCommand(intakeMotorSubsystem))

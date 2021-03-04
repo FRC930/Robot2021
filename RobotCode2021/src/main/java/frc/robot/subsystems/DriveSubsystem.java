@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 
 //-------- SUBSYSTEM CLASS --------\\
 
@@ -73,7 +74,7 @@ public class DriveSubsystem extends SubsystemBase {
   private double yawPitchRollValues[] = new double[3];
 
   // The odometry of the differential drive
-  private DifferentialDriveOdometry driveOdometry;
+  private DifferentialDriveOdometry tankDriveOdometry;
 
   // The differential drive object itself
   private DifferentialDrive differentialDrive;
@@ -110,6 +111,8 @@ public class DriveSubsystem extends SubsystemBase {
   private boolean slowSpeed;
 
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+  private double gyroAngle;
+  private SwerveDriveOdometry swerveDriveOdometry;
 
   /*
   private final SwerveDrivePoseEstimator m_poseEstimator =
@@ -161,6 +164,7 @@ public class DriveSubsystem extends SubsystemBase {
         gyro = new PigeonIMU(_intake.getIntakeMotor());
         usingGyro = _usingGyro;
         slowSpeed = _slowSpeed;
+        swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics, Rotation2d.fromDegrees(0.0));
         break;
 
       default: // default is error logging
@@ -199,7 +203,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     //shuffleboardUtility = ShuffleboardUtility.getInstance();
 
-    driveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+    tankDriveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
     // Inverts the direction of the drive motors
     tankLeftFront.setInverted(true);
@@ -302,78 +306,33 @@ public class DriveSubsystem extends SubsystemBase {
   public void swerveDrive(double targetX, double targetY, double rotation) {
     logger.entering(DriveSubsystem.class.getName(), "swerveDrive()");
 
-    double FRAngle = swerveMath.getFrontRightAngle(targetX, targetY, rotation);
-    double BRAngle = swerveMath.getBackRightAngle(targetX, targetY, rotation);
-    double FLAngle = swerveMath.getFrontLeftAngle(targetX, targetY, rotation);
-    double BLAngle = swerveMath.getBackLeftAngle(targetX, targetY, rotation);
+    Rotation2d heading = Rotation2d.fromDegrees(gyro.getFusedHeading());
+    double speedForward = targetY * Constants.KMAXSPEED;
+    double speedStrafe = targetX * Constants.KMAXSPEED;
+    double speedRotation = rotation * Constants.KMAXANGULARSPEED;
 
-    double FRSpeed = swerveMath.getFrontRightSpeed(targetX, targetY, rotation);
-    double BRSpeed = swerveMath.getBackRightSpeed(targetX, targetY, rotation);
-    double FLSpeed = swerveMath.getFrontLeftSpeed(targetX, targetY, rotation);
-    double BLSpeed = swerveMath.getBackLeftSpeed(targetX, targetY, rotation);
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speedForward, speedStrafe, speedRotation, heading);
+    SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(speeds);
 
-    if(usingGyro) {
-      double gyroAngle = gyro.getFusedHeading();
-      //gyroAngle = gyroAngle % 360;
-      //gyroAngle -= 180;
+    SwerveDriveKinematics.normalizeWheelSpeeds(states, Constants.KMAXSPEED);
 
-      gyroAngle = Math.IEEEremainder(gyroAngle, 360);
-
-      System.out.println(gyroAngle);
-
-      FRAngle = applyGyroAngle(FRAngle, gyroAngle);
-      BRAngle = applyGyroAngle(BRAngle, gyroAngle);
-      FLAngle = applyGyroAngle(FLAngle, gyroAngle);
-      BLAngle = applyGyroAngle(BLAngle, gyroAngle);
-    }
-
-    //System.out.println("BLAngle: " + BLAngle + " | FLAngle: " + FLAngle);
-
-    if(slowSpeed) {
-      FRSpeed *= 0.5;
-      BRSpeed *= 0.5;
-      FLSpeed *= 0.5;
-      BLSpeed *= 0.5;
-    }
-
-    SmartDashboard.putNumber("FRAngle: ",swerveMath.getFrontRightAngle(targetX, targetY, rotation));
-    SmartDashboard.putNumber("BRAngle: ", swerveMath.getBackRightAngle(targetX, targetY, rotation));
-    SmartDashboard.putNumber("FLAngle: ",swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
-    SmartDashboard.putNumber("BLAngle: ",swerveMath.getBackLeftAngle(targetX, targetY, rotation));
-
-    logger.log(Level.INFO, "FRAngle: " + swerveRightFront.getAngle());
-    logger.log(Level.INFO, "BRAngle: " + swerveMath.getBackRightAngle(targetX, targetY, rotation));
-    logger.log(Level.INFO, "FLAngle: " + swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
-    logger.log(Level.INFO, "BLAngle: " + swerveMath.getBackLeftAngle(targetX, targetY, rotation));
-
-    //logger.log(Level.INFO, "FR_CLE:" + swerveRightFront.getClosedLoopError());
-    //logger.log(Level.INFO, "BR_CLE:" + swerveRightBack.getClosedLoopError());
-    //logger.log(Level.INFO, "FL_CLE:" + swerveLeftFront.getClosedLoopError());
-    //logger.log(Level.INFO, "BL_CLE:" + swerveLeftBack.getClosedLoopError());
-
-    
-    if(Math.abs(targetX) > Math.pow(0.1, 3) || Math.abs(targetY) > Math.pow(0.1, 3)){
-      prevX = targetX;
-      prevY = targetY;
-      /*
-      swerveRightFront.drive(swerveMath.getFrontRightSpeed(targetX, targetY, rotation), swerveMath.getFrontRightAngle(targetX, targetY, rotation));
-      swerveRightBack.drive(swerveMath.getBackRightSpeed(targetX, targetY, rotation), swerveMath.getBackRightAngle(targetX, targetY, rotation));
-      swerveLeftFront.drive(swerveMath.getFrontLeftSpeed(targetX, targetY, rotation), swerveMath.getFrontLeftAngle(targetX, targetY, rotation));
-      swerveLeftBack.drive(swerveMath.getBackLeftSpeed(targetX, targetY, rotation), swerveMath.getBackLeftAngle(targetX, targetY, rotation));
-      */
-      swerveRightFront.drive(FRSpeed, FRAngle);
-      swerveRightBack.drive(BRSpeed, BRAngle);
-      swerveLeftFront.drive(FLSpeed, FLAngle);
-      swerveLeftBack.drive(BLSpeed, BLAngle);
-    } else {
-      swerveRightFront.drive(swerveMath.getFrontRightSpeed(targetX, targetY, rotation), swerveMath.getFrontRightAngle(prevX, prevY, rotation));
-      swerveRightBack.drive(swerveMath.getBackRightSpeed(targetX, targetY, rotation), swerveMath.getBackRightAngle(prevX, prevY, rotation));
-      swerveLeftFront.drive(swerveMath.getFrontLeftSpeed(targetX, targetY, rotation), swerveMath.getFrontLeftAngle(prevX, prevY, rotation));
-      swerveLeftBack.drive(swerveMath.getBackLeftSpeed(targetX, targetY, rotation), swerveMath.getBackLeftAngle(prevX, prevY, rotation));
-    }
+    swerveLeftFront.drive(states[0]);
+    swerveRightFront.drive(states[1]);
+    swerveLeftBack.drive(states[2]);
+    swerveRightBack.drive(states[3]);
 
     logger.exiting(DriveSubsystem.class.getName(), "swerveDrive()");
   } // end of method drive()
+
+  public void swerveDrive(SwerveModuleState[] states) {
+    logger.entering(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
+
+    swerveLeftFront.drive(states[0]);
+    swerveRightFront.drive(states[1]);
+    swerveLeftBack.drive(states[2]);
+    swerveRightBack.drive(states[3]);
+    logger.exiting(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
+  } // end of method swerveDrive()
 
   // TANK DRIVE
   /**
@@ -473,19 +432,20 @@ public class DriveSubsystem extends SubsystemBase {
     return new DifferentialDriveWheelSpeeds(getLeftWheelRotations(), getRightWheelRotations());
   }
 
+  // TANK DRIVE
   /**
    * Resets the gyro
    * 
    * @throws Exception
    */
   public void resetOdometry(Pose2d pose) throws RuntimeException {
-    if(driveOdometry != null) {
-      driveOdometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+    if(tankDriveOdometry != null) {
+      tankDriveOdometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
       logger.log(Constants.LOG_LEVEL_FINE, "Odometer reset");
     } else {
       // TODO: get LOG_LEVEL_ERROR
-      logger.log(Constants.LOG_LEVEL_WARNING, "calling null driveOdometry");
-      throw new RuntimeException("calling null driveOdometry");
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null tankDriveOdometry");
+      throw new RuntimeException("calling null tankDriveOdometry");
     }
   }
 
@@ -540,16 +500,50 @@ public class DriveSubsystem extends SubsystemBase {
      * 
      * @return A Pose2d object, from the drive odometry
      */
-  public Pose2d getPose() {
+  public Pose2d getTankPose() {
     Pose2d VRtn = new Pose2d();
-    if(driveOdometry != null) {
-      VRtn = driveOdometry.getPoseMeters();
+    if(tankDriveOdometry != null) {
+      VRtn = tankDriveOdometry.getPoseMeters();
     } else {
       // TODO: get LOG_LEVEL_ERROR
-      logger.log(Constants.LOG_LEVEL_WARNING, "calling null driveOdometry");
-      throw new RuntimeException("calling null driveOdometry");
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null tankDriveOdometry");
+      throw new RuntimeException("calling null tankDriveOdometry");
     }
     return VRtn;
+  }
+
+  // SWERVE DRIVE
+  public Pose2d getSwervePose() {
+    Pose2d VRtn = new Pose2d();
+    if(swerveDriveOdometry != null) {
+      VRtn = swerveDriveOdometry.getPoseMeters();
+    } else {
+      // TODO: get LOG_LEVEL_ERROR
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null swerveDriveOdometry");
+      throw new RuntimeException("calling null swerveDriveOdometry");
+    }
+    return VRtn;
+  }
+
+  // SWERVE DRIVE
+  public void swerveStop(){
+    swerveLeftFront.setSpeed(0);
+    swerveRightFront.setSpeed(0);
+    swerveRightFront.setSpeed(0);
+    swerveRightFront.setSpeed(0);
+  }
+
+  // SWERVE DRIVE
+  public void swerveResetWheels(){
+    swerveLeftFront.setAngle(0);
+    swerveRightFront.setAngle(0);
+    swerveLeftBack.setAngle(0);
+    swerveRightBack.setAngle(0);
+  }
+
+  // SWERVE DRIVE
+  public SwerveDriveKinematics swerveGetKinematics() {
+    return m_kinematics;
   }
 
   // TANK DRIVE
@@ -577,12 +571,14 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() throws RuntimeException{
     //logger.entering(DriveSubsystem.class.getName(), "periodic()");
 
-    if(driveOdometry != null) {
-      driveOdometry.update(Rotation2d.fromDegrees(getHeading()), getLeftWheelRotations(), getRightWheelRotations());
+    if(tankDriveOdometry != null) {
+      tankDriveOdometry.update(Rotation2d.fromDegrees(getHeading()), getLeftWheelRotations(), getRightWheelRotations());
+    } else if (swerveDriveOdometry != null) {
+      swerveDriveOdometry.update(Rotation2d.fromDegrees(gyroAngle), swerveLeftFront.getSwerveStates(), swerveRightFront.getSwerveStates(), swerveLeftBack.getSwerveStates(), swerveRightBack.getSwerveStates());
     } else {
       // TODO: get LOG_LEVEL_ERROR
-      logger.log(Constants.LOG_LEVEL_WARNING, "calling null driveOdometry");
-      throw new RuntimeException("calling null driveOdometry");
+      logger.log(Constants.LOG_LEVEL_WARNING, "calling null <tank/swerve>DriveOdometry");
+      throw new RuntimeException("calling null <tank/swerve>DriveOdometry");
     }
     //shuffleboardUtility.setGyroYaw(getHeading());
 
@@ -592,7 +588,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // SWERVE DRIVE: helper method (no need for error creation and handling)
   // Assumption --  rotation: (-180 - 180) and gyroAngle: (-180 - 180)
-  public double applyGyroAngle( double rotation, double gyroAngle) {
+  /*public double applyGyroAngle( double rotation, double gyroAngle) {
     boolean addAngle = false;
     // NOTE: May want to add instead gyroAngle
     double newRotation = rotation + ((addAngle?1:-1) * gyroAngle);
@@ -605,6 +601,6 @@ public class DriveSubsystem extends SubsystemBase {
     }
     // Output needs to be between -180 and 180
     return newRotation;
-  }
+  }*/
 
 } // end of the class DriveSubsystem

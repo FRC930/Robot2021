@@ -4,15 +4,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,12 +17,12 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import frc.robot.Constants;
 
 public class SwerveModule {
-
     private WPI_TalonFX driveFx;
 
     private WPI_TalonFX steerFx;
 
     private CANCoder steerEncoder;
+    private double previousAngle = 0;
 
     private final ProfiledPIDController m_turningPIDController =
             new ProfiledPIDController(
@@ -38,7 +35,7 @@ public class SwerveModule {
 
     private static final Logger logger = Logger.getLogger(SwerveModule.class.getName());
 
-    private boolean canDrive = false;
+    private final double RADIUS = 0.1016;
     
     /**
      * Helper class for a swerve wheel. Holds two Falcon500's.
@@ -50,31 +47,9 @@ public class SwerveModule {
         driveFx = new WPI_TalonFX(driveID);
         steerFx = new WPI_TalonFX(turnID);
         steerEncoder = new CANCoder(encID);
-        //steerEncoder.
-
-        //steerFx.configSelectedFeedbackSensor(RemoteFeedbackDevice);
 
         //Set PID limits 
         m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
-
-        driveFx.configOpenloopRamp(2);
-
-        if(false) {
-        //SJW https://www.chiefdelphi.com/t/can-it-be-done-talonfx-cancoder-absolute-encoder/387576
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        config.remoteFilter0.remoteSensorDeviceID = steerEncoder.getDeviceID();
-        config.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
-        config.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
-        config.slot0.kP = 1.0;
-        config.slot0.kI = 0.0;
-        config.slot0.kD = 10.0;
-        config.slot0.kF = 0.0;
-        config.slot0.integralZone = 0;
-        config.slot0.allowableClosedloopError = 0;
-        config.motionAcceleration = 1000;
-        config.motionCruiseVelocity = 100;
-        driveFx.configAllSettings(config);
-        }
     }
 
     /**
@@ -105,6 +80,7 @@ public class SwerveModule {
         //SmartDashboard.putNumber("Error"+steerFx.getDeviceID(), m_turningPIDController.getPositionError());
         //SmartDashboard.putNumber("Abs_Rotation"+steerFx.getDeviceID(), steerEncoder.getAbsolutePosition());
 
+        previousAngle = rotation;
         logger.exiting(SwerveModule.class.getName(), "setAngle");
     }
 
@@ -114,54 +90,38 @@ public class SwerveModule {
     * @param speed The speed from -1 to 1
     */
     public void setSpeed(double speed) {
-        //if(canDrive) {
         driveFx.set(ControlMode.PercentOutput, speed);
         SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
-        //}
+    }
+
+    public void drive(SwerveModuleState state) {
+        SwerveModuleState optimized = SwerveModuleState.optimize(state, getAngle());
+        double angle = optimized.angle.getDegrees();
+        double speed = optimized.speedMetersPerSecond / Constants.KMAXSPEED;
+
+        if (speed > 0.00178 || speed < -0.00178) {
+            setAngle(angle);
+            System.out.println("Speed:" + speed);
+        } else {
+            setAngle(previousAngle);
+            System.out.println("Previous:" + speed);
+        }
+
+        setSpeed(speed);
+    }
+
+    //gets the angle of wheel
+    public Rotation2d getAngle() {
+        return Rotation2d.fromDegrees(steerEncoder.getAbsolutePosition());
+    }
+
+    //gets speed  of wheel
+    public double getSpeed() {
+        return ((driveFx.getSelectedSensorVelocity() * 10 / 2048) * RADIUS * Math.PI) / 6.86;
     }
     
-    /**
-    * Sets each swerve module's angle and speed
-    * 
-    * @param speed The speed from -1 to 1
-    * @param rotation The Y position of the controller (Right stick)
-    */
-    public void drive(double speed, double rotation) {
-
-        // Difference of the current and target angles
-        double diff = getAngle() - rotation;
-
-        // If we are more than 90 deg away...
-        if(Math.abs(diff) > 90) {
-            // Depending whether we are negative or positive target, add or subtract 180
-            //  This will just be the direct opposite rotation
-            if(rotation > 0) {
-                rotation -= 180;
-            } else {
-                rotation += 180;
-            }
-
-            // Set the speed to be the other way
-            setSpeed(-speed);
-            setAngle(rotation);
-        } else {
-            setSpeed(speed);
-            setAngle(rotation);
-        }
-    }
-
-    /**
-     * Sets swerve module's angle
-     */
-    public double getAngle() {
-        return steerEncoder.getAbsolutePosition();
-    }
-
-    /**
-     * Sets swerve module's speed
-     */
-    public double getSpeed() {
-        return driveFx.getSelectedSensorVelocity();
+    public SwerveModuleState getSwerveStates(){
+        return new SwerveModuleState(getSpeed(), getAngle());
     }
 
     /**
