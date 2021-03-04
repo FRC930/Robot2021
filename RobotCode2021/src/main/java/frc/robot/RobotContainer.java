@@ -536,8 +536,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SaltAndPepperSkilletCommand(swerveDriveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
-        towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem);
+    return new TestCommand(swerveDriveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+        towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, turretSubsystem);
     // Run path following command, then stop at the end.
   }
 

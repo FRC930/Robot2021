@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.controller.RamseteController;
 
@@ -68,9 +69,12 @@ public class TestCommand extends SequentialCommandGroup {
         // this is our config for how much power goes to the motors
         var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getKinematics(), Constants.KMAXSPEED);
         //PID values
-        int kP = 0;
-        int kI = 0;
-        int kD = 0;
+        double kP = 0;
+        double kI = 0;
+        double kD = 0;
+        double kPRot = 0;
+        double kIRot = 0;
+        double kDRot = 0;
         double maxV = Math.PI * 2;
         double maxA = Math.PI;
         // Configurate the values of all trajectories for max velocity and acceleration
@@ -106,18 +110,54 @@ public class TestCommand extends SequentialCommandGroup {
         // -------- Trajectories -------- \\
         // Generates a trajectory 
 
-        String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/Test.wpilib.json";
-    Trajectory trajectory;
-    try {
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        //logger.log(Constants.LOG_LEVEL_INFO, "GalaticSearch_A_Red tragectory path: " + trajectoryPath.toString());
-        trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    } catch (IOException ex) {
-        DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-        //logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
-        throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
-    }
+    //     String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/Test.wpilib.json";
+    // Trajectory trajectory;
+    // try {
+    //     Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    //     //logger.log(Constants.LOG_LEVEL_INFO, "GalaticSearch_A_Red tragectory path: " + trajectoryPath.toString());
+    //     trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    // } catch (IOException ex) {
+    //     DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+    //     //logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
+    //     throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
+    // }
 
+    Trajectory trajectory1 = TrajectoryGenerator.generateTrajectory(
+    // Robot starts at X: 0 Y: 0 and a rotation of 0 
+    new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
+    List.of( 
+        // Midpoints
+    ),
+    //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+    new Pose2d(inchesToMeters(110), inchesToMeters(-92), new Rotation2d(Math.toRadians(-65))), //X: was 130y is -135
+    // Pass config
+    config
+);
+
+//this is our second trajectory it should be a inverse of the first one
+Trajectory trajectory2 = TrajectoryGenerator.generateTrajectory(
+    // Starts X: 0 inches Y: 0 inches and -65 degrees 
+    new Pose2d(inchesToMeters(120), inchesToMeters(-115), new Rotation2d(Math.toRadians(-65))), //-65
+    List.of( 
+        // Midpoints
+    ),
+    // return to intial position
+    new Pose2d(inchesToMeters(0), inchesToMeters(-20), new Rotation2d(Math.toRadians(15))),
+    // uses the second config
+    reverseConfig
+);
+
+Trajectory trajectory3 = TrajectoryGenerator.generateTrajectory(
+    // Robot starts at X: 0 Y: 0 and a rotation of 0 
+    new Pose2d(inchesToMeters(0), inchesToMeters(-20), new Rotation2d(Math.toRadians(15))),//set x to 0 was -20
+    List.of( 
+        // Midpoints
+    ),
+    //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+    new Pose2d(inchesToMeters(240), inchesToMeters(0), new Rotation2d(Math.toRadians(0))), //Y: -20
+    // Pass config
+    slowConfig
+);
         
 
         // -------- RAMSETE Commands -------- \\
@@ -127,8 +167,22 @@ public class TestCommand extends SequentialCommandGroup {
         
         // This is our first atuo command this will run the drivetrain using the first trajectory we made
 
-        SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory, dSubsystem::getPose, dSubsystem.getKinematics(), 
-            new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
+        Supplier<Rotation2d> angle = () -> Rotation2d.fromDegrees(0);
+        SwerveControllerCommand command1 = new SwerveControllerCommand(
+            trajectory1, 
+            dSubsystem::getPose, 
+            dSubsystem.getKinematics(), 
+            new PIDController(kP, kI, kD), 
+            new PIDController(kP, kI, kD), 
+            new ProfiledPIDController(kPRot, kIRot, kDRot,new TrapezoidProfile.Constraints(maxV, maxA)), 
+            angle, 
+            dSubsystem::drive, 
+            dSubsystem);
+            SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getKinematics(), 
+            new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
+            new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+            SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getKinematics(), 
+            new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
 
         
@@ -144,8 +198,9 @@ public class TestCommand extends SequentialCommandGroup {
 
         // add commands here to run during auto
         addCommands(
-            new ResetSwerveDriveCommand(dSubsystem),
             command1,
+            //command2,
+            //command3,
             new StopDriveCommand(dSubsystem)
         );
         //returnIntakeCommand);
