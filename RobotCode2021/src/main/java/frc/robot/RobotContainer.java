@@ -222,10 +222,18 @@ public class RobotContainer {
     // (INTAKE_SOLENOID_ID)
     intakePistonSubsystem = new IntakePistonSubsystem(0);
 
+    // SWERVE DRIVE ARRAYS
     int[] drfid = {3, 7, 11};
     int[] dlfid = {1, 5, 9};
     int[] drbid = {4, 8, 12};
     int[] dlbid = {2, 6, 10};
+    // TANK DRIVE ARRAYS
+    /*
+    int[] drfid = {3, null, null};
+    int[] dlfid = {1, null, null};
+    int[] drbid = {4, null, null};
+    int[] dlbid = {2, null, null};
+    */
 
     // Must be initialized after intake
     //the first boolean determines to use field orientation if true

@@ -26,11 +26,6 @@ public final class Constants {
 
     // [-------------------MOTOR IDS--------------------------]
 
-    public static final int DRIVE_RIGHT_FRONT_ID = 3;
-    public static final int DRIVE_RIGHT_BACK_ID = 4;
-    public static final int DRIVE_LEFT_FRONT_ID = 1;
-    public static final int DRIVE_LEFT_BACK_ID = 2;
-
     public static final int INTAKE_ID = 17;
     public static final int COLOR_WHEEL_ID = 333;
 
