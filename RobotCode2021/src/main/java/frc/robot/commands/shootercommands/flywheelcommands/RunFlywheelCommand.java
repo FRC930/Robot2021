@@ -37,7 +37,7 @@ public class RunFlywheelCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_FlywheelSubsystem.setSpeed(m_Speed);  //Run the flywheel at a certain speed
+    m_FlywheelSubsystem.setVoltage(m_Speed);  //Run the flywheel at a certain speed
   }
 
   // Called every time the scheduler runs while the command is scheduled.

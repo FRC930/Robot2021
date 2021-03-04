@@ -32,8 +32,8 @@ public final class Constants {
     public static final int TURRET_ID = 15;
     public static final int INTAKE_ID = 17;
 
-    public static final int SHOOTER_LEAD_ID = 18;
-    public static final int SHOOTER_SLAVE_ID = 19;
+    public static final int SHOOTER_LEAD_ID =  19;
+    public static final int SHOOTER_SLAVE_ID = 18;
 
     public static final int HOPPER_ID = 13;
     public static final int TOWER_ID = 16;
@@ -183,11 +183,12 @@ public final class Constants {
     */
 
     //TODO: We want to be able to change these values in Shuffleboard
+    public static final Level LOG_LEVEL_ERROR = Level.OFF;
+    public static final Level LOG_LEVEL_WARNING = Level.OFF;
+    public static final Level LOG_LEVEL_INFO = Level.OFF;
     public static final Level LOG_LEVEL_FINE = Level.OFF;
     public static final Level LOG_LEVEL_FINER = Level.OFF;
     public static final Level LOG_LEVEL_FINEST = Level.OFF;
-    public static final Level LOG_LEVEL_INFO = Level.OFF;
-    public static final Level LOG_LEVEL_WARNING = Level.OFF;
 
     //[-------------------LOGGER--------------------------]
 

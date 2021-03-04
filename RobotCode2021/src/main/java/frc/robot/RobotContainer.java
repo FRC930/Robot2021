@@ -36,7 +36,8 @@ import frc.robot.triggers.*;
 // --Utility imports
 import frc.robot.utilities.*;
 
-import java.util.logging.Logger;
+import java.util.logging.*;
+import frc.robot.Constants;
 import java.util.logging.Level;
 
 // --Other imports
@@ -183,7 +184,7 @@ public class RobotContainer {
 
   // --Shooter commands
   // --Flywheel commands
-  // private final DefaultFlywheelCommand defaultFlywheelCommand;
+   private final DefaultFlywheelCommand defaultFlywheelCommand;
 
   // --Turret commands
   private final JoystickTurretCommand joystickTurretCommand; // For manual
@@ -203,7 +204,7 @@ public class RobotContainer {
     // Setting Log level for entire robot code
     // TODO: Edit this in Shuffleboard...?
     frcRobotLogger.setLevel(Level.OFF);
-
+    
     // --Drive controllers
     driverController = new Joystick(DRIVER_CONTROLLER_ID);
     coDriverController = new Joystick(CODRIVER_CONTROLLER_ID);
@@ -252,7 +253,7 @@ public class RobotContainer {
     // TODO: Add LED commands here
 
     // Flywheel
-    // defaultFlywheelCommand = new DefaultFlywheelCommand(flywheelSubsystem);
+     defaultFlywheelCommand = new DefaultFlywheelCommand(flywheelSubsystem);
 
     // turret
     joystickTurretCommand = new JoystickTurretCommand(turretSubsystem, coDriverController, XB_AXIS_LEFT_X);
@@ -280,6 +281,12 @@ public class RobotContainer {
   } // end of constructor RobotContainer()
 
   // -------- METHODS --------\\
+
+  // -------- LOGGER ---------\\
+  private void robotLogger() {
+    frcRobotLogger.entering(RobotContainer.class.getName(), "robotLogger()");
+    frcRobotLogger.log(Constants.LOG_LEVEL_FINE, "Test if you can see this");
+  }
 
   private void configureButtonBindings() {
 
@@ -447,7 +454,7 @@ public class RobotContainer {
 
     scheduler.unregisterSubsystem(limelightSubsystem, hopperSubsystem, turretSubsystem, flywheelSubsystem,
         kickerSubsystem, towerSubsystem);
-
+    
     if (inManualMode) {
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
     } else {
@@ -458,8 +465,7 @@ public class RobotContainer {
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
       scheduler.setDefaultCommand(swerveDriveSubsystem, driveCommand);
       scheduler.setDefaultCommand(hopperSubsystem, defaultHopperCommand);
-      scheduler.setDefaultCommand(flywheelSubsystem,
-          new DefaultFlywheelCommand(flywheelSubsystem, Constants.FLYWHEEL_TELEOP_SPEED));
+      scheduler.setDefaultCommand(flywheelSubsystem, defaultFlywheelCommand);
       scheduler.setDefaultCommand(limelightSubsystem,
           new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
     }
@@ -480,7 +486,7 @@ public class RobotContainer {
     scheduler.setDefaultCommand(swerveDriveSubsystem, driveCommand);
     scheduler.setDefaultCommand(hopperSubsystem, defaultStopHopperCommand);
     scheduler.setDefaultCommand(flywheelSubsystem,
-        new DefaultFlywheelCommand(flywheelSubsystem, Constants.FLYWHEEL_TELEOP_SPEED));
+        new DefaultFlywheelCommand(flywheelSubsystem));
     scheduler.setDefaultCommand(limelightSubsystem,
         new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
 

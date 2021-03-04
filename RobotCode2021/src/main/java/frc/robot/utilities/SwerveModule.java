@@ -47,6 +47,10 @@ public class SwerveModule {
      * @param turnID   ID for the turning motor
      */
     public SwerveModule(int driveID, int turnID, int encID) {
+        logger.entering(SwerveModule.class.getName(), "SwerveModule()");
+        logger.log(Constants.LOG_LEVEL_FINER, "Creating SwerveModule...");
+        logger.exiting(SwerveModule.class.getName(), "SwerveModule()");
+
         driveFx = new WPI_TalonFX(driveID);
         steerFx = new WPI_TalonFX(turnID);
         steerEncoder = new CANCoder(encID);
@@ -100,6 +104,10 @@ public class SwerveModule {
         //if(canDrive) {
         driveFx.set(ControlMode.PercentOutput, speed);
         SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
+        
+        logger.entering(SwerveModule.class.getName(), "setSpeed()");
+        logger.log(Constants.LOG_LEVEL_FINER, "Set Wheel Speed to " + speed);
+        logger.exiting(SwerveModule.class.getName(), "setSpeed()");
         //}
     }
     // setting speed and angle
@@ -129,6 +137,10 @@ public class SwerveModule {
     //gets the angle of wheel
     public double getAngle() {
         return steerEncoder.getAbsolutePosition();
+        
+        //logger.entering(SwerveModule.class.getName(), "setSpeed()");
+        //logger.log(Constants.LOG_LEVEL_FINER, "Angle \"" + steerEncoder.getAbsolutePosition() + "\" got.");
+        //logger.exiting(SwerveModule.class.getName(), "setSpeed()");
     }
     //gets speed  of wheel
     public double getSpeed() {
