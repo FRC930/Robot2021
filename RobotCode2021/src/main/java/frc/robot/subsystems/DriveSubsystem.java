@@ -14,7 +14,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import frc.robot.utilities.SwerveModule;
-import frc.robot.utilities.SwerveMath;
 import edu.wpi.first.wpilibj.estimator.SwerveDrivePoseEstimator;
 
 import frc.robot.Constants;
@@ -84,8 +83,6 @@ public class DriveSubsystem extends SubsystemBase {
   private int[] driveLeftFrontIDs;
   private int[] driveRightBackIDs;
   private int[] driveLeftBackIDs;
-
-  private SwerveMath swerveMath;
 
   private final Translation2d m_frontLeftLocation = new Translation2d(
     Units.inchesToMeters(10.625),
@@ -165,7 +162,6 @@ public class DriveSubsystem extends SubsystemBase {
 
       case SWERVE_DRIVE:
         setSwerveDriveMotors();
-        swerveMath = new SwerveMath();
         gyro = new PigeonIMU(_intake.getIntakeMotor());
         usingGyro = _usingGyro;
         slowSpeed = _slowSpeed;
@@ -316,9 +312,12 @@ public class DriveSubsystem extends SubsystemBase {
     double speedStrafe = targetX * Constants.KMAXSPEED;
     double speedRotation = rotation * Constants.KMAXANGULARSPEED;
 
+    // Create ChassisSpeeds to determine speed of robot frame
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speedForward, speedStrafe, speedRotation, heading);
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(speeds);
 
+    // Normalize speed so speed wont go over 1
+    //    This also will lower other wheel speeds if a speed goes over 1 on any wheel
     SwerveDriveKinematics.normalizeWheelSpeeds(states, Constants.KMAXSPEED);
 
     swerveLeftFront.drive(states[0]);
@@ -336,6 +335,7 @@ public class DriveSubsystem extends SubsystemBase {
     swerveRightFront.drive(states[1]);
     swerveLeftBack.drive(states[2]);
     swerveRightBack.drive(states[3]);
+    
     logger.exiting(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
   } // end of method swerveDrive()
 
