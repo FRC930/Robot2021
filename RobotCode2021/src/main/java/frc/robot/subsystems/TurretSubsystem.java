@@ -44,12 +44,12 @@ public class TurretSubsystem extends SubsystemBase {
 
     // -------- CONSTRUCTOR --------\\
 
-    public TurretSubsystem() {
-        this.turretMotor = new WPI_TalonSRX(Constants.TURRET_ID);
+    public TurretSubsystem(int TURRET_ID, int ENCODER_PORT_ID) {
+        this.turretMotor = new WPI_TalonSRX(TURRET_ID);
 
         // Dont use encoder in robot sim
         if(RobotBase.isReal()){
-            this.encoder = new DutyCycleEncoder(Constants.ENCODER_PORT_ID);
+            this.encoder = new DutyCycleEncoder(ENCODER_PORT_ID);
         }
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
         logger.log(Constants.LOG_LEVEL_INFO, "Starting TurretSubsystem");
@@ -80,7 +80,7 @@ public class TurretSubsystem extends SubsystemBase {
 
         this.turretMotor.set(ControlMode.PercentOutput, speed);
         
-        logger.log(Constants.LOG_LEVEL_INFO, "Set speed to " + getSpeed());
+        logger.log(Constants.LOG_LEVEL_FINER, "Set speed to " + getSpeed());
     }
 
     public double getSpeed() {

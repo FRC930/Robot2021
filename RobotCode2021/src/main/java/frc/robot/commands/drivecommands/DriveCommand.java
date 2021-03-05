@@ -79,6 +79,6 @@ public class DriveCommand extends CommandBase {
       stickY = 0;
     }
     // sends the values of our sticks (with some math for turning) to our drive train motors
-    driveSubsystem.runAt((stickY - stickX), (stickY + stickX));
+    driveSubsystem.tankDrive((stickY - stickX), (stickY + stickX));
   } //End of method run()
 } //End of class DriveCommand

@@ -55,7 +55,7 @@ public class LimelightSubsystem extends SubsystemBase {
     // -------- DECLARATIONS --------\\
 
     // network table that holds the limelight's settings
-    private NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+    private NetworkTable limelightTable;
 
     // shuffleboardUtility
     //private ShuffleboardUtility shuffleboardUtility;
@@ -96,7 +96,8 @@ public class LimelightSubsystem extends SubsystemBase {
 
     //-------- CONSTRUCTOR --------\\
 
-    public LimelightSubsystem() {
+    public LimelightSubsystem(NetworkTable _limelightTable) {
+        limelightTable = _limelightTable;
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
     }
 
@@ -135,9 +136,9 @@ public class LimelightSubsystem extends SubsystemBase {
         error = (ERROR_EQ_SLOPE * estDistance) + ERROR_EQ_INTERCEPT;
         distanceAndError = estDistance + error;
 
-        logger.log(Constants.LOG_LEVEL_FINE, "Estimated distance = " + estDistance);
-        logger.log(Constants.LOG_LEVEL_FINE, "Error = " + error);
-        logger.log(Constants.LOG_LEVEL_FINE, "estDistance + error = " + distanceAndError);
+        logger.log(Constants.LOG_LEVEL_FINER, "Estimated distance = " + estDistance);
+        logger.log(Constants.LOG_LEVEL_WARNING, "Error = " + error);
+        logger.log(Constants.LOG_LEVEL_FINER, "estDistance + error = " + distanceAndError);
         logger.exiting(LimelightSubsystem.class.getName(), "getDistance()");
 
         return distanceAndError;

@@ -45,8 +45,8 @@ public class ClimberArmSubsystem extends SubsystemBase {
      * <h3>ClimberArmSubsystem</h3> This default constructor initializes the
      * {@link #climberArmMotor motor controller} to the right motor controller.
      */
-    public ClimberArmSubsystem() {
-        climberArmMotor = new WPI_VictorSPX(Constants.CLIMBER_ARM_ID);
+    public ClimberArmSubsystem(int CLIMBER_ARM_ID) {
+        climberArmMotor = new WPI_VictorSPX(CLIMBER_ARM_ID);
 
         // Dont use the encoder in simulation
         if(RobotBase.isReal()){
@@ -66,7 +66,7 @@ public class ClimberArmSubsystem extends SubsystemBase {
      */
     public void setSpeed(double speed) {
         logger.entering(ClimberArmSubsystem.class.getName(), "Extend");
-        logger.log(Constants.LOG_LEVEL_INFO, "motorSpeed: " + speed);
+        logger.log(Constants.LOG_LEVEL_INFO, "Expected Motor Speed: " + speed);
 
         climberArmMotor.set(ControlMode.PercentOutput, speed);
 
@@ -82,7 +82,7 @@ public class ClimberArmSubsystem extends SubsystemBase {
      */
     public double getSpeed() {
         logger.entering(ClimberArmSubsystem.class.getName(), "getSpeed");
-        logger.log(Constants.LOG_LEVEL_INFO, "motorSpeed: " + climberArmMotor.getMotorOutputPercent());
+        logger.log(Constants.LOG_LEVEL_INFO, "Actual Motor Speed: " + climberArmMotor.getMotorOutputPercent());
         logger.exiting(ClimberArmSubsystem.class.getName(), "getSpeed");
 
         return climberArmMotor.getMotorOutputPercent();

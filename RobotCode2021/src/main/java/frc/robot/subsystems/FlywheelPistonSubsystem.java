@@ -55,8 +55,8 @@ public class FlywheelPistonSubsystem extends SubsystemBase {
     /**
      * This constructor will assign {@link #flywheelPiston} to the correct hardware
      */
-    public FlywheelPistonSubsystem() {
-        flywheelPiston = new Solenoid(Constants.SHOOTER_SOLENOID_ID);
+    public FlywheelPistonSubsystem(int SHOOTER_SOLENOID_ID) {
+        flywheelPiston = new Solenoid(SHOOTER_SOLENOID_ID);
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
     }
 
@@ -77,7 +77,7 @@ public class FlywheelPistonSubsystem extends SubsystemBase {
      * @return the solenoid position using the custom enum
      */
     public boolean get() {
-        logger.log(Constants.LOG_LEVEL_FINE, "getPistonValue: " + (flywheelPiston.get() ? "True" : "False"));
+        logger.log(Constants.LOG_LEVEL_FINER, "getPistonValue: " + (flywheelPiston.get() ? "True" : "False"));
         return flywheelPiston.get();
     }
 } // end of class FlywheelPistonSubsystem
