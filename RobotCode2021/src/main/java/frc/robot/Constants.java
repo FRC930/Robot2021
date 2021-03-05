@@ -26,7 +26,6 @@ public final class Constants {
 
     // [-------------------MOTOR IDS--------------------------]
 
-    public static final int INTAKE_ID = 17;
     public static final int COLOR_WHEEL_ID = 333;
 
 

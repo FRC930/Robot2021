@@ -111,6 +111,9 @@ public class RobotContainer {
   private final int DRIVER_CONTROLLER_ID = 0; // The gamecube controller
   private final int CODRIVER_CONTROLLER_ID = 1; // The xbox controller
 
+  // MOTOR IDs
+  private final int INTAKE_ID = 17;
+
   // -------- DECLARATIONS --------\\
   private static final Logger frcRobotLogger = Logger.getLogger(RobotContainer.class.getPackageName());
 
@@ -218,7 +221,7 @@ public class RobotContainer {
     // colorWheelSpinnerSubsystem = new ColorWheelSpinnerSubsystem();
 
     // (INTAKE_ID)
-    intakeMotorSubsystem = new IntakeMotorSubsystem(Constants.INTAKE_ID);
+    intakeMotorSubsystem = new IntakeMotorSubsystem(INTAKE_ID);
     // (INTAKE_SOLENOID_ID)
     intakePistonSubsystem = new IntakePistonSubsystem(0);
 
@@ -236,9 +239,10 @@ public class RobotContainer {
     */
 
     // Must be initialized after intake
-    //the first boolean determines to use field orientation if true
+    // the first boolean determines to use field orientation if true
     // the second boolean if true halves the speed
-    driveSubsystem = new DriveSubsystem(drfid, dlfid, drbid, dlbid, DRIVE_TYPE.SWERVE_DRIVE, intakeMotorSubsystem, false, true);
+    // due to the wiring of the gyro, both the intake and the gyro are tied together. because of this, we need to use the intake_id for this gyro.
+    driveSubsystem = new DriveSubsystem(INTAKE_ID, drfid, dlfid, drbid, dlbid, DRIVE_TYPE.SWERVE_DRIVE, intakeMotorSubsystem, false, true);
     //swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
 
     // (HOPPER_ID)

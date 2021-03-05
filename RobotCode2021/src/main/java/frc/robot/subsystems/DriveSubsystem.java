@@ -114,6 +114,8 @@ public class DriveSubsystem extends SubsystemBase {
   private double gyroAngle;
   private SwerveDriveOdometry swerveDriveOdometry;
 
+  private int gyroID;
+
   /*
   private final SwerveDrivePoseEstimator m_poseEstimator =
       new SwerveDrivePoseEstimator(
@@ -144,7 +146,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // -------- CONSTRUCTOR --------\\
 
-  public DriveSubsystem(int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, DRIVE_TYPE _driveType, IntakeMotorSubsystem _intake, boolean _usingGyro, boolean _slowSpeed) {
+  public DriveSubsystem(int _gyroID, int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, DRIVE_TYPE _driveType, IntakeMotorSubsystem _intake, boolean _usingGyro, boolean _slowSpeed) {
     
     driveType = _driveType;
 
@@ -152,6 +154,8 @@ public class DriveSubsystem extends SubsystemBase {
     driveLeftFrontIDs = _driveLeftFrontIDs;
     driveRightBackIDs = _driveRightBackIDs;
     driveLeftBackIDs = _driveLeftBackIDs;
+
+    gyroID = _gyroID;
     
     switch(driveType) {
 
@@ -191,9 +195,9 @@ public class DriveSubsystem extends SubsystemBase {
     // Move gyro to port 16 so simulator does not break
     if(RobotBase.isReal())
     {
-      gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
+      gyroTalon = new WPI_TalonSRX(gyroID);
     } else {
-      gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID + 10);
+      gyroTalon = new WPI_TalonSRX(gyroID + 10);
     }
 
     // the gyro attached to the talon, used to track position and rotation
