@@ -10,15 +10,16 @@ package frc.robot.commands.drivecommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.SwerveDriveSubsystem;
 
-public class StopDriveCommand extends CommandBase {
-    private DriveSubsystem driveSubsystem;
-    public StopDriveCommand(DriveSubsystem dSubsystem){
+public class ResetSwerveDriveCommand extends CommandBase {
+    private SwerveDriveSubsystem driveSubsystem;
+    public ResetSwerveDriveCommand(SwerveDriveSubsystem dSubsystem){
         driveSubsystem = dSubsystem;
     }
     @Override
     public void initialize() {  
-        driveSubsystem.tankDrive(0, 0); 
+        driveSubsystem.resetWheels();
     }
     // Called every time the scheduler runs while the command is scheduled.
     @Override
@@ -33,6 +34,9 @@ public class StopDriveCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
+        // if(driveSubsystem.getPose() ){
+
+        // }
         return true;
     }
 }

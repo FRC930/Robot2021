@@ -32,8 +32,8 @@ public class TowerSubsystem extends SubsystemBase {
 
     //-------- CONSTRUCTOR --------\\
 
-    public TowerSubsystem() {
-        towerMotor = new WPI_VictorSPX(Constants.TOWER_ID);  
+    public TowerSubsystem(int TOWER_ID) {
+        towerMotor = new WPI_VictorSPX(TOWER_ID);  
     }   
     
     //-------- METHODS --------\\

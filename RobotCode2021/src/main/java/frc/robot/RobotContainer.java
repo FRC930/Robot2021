@@ -29,7 +29,7 @@ import frc.robot.commands.endgamecommands.*;
 
 // --Subsystem imports
 import frc.robot.subsystems.*;
-
+import frc.robot.subsystems.DriveSubsystem.DRIVE_TYPE;
 // --Trigger imports
 import frc.robot.triggers.*;
 
@@ -47,6 +47,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+// limelight
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 //-------- CLASS RobotContainer --------\\
 
@@ -126,15 +130,15 @@ public class RobotContainer {
   // -------- SUBSYSTEMS --------\\
 
   // --Endgame subsystem
-  private final ClimberArmSubsystem climberArmSubsystem;
+  // private final ClimberArmSubsystem climberArmSubsystem;
 
   // --Color wheel stuff subsystems
   // private final ColorSensorSubsystem colorSensorSubsystem;
   // private final ColorWheelSpinnerSubsystem colorWheelSpinnerSubsystem;
 
   // --Drive subsystem
-  //private final DriveSubsystem driveSubsystem;
-  private final SwerveDriveSubsystem swerveDriveSubsystem;
+  private DriveSubsystem driveSubsystem;
+  //private SwerveDriveSubsystem swerveDriveSubsystem;
 
   // --Shooter stuff subsystems
   private final FlywheelSubsystem flywheelSubsystem;
@@ -170,8 +174,9 @@ public class RobotContainer {
   // -------- COMMANDS --------\\
 
   // --Drive commands
-  private final SwerveDriveCommand driveCommand;
-  private final ClimberArmCommandGroup climberArmCommandGroup;
+  private DriveCommand driveCommand;
+  //private final ClimberArmCommandGroup climberArmCommandGroup;
+  private SwerveDriveCommand swerveDriveCommand;
 
   // --Hopper commands
   // private final StopHopperCommand stopHopperCommand;
@@ -212,37 +217,63 @@ public class RobotContainer {
     // colorSensorSubsystem = new ColorSensorSubsystem();
     // colorWheelSpinnerSubsystem = new ColorWheelSpinnerSubsystem();
 
-    hopperSubsystem = new HopperSubsystem();
+    // (INTAKE_ID)
+    intakeMotorSubsystem = new IntakeMotorSubsystem(Constants.INTAKE_ID);
+    // (INTAKE_SOLENOID_ID)
+    intakePistonSubsystem = new IntakePistonSubsystem(0);
 
-    intakeMotorSubsystem = new IntakeMotorSubsystem();
-    intakePistonSubsystem = new IntakePistonSubsystem();
+    // SWERVE DRIVE ARRAYS
+    int[] drfid = {3, 7, 11};
+    int[] dlfid = {1, 5, 9};
+    int[] drbid = {4, 8, 12};
+    int[] dlbid = {2, 6, 10};
+    // TANK DRIVE ARRAYS
+    /*
+    int[] drfid = {3, null, null};
+    int[] dlfid = {1, null, null};
+    int[] drbid = {4, null, null};
+    int[] dlbid = {2, null, null};
+    */
 
     // Must be initialized after intake
-    swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
+    //the first boolean determines to use field orientation if true
+    // the second boolean if true halves the speed
+    driveSubsystem = new DriveSubsystem(drfid, dlfid, drbid, dlbid, DRIVE_TYPE.SWERVE_DRIVE, intakeMotorSubsystem, false, true);
+    //swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
 
-    kickerSubsystem = new KickerSubsystem();
+    // (HOPPER_ID)
+    hopperSubsystem = new HopperSubsystem(13);
 
-    climberArmSubsystem = new ClimberArmSubsystem();
+    // (KICKER_ID)
+    kickerSubsystem = new KickerSubsystem(14);
+
+    // (CLIMBER_ARM_ID)
+    //climberArmSubsystem = new ClimberArmSubsystem(12);
 
     // ledSubsystem = new LEDSubsystem();
 
-    limelightSubsystem = new LimelightSubsystem();
+    // (_limelightNetworkInstance)
+    limelightSubsystem = new LimelightSubsystem(NetworkTableInstance.getDefault().getTable("limelight"));
 
-    flywheelSubsystem = new FlywheelSubsystem();
-    flywheelPistonSubsystem = new FlywheelPistonSubsystem();
+    // (SHOOTER_LEAD_ID, SHOOTER_SLAVE_ID)
+    flywheelSubsystem = new FlywheelSubsystem(19, 18);
+    // (SHOOTER_SOLENOID_ID)
+    flywheelPistonSubsystem = new FlywheelPistonSubsystem(1);
 
-    towerSubsystem = new TowerSubsystem();
+    // (TOWER_ID)
+    towerSubsystem = new TowerSubsystem(16);
 
-    turretSubsystem = new TurretSubsystem();
+    // (TURRET_ID, ENCODER_PORT_ID)
+    turretSubsystem = new TurretSubsystem(15, 0);
 
     // --Commands
 
     // endgame
-    climberArmCommandGroup = new ClimberArmCommandGroup(climberArmSubsystem, coDriverController, XB_AXIS_LEFT_Y,
-        new JoystickButton(coDriverController, XB_RB));
+    // climberArmCommandGroup = new ClimberArmCommandGroup(climberArmSubsystem, coDriverController, XB_AXIS_LEFT_Y,
+    //     new JoystickButton(coDriverController, XB_RB));
 
     // drive (NOTE: This is where we bind the driver controls to the drivetrain)
-    driveCommand = new SwerveDriveCommand(swerveDriveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
+    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
 
     // hopper
     defaultStopHopperCommand = new DefaultStopHopperCommand(hopperSubsystem);
@@ -323,9 +354,9 @@ public class RobotContainer {
     // B Button
     //JoystickButton positionalButton = new JoystickButton(driverController, GC_B);
     // L Button
-    //JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
+    JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
     // ZR Button
-    AxisTrigger shootButton = new AxisTrigger(driverController, XB_AXIS_RT);
+    JoystickButton shootButton = new JoystickButton(coDriverController, XB_RB);
 
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
@@ -341,7 +372,7 @@ public class RobotContainer {
     // positionalButton.whileActiveOnce(positionalControlCommandGroup);
 
     // Drive command binds
-    driveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
+    swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
 
     // Shooter command binds
     shootButton.whenActive(new ShootPowerCellCommandGroup(flywheelSubsystem, towerSubsystem, hopperSubsystem,
@@ -439,7 +470,7 @@ public class RobotContainer {
     turretFrontRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.FRONT_RIGHT_POSITION));
     turretBackRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.BACK_RIGHT_POSITION));
 
-    endgameSafetyButton.whileActiveOnce(climberArmCommandGroup);
+    // endgameSafetyButton.whileActiveOnce(climberArmCommandGroup);
     intakePistonTrigger.toggleWhenActive(new ExtendIntakePistonCommand(intakePistonSubsystem))
         .whenInactive(new RetractIntakePistonCommand(intakePistonSubsystem));
     intakeMotorTrigger.toggleWhenActive(new RunIntakeMotorsCommand(intakeMotorSubsystem))
@@ -463,7 +494,7 @@ public class RobotContainer {
       // ManualIntakeCommand(intakeMotorSubsystem, coDriverController,
       // XB_AXIS_RIGHT_Y));
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
-      scheduler.setDefaultCommand(swerveDriveSubsystem, driveCommand);
+      scheduler.setDefaultCommand(driveSubsystem, swerveDriveCommand);
       scheduler.setDefaultCommand(hopperSubsystem, defaultHopperCommand);
       scheduler.setDefaultCommand(flywheelSubsystem, defaultFlywheelCommand);
       scheduler.setDefaultCommand(limelightSubsystem,
@@ -483,7 +514,7 @@ public class RobotContainer {
                                                                         // PIDController(Constants.TURRET_P,
                                                                         // Constants.TURRET_I, Constants.TURRET_D),
                                                                         // coDriverController, XB_AXIS_LEFT_X));
-    scheduler.setDefaultCommand(swerveDriveSubsystem, driveCommand);
+    scheduler.setDefaultCommand(driveSubsystem, driveCommand);
     scheduler.setDefaultCommand(hopperSubsystem, defaultStopHopperCommand);
     scheduler.setDefaultCommand(flywheelSubsystem,
         new DefaultFlywheelCommand(flywheelSubsystem));

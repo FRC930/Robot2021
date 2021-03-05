@@ -38,8 +38,8 @@ public class IntakeMotorSubsystem extends SubsystemBase {
     /**
      * This constructor initializes the {@link #intakeMotorController} to the proper hardware
      */
-    public IntakeMotorSubsystem() {
-        intakeMotorController = new WPI_TalonSRX(Constants.INTAKE_ID);
+    public IntakeMotorSubsystem(int INTAKE_ID) {
+        intakeMotorController = new WPI_TalonSRX(INTAKE_ID);
     }
 
     //-------- METHODS --------\\

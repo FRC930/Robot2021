@@ -43,6 +43,7 @@ public class ToggleShiftCommand extends CommandBase {
 
         state = !state;
 
+        // TODO: Error handling
         driveSubsystem.setShifterState(state);
     }
 
