@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.controller.RamseteController;
 
@@ -59,7 +60,7 @@ public class TestCommand extends SequentialCommandGroup {
     /**
      * Creates a new Autonomous.
      */
-    private final double AUTO_SHOOTER_SPEED = 0.8;
+    private final double AUTO_SHOOTER_SPEED = 0.5;
 
     public TestCommand(SwerveDriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
             IntakeMotorSubsystem iMotorSubsystem, FlywheelSubsystem fSubsystem, TowerSubsystem towSubsystem,
@@ -78,8 +79,7 @@ public class TestCommand extends SequentialCommandGroup {
         double maxA = Math.PI;
         // Configurate the values of all trajectories for max velocity and acceleration
         TrajectoryConfig config =
-        new TrajectoryConfig(Constants.KMAXSPEED,
-        Constants.KMAXACCELERATION)
+        new TrajectoryConfig(2, 1)
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(dSubsystem.getKinematics())
         .setEndVelocity(1)
@@ -88,8 +88,7 @@ public class TestCommand extends SequentialCommandGroup {
         
         //a second trajectory config this one is reversed
         TrajectoryConfig reverseConfig =
-        new TrajectoryConfig(Constants.KMAXSPEED,
-        Constants.KMAXACCELERATION)
+        new TrajectoryConfig(2, 1)
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(dSubsystem.getKinematics())
         .setEndVelocity(1)
@@ -98,8 +97,7 @@ public class TestCommand extends SequentialCommandGroup {
         .setReversed(true);
 
         TrajectoryConfig slowConfig =
-        new TrajectoryConfig(Constants.KMAXSPEED,
-        2.0)
+        new TrajectoryConfig(2, 1)
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(dSubsystem.getKinematics())
         // Apply the voltage constraint
@@ -109,19 +107,17 @@ public class TestCommand extends SequentialCommandGroup {
         // -------- Trajectories -------- \\
         // Generates a trajectory 
 
-        String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/Test.wpilib.json";
+    String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/Test.wpilib.json";
     Trajectory trajectory;
     try {
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        //logger.log(Constants.LOG_LEVEL_INFO, "GalaticSearch_A_Red tragectory path: " + trajectoryPath.toString());
-        trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    } catch (IOException ex) {
-        DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-        //logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
-        throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
-    }
-
-        
+         Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+         //logger.log(Constants.LOG_LEVEL_INFO, "GalaticSearch_A_Red tragectory path: " + trajectoryPath.toString());
+         trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+     } catch (IOException ex) {
+         DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+         //logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
+         throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
+     }
 
         // -------- RAMSETE Commands -------- \\
         // Creates a command that can be added to the command scheduler in the sequential command
@@ -147,9 +143,7 @@ public class TestCommand extends SequentialCommandGroup {
 
         // add commands here to run during auto
         addCommands(
-            new ResetSwerveDriveCommand(dSubsystem),
-            command1,
-            new StopDriveCommand(dSubsystem)
+        command1
         );
         //returnIntakeCommand);
     }

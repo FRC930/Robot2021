@@ -71,7 +71,7 @@ import java.util.logging.*;
 
 public class SlalomCommand extends SequentialCommandGroup {
 
-    private static final Logger logger = Logger.getLogger(GalaticSearch_A_RedCommand.class.getName());
+    private static final Logger logger = Logger.getLogger(SlalomCommand.class.getName());
   /**
    * Path Description: ----------------- Shoot 3 from initiation line move through
    * trench to grab 3 balls Shoot 3 from trench position
@@ -84,11 +84,11 @@ public class SlalomCommand extends SequentialCommandGroup {
     // -------- Trajectories -------- \\
 
     // Generates a trajectory for a path to move towards furthest ball in trench run
-    String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/GalaticSearch_A_Red.wpilib.json";
+    String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/Slalom.wpilib.json";
     Trajectory trajectory;
     try {
         Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        logger.log(Constants.LOG_LEVEL_INFO, "GalaticSearch_A_Red tragectory path: " + trajectoryPath.toString());
+        logger.log(Constants.LOG_LEVEL_INFO, "Slalom tragectory path: " + trajectoryPath.toString());
         trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
     } catch (IOException ex) {
         DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());

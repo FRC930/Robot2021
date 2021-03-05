@@ -73,7 +73,7 @@ public final class Constants {
     public static final double HOPPER_DEFAULT_SPEED = 0.3;
     public static final double HOPPER_REVERSE_SPEED = 0.35;
 
-    public static final double HOPPER_SHOOTING_SPEED = 1.0;
+    public static final double HOPPER_SHOOTING_SPEED = 0.6;
     public static final double TOWER_SPEED = 1.0;
 
     public static final double TOWER_REVERSE_SPEED = -0.5;
