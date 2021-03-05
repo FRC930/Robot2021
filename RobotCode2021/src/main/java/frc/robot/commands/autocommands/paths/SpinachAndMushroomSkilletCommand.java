@@ -102,7 +102,7 @@ public class SpinachAndMushroomSkilletCommand extends SequentialCommandGroup {
     // Creates RAMSETE Command for first trajectory
     RamseteCommand ramseteCommand1 = new RamseteCommand(
         trajectory1,
-        dSubsystem::getPose,
+        dSubsystem::getTankPose,
         new RamseteController(Constants.KRAMSETEB, Constants.KRAMSETEZETA),
         new SimpleMotorFeedforward(Constants.KSVOLTS,
                                    Constants.KVVOLT,
@@ -119,7 +119,7 @@ public class SpinachAndMushroomSkilletCommand extends SequentialCommandGroup {
     // Creates RAMSETE Command for second trajectory
     RamseteCommand ramseteCommand2 = new RamseteCommand(
         trajectory2,
-        dSubsystem::getPose,
+        dSubsystem::getTankPose,
         new RamseteController(Constants.KRAMSETEB, Constants.KRAMSETEZETA),
         new SimpleMotorFeedforward(Constants.KSVOLTS,
                                    Constants.KVVOLT,
@@ -136,7 +136,7 @@ public class SpinachAndMushroomSkilletCommand extends SequentialCommandGroup {
     // Creates RAMSETE Command for third trajectory
     RamseteCommand ramseteCommand3 = new RamseteCommand(
         trajectory3,
-        dSubsystem::getPose,
+        dSubsystem::getTankPose,
         new RamseteController(Constants.KRAMSETEB, Constants.KRAMSETEZETA),
         new SimpleMotorFeedforward(Constants.KSVOLTS,
                                    Constants.KVVOLT,

@@ -10,14 +10,13 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
-//import frc.robot.utilities.ShuffleboardUtility;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.util.logging.Logger;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
-//import com.revrobotics.CANPIDController;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -38,29 +37,30 @@ public class FlywheelSubsystem extends SubsystemBase {
     private final CANSparkMax motorLead;
     private final CANSparkMax motor2;
 
-    //private CANPIDController pidcontroller;
+    private final CANEncoder encoder;
+
 
     // -------- CONSTRUCTOR --------\\
 
-    public FlywheelSubsystem() {
+    public FlywheelSubsystem(int SHOOTER_LEAD_ID, int SHOOTER_SLAVE_ID) {
 
         // Motor declaration
         // Determines if dealing with a real robot. 
         if(RobotBase.isReal()){ 
             // If true, use hardware
-            this.motorLead = new CANSparkMax(Constants.SHOOTER_LEAD_ID, MotorType.kBrushless);
-            this.motor2 = new CANSparkMax(Constants.SHOOTER_SLAVE_ID, MotorType.kBrushless);
+            this.motorLead = new CANSparkMax(SHOOTER_LEAD_ID, MotorType.kBrushless);
+            this.motor2 = new CANSparkMax(SHOOTER_SLAVE_ID, MotorType.kBrushless);
         } else { 
             // If false, use simulator
-            this.motorLead = new SparkMaxWrapper(Constants.SHOOTER_LEAD_ID, MotorType.kBrushless);
-            this.motor2 = new SparkMaxWrapper(Constants.SHOOTER_SLAVE_ID, MotorType.kBrushless);
+            this.motorLead = new SparkMaxWrapper(SHOOTER_LEAD_ID, MotorType.kBrushless);
+            this.motor2 = new SparkMaxWrapper(SHOOTER_SLAVE_ID, MotorType.kBrushless);
         }
 
         // Follow lead reverse speed
         if(RobotBase.isReal()){
             motor2.follow(motorLead, true);
         }
-
+        encoder = motorLead.getEncoder();
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
     }
 
@@ -75,7 +75,7 @@ public class FlywheelSubsystem extends SubsystemBase {
     }
 
     public double getSpeed() {
-        return motorLead.getEncoder().getVelocity();
+        return encoder.getVelocity();
         
     }
 

@@ -8,6 +8,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.util.Units;
+
 import java.util.logging.*;
 
 /**
@@ -24,31 +26,14 @@ public final class Constants {
 
     // [-------------------MOTOR IDS--------------------------]
 
-    public static final int DRIVE_RIGHT_FRONT_ID = 3;
-    public static final int DRIVE_RIGHT_BACK_ID = 4;
-    public static final int DRIVE_LEFT_FRONT_ID = 1;
-    public static final int DRIVE_LEFT_BACK_ID = 2;
-
-    public static final int TURRET_ID = 15;
     public static final int INTAKE_ID = 17;
-
-    public static final int SHOOTER_LEAD_ID =  19;
-    public static final int SHOOTER_SLAVE_ID = 18;
-
-    public static final int HOPPER_ID = 13;
-    public static final int TOWER_ID = 16;
-    public static final int KICKER_ID = 14;
-
     public static final int COLOR_WHEEL_ID = 333;
 
-    public static final int CLIMBER_ARM_ID = 12;
 
     // [-------------------MOTOR IDS--------------------------]
 
     // [-------------------PISTON IDS-------------------------]
 
-    public static final int INTAKE_SOLENOID_ID = 0;
-    public static final int SHOOTER_SOLENOID_ID = 1;
     public static final int SHIFTER_SOLENOID_ID = 2;
 
     public static final int COMPRESSOR_PORT = 0;
@@ -57,8 +42,7 @@ public final class Constants {
 
     // [-------------------ROBORIO PORT IDS---------------------------]
 
-    public static final int ENCODER_PORT_ID = 0;
-	  public static final int HOPPER_ENCODER_PORT_ID = 1; 
+	public static final int HOPPER_ENCODER_PORT_ID = 1; 
     public static final int CLIMBER_ENCODER_PORT_ID = 2;
 
     // [-------------------ROBORIO PORT IDS---------------------------]
@@ -74,7 +58,7 @@ public final class Constants {
     public static final double HOPPER_DEFAULT_SPEED = 0.3;
     public static final double HOPPER_REVERSE_SPEED = 0.35;
 
-    public static final double HOPPER_SHOOTING_SPEED = 1.0;
+    public static final double HOPPER_SHOOTING_SPEED = 0.6;
     public static final double TOWER_SPEED = 1.0;
 
     public static final double TOWER_REVERSE_SPEED = -0.5;
@@ -153,8 +137,9 @@ public final class Constants {
     public static final double KSVOLTS = 0.411;
     public static final double KVVOLT = 0.227; 
     public static final double KAVOLT = 0.0249; //this is in seconds squared per meter 
-    public static final double KMAXSPEED = 3.5; //in meters per second
+    public static final double KMAXSPEED = Units.feetToMeters(16.2); //in meters per second
     public static final double KMAXACCELERATION = 3; //in meters per seconds squared 
+    public static final double KMAXANGULARSPEED = Math.PI;
     //gyro values
     public static final double KRAMSETEB = 2;
     public static final double KRAMSETEZETA = 0.7;
@@ -165,30 +150,24 @@ public final class Constants {
     public static final DifferentialDriveKinematics KDRIVEKINEMATICS = new DifferentialDriveKinematics(KTRACKWIDTH);
     // AUTO code values---------------------------------------]
 
-    // DRIVETRAIN Constants --------------------------------]
+    // DRIVE Constants --------------------------------]
 
+    //Drivetrain
     public static final double DRIVE_DEADBAND_JOYSTICK = 0.000125;
     public static final double DRIVE_TURNING_MULTIPLIER = 0.5;
 
-    // DRIVETRAIN Constants --------------------------------]
+    //Swervedrive
+    //TODO: Add constants for deadbands.
+
+    // DRIVE Constants --------------------------------]
 
     //[-------------------LOGGER--------------------------]
 
-    /*
     public static final Level LOG_LEVEL_FINE = Level.FINE;
     public static final Level LOG_LEVEL_FINER = Level.FINER;
     public static final Level LOG_LEVEL_FINEST = Level.FINEST;
     public static final Level LOG_LEVEL_INFO = Level.INFO;
     public static final Level LOG_LEVEL_WARNING = Level.WARNING; 
-    */
-
-    //TODO: We want to be able to change these values in Shuffleboard
-    public static final Level LOG_LEVEL_ERROR = Level.OFF;
-    public static final Level LOG_LEVEL_WARNING = Level.OFF;
-    public static final Level LOG_LEVEL_INFO = Level.OFF;
-    public static final Level LOG_LEVEL_FINE = Level.OFF;
-    public static final Level LOG_LEVEL_FINER = Level.OFF;
-    public static final Level LOG_LEVEL_FINEST = Level.OFF;
 
     //[-------------------LOGGER--------------------------]
 
