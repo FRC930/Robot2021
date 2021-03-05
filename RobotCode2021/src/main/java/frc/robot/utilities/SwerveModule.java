@@ -59,8 +59,6 @@ public class SwerveModule {
         //Set PID limits 
         m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
 
-        driveFx.configOpenloopRamp(2);
-
         if(false) {
         //SJW https://www.chiefdelphi.com/t/can-it-be-done-talonfx-cancoder-absolute-encoder/387576
         TalonFXConfiguration config = new TalonFXConfiguration();

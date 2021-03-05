@@ -68,9 +68,12 @@ public class TestCommand extends SequentialCommandGroup {
         // this is our config for how much power goes to the motors
         var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getKinematics(), Constants.KMAXSPEED);
         //PID values
-        int kP = 0;
-        int kI = 0;
-        int kD = 0;
+        double kP = 0.2;
+        double kI = 0;
+        double kD = 0;
+        double kPRot = 0.2;
+        double kIRot = 0;
+        double kDRot = 0;
         double maxV = Math.PI * 2;
         double maxA = Math.PI;
         // Configurate the values of all trajectories for max velocity and acceleration
@@ -128,7 +131,7 @@ public class TestCommand extends SequentialCommandGroup {
         // This is our first atuo command this will run the drivetrain using the first trajectory we made
 
         SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory, dSubsystem::getPose, dSubsystem.getKinematics(), 
-            new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
+            new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
 
         
