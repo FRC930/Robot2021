@@ -102,6 +102,11 @@ public class SwerveModule {
         //}
     }
 
+    /**
+    * Sets swerve module's  speed
+    * 
+    * @param state The SwerveModuleState this module should follow
+    */
     public void drive(SwerveModuleState state) {
         SwerveModuleState optimized = SwerveModuleState.optimize(state, getAngle());
         double angle = optimized.angle.getDegrees();
@@ -127,6 +132,7 @@ public class SwerveModule {
         return ((driveFx.getSelectedSensorVelocity() * 10 / 2048) * RADIUS * Math.PI) / 6.86;
     }
     
+    // Return the speed and angle of this module as a SwerveModuleState
     public SwerveModuleState getSwerveStates(){
         return new SwerveModuleState(getSpeed(), getAngle());
     }
