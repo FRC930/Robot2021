@@ -67,6 +67,7 @@ public class TurretSubsystem extends SubsystemBase {
 
 
         SmartDashboard.putNumber("Turret speed unclamped", speed);
+        SmartDashboard.putNumber("Turret pos", encoderPosition);
         speed = clamp(speed);
         if (encoderPosition > Constants.UPPER_LIMIT) {
             if (speed < 0) {

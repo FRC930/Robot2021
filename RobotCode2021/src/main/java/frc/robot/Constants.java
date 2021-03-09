@@ -58,7 +58,7 @@ public final class Constants {
     public static final double HOPPER_DEFAULT_SPEED = 0.3;
     public static final double HOPPER_REVERSE_SPEED = 0.35;
 
-    public static final double HOPPER_SHOOTING_SPEED = 0.6;
+    public static final double HOPPER_SHOOTING_SPEED = 0.7;
     public static final double TOWER_SPEED = 1.0;
 
     public static final double TOWER_REVERSE_SPEED = -0.5;
@@ -98,8 +98,8 @@ public final class Constants {
     public static final double TURRET_SET_POSITION_D = 0.0;
 
     // encoder positions for setting turret to one of four directions
-    public static final double TURRET_BACK_POSITION = 0.635;
-    public static final double TURRET_FRONT_POSITION = 0.383;
+    public static final double TURRET_BACK_POSITION = 0.635;  // Toward intake
+    public static final double TURRET_FRONT_POSITION = 0.383;  // Toward Back of robot
     public static final double TURRET_RIGHT_POSITION = 0.51;
     public static final double TURRET_LEFT_POSITION = 0.256;
 
