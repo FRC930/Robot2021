@@ -63,13 +63,13 @@ public final class Constants {
 
     public static final double TOWER_REVERSE_SPEED = -0.5;
     public static final double KICKER_SPEED = 1.0;
-    public static final double INTAKE_SPEED = 0.6; 
+    public static final double INTAKE_SPEED = 0.6;
     public static final double FLYWHEEL_TELEOP_SPEED = 0.5;
 
     public static final double FLYWHEEL_AUTON_SPEED = 0.8;
     public static final double CLIMBER_EXTEND_SPEED = 0.1;
     public static final double CLIMBER_RETRACT_SPEED = -0.1;
-  
+
     // [-------------------SPEEDS--------------------------]
 
     // [-------------------LIMITS--------------------------]
@@ -132,22 +132,21 @@ public final class Constants {
     public static final int LIMELIGHT_LEDS_ON = 3;
     public static final int LIMELIGHT_LEDS_OFF = 1;
 
-    //[--------------------AUTO--------------------------]
-    
-    public static final double KSVOLTS = 0.411;
-    public static final double KVVOLT = 0.227; 
-    public static final double KAVOLT = 0.0249; //this is in seconds squared per meter 
+    // [--------------------AUTO--------------------------]
+
+    public static final double KSVOLTS = 0.67;
+    public static final double KVVOLT = 2.31;
+    public static final double KAVOLT = 0.0844; // this is in seconds squared per meter
     public static final double KMAXSPEED = Units.feetToMeters(16.2); //in meters per second
-    public static final double KMAXACCELERATION = 3; //in meters per seconds squared 
+    public static final double KMAXACCELERATION = 2; //in meters per seconds squared 
     public static final double KMAXANGULARSPEED = Math.PI;
     //gyro values
     public static final double KRAMSETEB = 2;
     public static final double KRAMSETEZETA = 0.7;
-    
-    //Track width of our robot
-    public static final double KTRACKWIDTH = 0.69; //in meters 
-    public static final double KPDRIVEVEL =  0.693;
-    public static final DifferentialDriveKinematics KDRIVEKINEMATICS = new DifferentialDriveKinematics(KTRACKWIDTH);
+
+    // Track width of our robot
+    public static final double KTRACKWIDTH = 0.5715; // in meters
+    public static final double KPDRIVEVEL = 1.49;
     // AUTO code values---------------------------------------]
 
     // DRIVE Constants --------------------------------]

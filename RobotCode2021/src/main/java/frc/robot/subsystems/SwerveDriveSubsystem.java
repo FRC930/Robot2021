@@ -128,6 +128,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   public void drive(SwerveModuleState[] states) {
     logger.entering(SwerveDriveSubsystem.class.getName(), "drive");
 
+    System.out.println("Set FL:" + states[0].toString());
+    System.out.println("Set FR:" + states[1].toString());
+    System.out.println("Set BL:" + states[2].toString());
+    System.out.println("Set BR:" + states[3].toString());
+    System.out.println("Pose: " + od.getPoseMeters());
     FLDrive.drive(states[0]);
     FRDrive.drive(states[1]);
     BLDrive.drive(states[2]);
@@ -148,7 +153,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     BLDrive.setAngle(0);
     BRDrive.setAngle(0);
   }
-
+  
   public SwerveDriveKinematics getKinematics() {
     return m_kinematics;
   }

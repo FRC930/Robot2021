@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.cscore.HttpCamera;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -44,11 +45,21 @@ public class Robot extends TimedRobot {
         m_robotContainer = new RobotContainer();
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
 
+        
+
         commandScheduler = CommandScheduler.getInstance();  
         limelightCamera = new HttpCamera("limelight", "http://10.9.30.11:5801/stream.mjpg");
-
+        
         ShuffleboardTab driveTab = Shuffleboard.getTab("Driver Station");
         driveTab.add("LL", limelightCamera);
+
+        //Runs sim method if robot is simulated
+        if(RobotBase.isSimulation()){
+            // Flush NetworkTables every loop. This ensures that robot pose and other values
+            // are sent during every iteration.
+            setNetworkTablesFlushEnabled(true);
+            m_robotContainer.robotSimInit();
+        }
 
         // SmartDashboard.putNumber("TP", 0.03);
         // SmartDashboard.putNumber("TI", 0.0);
@@ -80,6 +91,11 @@ public class Robot extends TimedRobot {
 
         commandScheduler.run();
 
+        //Runs sim method if robot is simulated
+        if(RobotBase.isSimulation()){
+            m_robotContainer.robotSimPeriodic();
+        }
+
         //shuffleboard.run();
     }
 
@@ -100,12 +116,19 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        m_robotContainer.beginAutoRunCommands();
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
         
-        // schedule the autonomous command (example)
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.schedule();
+        if(RobotBase.isReal()){
+            m_robotContainer.beginAutoRunCommands();
+            m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+            
+            // schedule the autonomous command (example)
+            if (m_autonomousCommand != null) {
+                m_autonomousCommand.schedule();
+            }
+        } 
+        //Runs sim method if robot is simulated
+        else {
+            m_robotContainer.autoSimInit();
         }
     }
 
@@ -114,6 +137,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
+        //Runs sim method if robot is simulated
+        if(RobotBase.isSimulation()){
+            m_robotContainer.autoSimPeriodic();
+        }
     }
 
     @Override
@@ -126,5 +153,11 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+    }
+
+    //Needed for robot simulation
+    @Override
+        public void simulationPeriodic() {
+        m_robotContainer.simPeriodic();
     }
   }
