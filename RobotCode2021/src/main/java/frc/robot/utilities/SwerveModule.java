@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
@@ -51,6 +52,7 @@ public class SwerveModule {
         steerFx = new WPI_TalonFX(turnID);
         steerEncoder = new CANCoder(encID);
 
+        driveFx.setNeutralMode(NeutralMode.Brake); // Force Brake mode
         //Set PID limits 
         m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
     }

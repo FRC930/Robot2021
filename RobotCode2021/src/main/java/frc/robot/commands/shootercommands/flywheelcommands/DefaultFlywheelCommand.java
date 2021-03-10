@@ -33,7 +33,7 @@ public class DefaultFlywheelCommand extends CommandBase {
 
   private FlywheelSubsystem m_FlywheelSubsystem;
 
-  private final double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(2750.0);
+  private final double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(2200.0);
   public final double kFlywheelMomentOfInertia = 0.00094610399; 
   private final double kFlywheelGearing = 1.0;
   
