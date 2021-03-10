@@ -198,7 +198,6 @@ public class RobotContainer {
   // -------- COMMANDS --------\\
 
   // --Drive commands
-  private DriveCommand driveCommand;
   //private final ClimberArmCommandGroup climberArmCommandGroup;
   private SwerveDriveCommand swerveDriveCommand;
 
@@ -558,7 +557,7 @@ public class RobotContainer {
                                                                         // PIDController(Constants.TURRET_P,
                                                                         // Constants.TURRET_I, Constants.TURRET_D),
                                                                         // coDriverController, XB_AXIS_LEFT_X));
-    scheduler.setDefaultCommand(driveSubsystem, driveCommand);
+    scheduler.setDefaultCommand(driveSubsystem, swerveDriveCommand);
     scheduler.setDefaultCommand(hopperSubsystem, defaultStopHopperCommand);
     scheduler.setDefaultCommand(flywheelSubsystem,
         new DefaultFlywheelCommand(flywheelSubsystem));
