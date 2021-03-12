@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import frc.robot.utilities.AutonConfig;
 import frc.robot.utilities.SwerveModule;
 import edu.wpi.first.wpilibj.estimator.SwerveDrivePoseEstimator;
 
@@ -170,6 +171,8 @@ public class DriveSubsystem extends SubsystemBase {
         break;
 
     }
+    //initializing autonomous config. Done for performance reasons
+    AutonConfig.initInstance(this);
   }
 
   //-------- METHODS --------\\
