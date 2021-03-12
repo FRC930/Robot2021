@@ -114,6 +114,25 @@ public class RobotContainer {
   // MOTOR IDs
   private final int INTAKE_ID = 17;
 
+  // PISTION IDs
+  private final int SHIFTER_SOLENOID_ID = 2;
+
+  // TURRET POSITIONS
+
+  //private final double TURRET_SET_POSITION_P = 2.5;
+  //private final double TURRET_SET_POSITION_I = 0.0;
+  //private final double TURRET_SET_POSITION_D = 0.0;
+
+  // encoder positions for setting turret to one of four directions
+  private final double TURRET_BACK_POSITION = 0.635;
+  private final double TURRET_FRONT_POSITION = 0.383;
+  private final double TURRET_RIGHT_POSITION = 0.51;
+  private final double TURRET_LEFT_POSITION = 0.256;
+
+  private final double FRONT_LEFT_POSITION = 0.3195;
+  private final double FRONT_RIGHT_POSITION = 0.4465;
+  private final double BACK_RIGHT_POSITION = 0.5725;
+
   // -------- DECLARATIONS --------\\
   private static final Logger frcRobotLogger = Logger.getLogger(RobotContainer.class.getPackageName());
 
@@ -218,13 +237,17 @@ public class RobotContainer {
     coDriverController = new Joystick(CODRIVER_CONTROLLER_ID);
     // --Subsystems
     // colorSensorSubsystem = new ColorSensorSubsystem();
-    // colorWheelSpinnerSubsystem = new ColorWheelSpinnerSubsystem();
+    // colorWheelSpinnerSubsystem = new ColorWheelSpinnerSubsystem(333);
 
     // (INTAKE_ID)
     intakeMotorSubsystem = new IntakeMotorSubsystem(INTAKE_ID);
     // (INTAKE_SOLENOID_ID)
     intakePistonSubsystem = new IntakePistonSubsystem(0);
 
+    // GENERAL DRIVE ARRAYS
+    // due to the wiring of the gyro, both the intake and the gyro are tied together. because of this, we need to use the intake_id for this gyro.
+    // additionalDriveIDs [     gyroID,    shifterSolenoidID]
+    int[] additionalDriveIDs = {INTAKE_ID, SHIFTER_SOLENOID_ID};
     // SWERVE DRIVE ARRAYS
     int[] drfid = {3, 7, 11};
     int[] dlfid = {1, 5, 9};
@@ -241,18 +264,17 @@ public class RobotContainer {
     // Must be initialized after intake
     // the first boolean determines to use field orientation if true
     // the second boolean if true halves the speed
-    // due to the wiring of the gyro, both the intake and the gyro are tied together. because of this, we need to use the intake_id for this gyro.
-    driveSubsystem = new DriveSubsystem(INTAKE_ID, drfid, dlfid, drbid, dlbid, DRIVE_TYPE.SWERVE_DRIVE, intakeMotorSubsystem, false, true);
+    driveSubsystem = new DriveSubsystem(additionalDriveIDs, drfid, dlfid, drbid, dlbid, DRIVE_TYPE.SWERVE_DRIVE, intakeMotorSubsystem, false, true);
     //swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
 
     // (HOPPER_ID)
     hopperSubsystem = new HopperSubsystem(13);
 
-    // (KICKER_ID)
-    kickerSubsystem = new KickerSubsystem(14);
+    // (KICKER_ID, HOPPER_ENCODER_PORT_ID)
+    kickerSubsystem = new KickerSubsystem(14, 1);
 
-    // (CLIMBER_ARM_ID)
-    //climberArmSubsystem = new ClimberArmSubsystem(12);
+    // (CLIMBER_ARM_ID, CLIMBER_ENCODER_PORT_ID)
+    //climberArmSubsystem = new ClimberArmSubsystem(12, 2);
 
     // ledSubsystem = new LEDSubsystem();
 
@@ -465,14 +487,15 @@ public class RobotContainer {
     autoTrackTurret.whileActiveOnce(new AutoAimTurretCommand(limelightSubsystem, turretSubsystem,
         new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D), coDriverController,
         XB_AXIS_LEFT_X));
-    turretFront.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.TURRET_FRONT_POSITION));
-    turretBack.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.TURRET_BACK_POSITION));
-    turretLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.TURRET_LEFT_POSITION));
-    turretRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.TURRET_RIGHT_POSITION));
 
-    turretFrontLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.FRONT_LEFT_POSITION));
-    turretFrontRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.FRONT_RIGHT_POSITION));
-    turretBackRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.BACK_RIGHT_POSITION));
+    turretFront.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_FRONT_POSITION));
+    turretBack.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_BACK_POSITION));
+    turretLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_LEFT_POSITION));
+    turretRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_RIGHT_POSITION));
+
+    turretFrontLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, FRONT_LEFT_POSITION));
+    turretFrontRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, FRONT_RIGHT_POSITION));
+    turretBackRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, BACK_RIGHT_POSITION));
 
     // endgameSafetyButton.whileActiveOnce(climberArmCommandGroup);
     intakePistonTrigger.toggleWhenActive(new ExtendIntakePistonCommand(intakePistonSubsystem))

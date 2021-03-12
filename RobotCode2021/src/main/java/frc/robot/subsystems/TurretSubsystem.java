@@ -34,6 +34,14 @@ public class TurretSubsystem extends SubsystemBase {
     // constant used in the conversion from encoder units to degrees
     private final double DEGREE_CONVERSION_NUMBER = .0013889;
 
+    // When the turret encoder is reset, the turret faces forward and the encoder is
+    // reset to 180 degrees. These units are in raw values.
+    private final double UPPER_LIMIT = 0.697;
+    private final double LOWER_LIMIT = 0.335;
+
+    private final double TURRET_MAX_SPEED = 0.6;
+    private final double TURRET_MAX_SET_POSITION_SPEED = 0.4;
+
     // -------- DECLARATIONS --------\\
 
     // The motor controller that will control the turret
@@ -68,11 +76,11 @@ public class TurretSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Turret speed unclamped", speed);
         speed = clamp(speed);
-        if (encoderPosition > Constants.UPPER_LIMIT) {
+        if (encoderPosition > UPPER_LIMIT) {
             if (speed < 0) {
                 speed = 0;
             }
-        } else if (encoderPosition < Constants.LOWER_LIMIT) {
+        } else if (encoderPosition < LOWER_LIMIT) {
             if (speed > 0) {
                 speed = 0;
             }
@@ -113,10 +121,10 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     private double clamp(double speed) {
-        if (speed > Constants.TURRET_MAX_SPEED) {
-            speed = Constants.TURRET_MAX_SPEED;
-        } else if (speed < -Constants.TURRET_MAX_SPEED) {
-            speed = -Constants.TURRET_MAX_SPEED;
+        if (speed > TURRET_MAX_SPEED) {
+            speed = TURRET_MAX_SPEED;
+        } else if (speed < -TURRET_MAX_SPEED) {
+            speed = -TURRET_MAX_SPEED;
         }
         return speed;
     }

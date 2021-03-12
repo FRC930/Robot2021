@@ -45,9 +45,10 @@ public class CompresserSubsystem extends SubsystemBase {
 
     /**
      * This is the default command that sets the {@link #compressorUtility compressor} to the correct hardware
+     * NOTE: Normally port = 0;
      */
-    public CompresserSubsystem() {
-        compressorUtility = new Compressor(Constants.COMPRESSOR_PORT);  
+    public CompresserSubsystem(int COMPRESSOR_PORT) {
+        compressorUtility = new Compressor(COMPRESSOR_PORT);  
     }
 
     //-------- METHODS --------\\

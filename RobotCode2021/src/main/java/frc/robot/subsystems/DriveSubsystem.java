@@ -113,6 +113,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   private int gyroID;
 
+  // tank drive
+  private int shifterSolenoidID;
+
+  // tank drive, auton config
+  private final double MOTOR_RAMP_RATE = 0.75;//0.5;
+
   /*
   private final SwerveDrivePoseEstimator m_poseEstimator =
       new SwerveDrivePoseEstimator(
@@ -143,7 +149,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // -------- CONSTRUCTOR --------\\
 
-  public DriveSubsystem(int _gyroID, int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, DRIVE_TYPE _driveType, IntakeMotorSubsystem _intake, boolean _usingGyro, boolean _slowSpeed) {
+  public DriveSubsystem(int[] additionalIDs, int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, DRIVE_TYPE _driveType, IntakeMotorSubsystem _intake, boolean _usingGyro, boolean _slowSpeed) {
     
     driveType = _driveType;
 
@@ -152,17 +158,19 @@ public class DriveSubsystem extends SubsystemBase {
     driveRightBackIDs = _driveRightBackIDs;
     driveLeftBackIDs = _driveLeftBackIDs;
 
-    gyroID = _gyroID;
+    gyroID = additionalIDs[0];
     
     switch(driveType) {
 
       case TANK_DRIVE:
+        shifterSolenoidID = additionalIDs[1];
         setTankDriveMotors();
         break;
 
       case SWERVE_DRIVE:
         setSwerveDriveMotors();
-        gyro = new PigeonIMU(_intake.getIntakeMotor());
+        //gyro = new PigeonIMU(_intake.getIntakeMotor());
+        gyro = new PigeonIMU(gyroID);
         usingGyro = _usingGyro;
         slowSpeed = _slowSpeed;
         swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics, Rotation2d.fromDegrees(0.0));
@@ -200,7 +208,7 @@ public class DriveSubsystem extends SubsystemBase {
     // TODO: Change this because GyroSubsystem already instantiates this!
     gyro = new PigeonIMU(gyroTalon);
   
-    shifter = new Solenoid(Constants.SHIFTER_SOLENOID_ID);
+    shifter = new Solenoid(shifterSolenoidID);
 
     //shuffleboardUtility = ShuffleboardUtility.getInstance();
 
@@ -228,8 +236,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
     
     // Sets the ramp rate of the robot, this will need to be configued
-    tankLeftFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
-    tankRightFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
+    tankLeftFront.configOpenloopRamp(MOTOR_RAMP_RATE);
+    tankRightFront.configOpenloopRamp(MOTOR_RAMP_RATE);
     // Sets up the differntial drive
     // drive = new DifferentialDrive(tankRightFront, tankLeftFront);
     shifter.set(true);
