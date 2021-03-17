@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -56,6 +57,7 @@ import frc.robot.commands.shootercommands.flywheelcommands.DefaultFlywheelComman
 import frc.robot.commands.shootercommands.flywheelcommands.RunFlywheelAutoCommand;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import frc.robot.Constants;
@@ -85,16 +87,20 @@ public class GalaticSearch_B_RedCommand extends SequentialCommandGroup {
 
     // Generates a trajectory for a path to move towards furthest ball in trench run
     String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/GalaticSearch_B_Red.wpilib.json";
-    Trajectory trajectory;
+    Trajectory trajectory0;
     try {
         Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
         logger.log(Constants.LOG_LEVEL_INFO, "GalaticSearch_B_Red tragectory path: " + trajectoryPath.toString());
-        trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+        trajectory0 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
     } catch (IOException ex) {
         DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
         logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
         throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
     }
+
+
+
+
 // this is our config for how much power goes to the motors
 var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getKinematics(), Constants.KMAXSPEED);
 //PID values
@@ -131,7 +137,6 @@ new TrajectoryConfig(Constants.KMAXSPEED,
 .setKinematics(dSubsystem.getKinematics())
 // Apply the voltage constraint
 .addConstraint(autoVoltageConstraint);
-
 
 // -------- Trajectories -------- \\
 // Generates a trajectory 

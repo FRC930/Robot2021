@@ -32,19 +32,19 @@ public class AutonConfig {
     
     //Class constructor - sets logger lever
     private AutonConfig(DriveSubsystem dSubsystem) {
-        autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.swerveGetKinematics(), Constants.KMAXSPEED);
+        autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getSwerveKinematics(), Constants.KMAXSPEED);
         // Configurate the values of all trajectories for max velocity and acceleration
         trajectoryConfig =
         new TrajectoryConfig(2, 1)
         // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(dSubsystem.swerveGetKinematics())
+        .setKinematics(dSubsystem.getSwerveKinematics())
         .setEndVelocity(1)
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint);
 
         reverseConfig = new TrajectoryConfig(2, 1)
         // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(dSubsystem.swerveGetKinematics())
+        .setKinematics(dSubsystem.getSwerveKinematics())
         .setEndVelocity(1)
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint)
@@ -52,7 +52,7 @@ public class AutonConfig {
 
         slowConfig = new TrajectoryConfig(2, 1)
         // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(dSubsystem.swerveGetKinematics())
+        .setKinematics(dSubsystem.getSwerveKinematics())
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint);
     }

@@ -165,20 +165,20 @@ Trajectory trajectory4 = TrajectoryGenerator.generateTrajectory(
         SwerveControllerCommand command1 = new SwerveControllerCommand(
             trajectory1, 
             dSubsystem::getPose, 
-            dSubsystem.swerveGetKinematics(), 
+            dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), 
             new PIDController(kP, kI, kD), 
             new ProfiledPIDController(kPRot, kIRot, kDRot,new TrapezoidProfile.Constraints(maxV, maxA)), 
             angle, 
             dSubsystem::swerveDrive, 
             dSubsystem);
-            SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.swerveGetKinematics(), 
+            SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
-            SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.swerveGetKinematics(), 
+            SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
-            SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.swerveGetKinematics(), 
+            SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 

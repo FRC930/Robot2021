@@ -572,9 +572,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SaltAndPepperSkilletCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
-        towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, turretSubsystem);
-    // Run path following command, then stop at the end.
+    //return new SaltAndPepperSkilletCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+        //towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, turretSubsystem);
+    return new BarrelRacingCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+      towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem);
+        // Run path following command, then stop at the end.
   }
 
   // -------- METHODS FOR SHUFFLEBOARD --------\\
