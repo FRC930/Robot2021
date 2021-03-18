@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FlywheelPistonSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.utilities.DeadbandMath;
+import frc.robot.utilities.DistanceMath;
 import frc.robot.utilities.DeadbandMath.DeadbandZone;
 import frc.robot.utilities.DeadbandMath.ShotChance;
 import frc.robot.utilities.ShooterMath;
@@ -33,10 +34,10 @@ public class CheckIfShotPossible extends CommandBase{
     public boolean isFinished() {
 
         //Set the shot type to the shooter.
-        shooterMath.setPosition(flywheelPistonSubsystem.get() ? 31.4 : 39, limeLightSubsystem.getDistance());
+        shooterMath.setPosition(flywheelPistonSubsystem.get() ? 31.4 : 39, DistanceMath.getDistY(limeLightSubsystem.getVerticleOffset()));
         shotOutcome = shooterMath.getPossibleShot();
         
-        deadbandMath.setPosition(limeLightSubsystem.getHorizontalOffset(), limeLightSubsystem.getDistance());
+        deadbandMath.setPosition(limeLightSubsystem.getHorizontalOffset(), DistanceMath.getDistY(limeLightSubsystem.getVerticleOffset()));
         deadbandZone = deadbandMath.getDeadbandZone();
         shotChance = deadbandMath.getShotChance();
 

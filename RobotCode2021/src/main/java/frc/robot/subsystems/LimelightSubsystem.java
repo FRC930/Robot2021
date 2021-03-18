@@ -30,7 +30,7 @@ public class LimelightSubsystem extends SubsystemBase {
     // logger
     private static final Logger logger = Logger.getLogger(LimelightSubsystem.class.getName());
 
-    // default limelight value :)
+    // default limelight value 
     public final double IF_YOU_SEE_THIS_CODE_NO_WORK = 0.12345;
 
     // max angle of the limelight's POV (-27 to 27)
@@ -55,7 +55,7 @@ public class LimelightSubsystem extends SubsystemBase {
     // -------- DECLARATIONS --------\\
 
     // network table that holds the limelight's settings
-    private NetworkTable limelightTable;
+    private NetworkTable  limelightTable;
 
     // shuffleboardUtility
     //private ShuffleboardUtility shuffleboardUtility;
@@ -73,26 +73,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
     private double skew;
 
-    // the Limelight's current pipeline
-    private LimelightPipelines currentPipeline;
-
     //private FIFOStack smoother = new FIFOStack(10);
-
-    // enum for the different limelight pipelines
-    public enum LimelightPipelines {
-
-        NO_ZOOM(0), ZOOM_2X(1);
-
-        private final int pipelineNumber;
-
-        LimelightPipelines(int pipelineNumber) {
-            this.pipelineNumber = pipelineNumber;
-        }
-
-        public int getPipeline() {
-            return this.pipelineNumber;
-        }
-    }
 
     //-------- CONSTRUCTOR --------\\
 
@@ -103,7 +84,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
     // -------- METHODS --------\\
 
-    // this returns the horizontal angle between the limelights crosshair and the target crosshair :)
+    // this returns the horizontal angle between the limelights crosshair and the target crosshair 
     public double getHorizontalOffset() {
 
         logger.entering(LimelightSubsystem.class.getName(), "getHorizontalOffset()");
@@ -118,7 +99,7 @@ public class LimelightSubsystem extends SubsystemBase {
         return horizontalOffset;
     }
 
-    // the distance between the robot and the goal :)
+    // the distance between the robot and the goal 
     public double getDistance() {
 
         logger.entering(LimelightSubsystem.class.getName(), "getDistance()");
@@ -144,7 +125,7 @@ public class LimelightSubsystem extends SubsystemBase {
         return distanceAndError;
     }
 
-    // whether the limelight sees a target or not :)
+    // whether the limelight sees a target or not 
     public boolean getValidTargets() {
 
         // logger.entering(LimelightSubsystem.class.getName(), "getValidTargets()");
@@ -157,7 +138,7 @@ public class LimelightSubsystem extends SubsystemBase {
         return validTarget;
     }
 
-    // this returns the verticle offset between the limelights crosshair and the target crosshair :)
+    // this returns the verticle offset between the limelights crosshair and the target crosshair 
     public double getVerticleOffset() {
 
         // logger.entering(LimelightSubsystem.class.getName(), "getVerticleOffset()");
@@ -184,34 +165,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
     }
 
-    // sets the pipeline, or configuration, of the limelight
-    public void setPipeline(LimelightPipelines pipeline) {
-
-        // logger.entering(LimelightSubsystem.class.getName(), "setPipeline()");
-
-        // sets the pipeline to the associated number of the pipeline enum
-        limelightTable.getEntry("pipeline").setNumber(pipeline.getPipeline());
-        currentPipeline = pipeline;
-
-        // logger.log(Level.FINE, "Pipeline: " + pipeline);
-        // logger.exiting(LimelightSubsystem.class.getName(), "setPipeline()");
-    }
-
-    // returns the Limelight's pipeline, returns "error" if no pipeline can be found
-    public String getPipeline() {
-
-        // holds the name of the current pipeline
-        String pipelineName = "error";
-
-        if(currentPipeline.getPipeline() == 0) {
-            pipelineName = "no zoom";
-        } else if(currentPipeline.getPipeline() == 1) {
-            pipelineName = "zoom";
-        }
-
-        return pipelineName;
-    }
-
+    
     // used to turn the limelight LEDs on and off
     public void setLightMode(int mode) {
         limelightTable.getEntry("ledMode").setNumber(mode);
@@ -220,20 +174,6 @@ public class LimelightSubsystem extends SubsystemBase {
     @Override
     public void periodic() {    
 
-        // if(getDistance() > DISTANCE_THRESHOLD) {
-        //     setPipeline(LimelightPipelines.ZOOM_2X);
-        // } else {
-        //     setPipeline(LimelightPipelines.NO_ZOOM);
-        // }
-
-        // SmartDashboard.putNumber("horiz offset", getHorizontalOffset());
-        // SmartDashboard.putNumber("verical offset", getVerticleOffset());
-        // SmartDashboard.putBoolean("valid targets", getValidTargets());
-        // SmartDashboard.putNumber("distance", getDistance());
-        // SmartDashboard.putString("pipeline", getPipeline());
-        SmartDashboard.putNumber("skew", getSkew());
-
-        //shuffleboardUtility.setDistanceFromTarget(getDistance());
     }
 
 } // end of class LimelightSubsystem

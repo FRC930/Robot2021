@@ -33,7 +33,7 @@ public class DefaultFlywheelCommand extends CommandBase {
 
   private FlywheelSubsystem m_FlywheelSubsystem;
 
-  private final double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(2200.0);
+  private final double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(3150.0);
   public final double kFlywheelMomentOfInertia = 0.00094610399; 
   private final double kFlywheelGearing = 1.0;
   
@@ -105,8 +105,8 @@ public class DefaultFlywheelCommand extends CommandBase {
         kFlywheelGearing);
 
     m_controller = new LinearQuadraticRegulator<>(m_flywheelPlant,
-      	VecBuilder.fill(mVelError), // qelms.
-        VecBuilder.fill(mControlTol), // relms. 
+      	VecBuilder.fill(mVelError), // qelms
+        VecBuilder.fill(mControlTol), // relms 
         0.020); // Nominal time between loops. 0.020 for TimedRobot
 
     m_observer = new KalmanFilter<>(Nat.N1(), Nat.N1(), m_flywheelPlant, VecBuilder.fill(mModelAcc), 
