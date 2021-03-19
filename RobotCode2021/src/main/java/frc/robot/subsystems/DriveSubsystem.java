@@ -538,6 +538,16 @@ public class DriveSubsystem extends SubsystemBase {
     return VRtn;
   }
 
+  public Pose2d getPose() {
+    switch(driveType){
+      case SWERVE_DRIVE:
+        return getSwervePose();
+      case TANK_DRIVE:
+        return getTankPose();
+      default:
+        return getSwervePose();
+    }
+  }
   // SWERVE DRIVE
   public void swerveStop(){
     swerveLeftFront.setSpeed(0);
@@ -598,6 +608,7 @@ public class DriveSubsystem extends SubsystemBase {
     //logger.log(Constants.LOG_LEVEL_FINE, "Rotations: " + Rotation2d.fromDegrees(getHeading()) + "|| Left wheel rotations: " + getLeftWheelRotations() + "|| Right wheel rotations " + getRightWheelRotations());
     //logger.exiting(DriveSubsystem.class.getName(), "periodic()");  
   }
+
 
   // SWERVE DRIVE: helper method (no need for error creation and handling)
   // Assumption --  rotation: (-180 - 180) and gyroAngle: (-180 - 180)

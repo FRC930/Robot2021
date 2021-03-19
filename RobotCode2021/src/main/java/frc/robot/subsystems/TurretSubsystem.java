@@ -40,7 +40,7 @@ public class TurretSubsystem extends SubsystemBase {
     private final double LOWER_LIMIT = 0.335;
 
     private final double TURRET_MAX_SPEED = 0.6;
-    private final double TURRET_MAX_SET_POSITION_SPEED = 0.4;
+    private final double TURRET_MAX_SET_POSITION_SPEED = Constants.TURRET_MAX_SET_POSITION_SPEED;
 
     // -------- DECLARATIONS --------\\
 
@@ -75,6 +75,7 @@ public class TurretSubsystem extends SubsystemBase {
 
 
         SmartDashboard.putNumber("Turret speed unclamped", speed);
+        SmartDashboard.putNumber("Turret pos", encoderPosition);
         speed = clamp(speed);
         if (encoderPosition > UPPER_LIMIT) {
             if (speed < 0) {
