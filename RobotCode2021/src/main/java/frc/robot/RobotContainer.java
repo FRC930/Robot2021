@@ -478,8 +478,8 @@ public class RobotContainer {
 
     // manual flywheel piston stuff
     manualFlywheelPistonButton.whenActive(new
-    ExtendFlywheelPistonCommand(flywheelPistonSubsystem)).whenInactive(new
-    RetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    FullExtendFlywheelPistonCommand(flywheelPistonSubsystem)).whenInactive(new
+    FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
 
     reverseHopperButton.whileActiveOnce(new SetHopperCommand(hopperSubsystem, Constants.HOPPER_REVERSE_SPEED, true));
     // manual
