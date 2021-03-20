@@ -18,8 +18,10 @@ import frc.robot.utilities.DistanceMath;
 
 import frc.robot.Constants;
 import frc.robot.commands.shootercommands.flywheelcommands.DefaultFlywheelCommand;
-import frc.robot.commands.shootercommands.pistoncommands.ExtendFlywheelPistonCommand;
-import frc.robot.commands.shootercommands.pistoncommands.RetractFlywheelPistonCommand;
+import frc.robot.commands.shootercommands.pistoncommands.FullExtendFlywheelPistonCommand;
+import frc.robot.commands.shootercommands.pistoncommands.FullExtendFlywheelPistonCommand;
+import frc.robot.commands.shootercommands.pistoncommands.FullRetractFlywheelPistonCommand;
+import frc.robot.commands.shootercommands.pistoncommands.FullRetractFlywheelPistonCommand;
 
 //-------- COMMAND CLASS --------\\
 
@@ -51,8 +53,8 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     private LimelightSubsystem mLimelightSubsystem;
     private DefaultFlywheelCommand mDefaultFlywheelCommand;
 
-    private ExtendFlywheelPistonCommand mExtendFlywheelPistonCommand;
-    private RetractFlywheelPistonCommand mRetractFlywheelPistonCommand;
+    private FullExtendFlywheelPistonCommand mFullExtendFlywheelPistonCommand;
+    private FullRetractFlywheelPistonCommand mFullRetractFlywheelPistonCommand;
     
     //-------- CONSTRUCTOR --------\\
 
@@ -63,8 +65,8 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
         this.mFlywheelSubsystem = _mFlywheelSubsystem;
         this.mFlywheelPistonSubsystem = _mFlywheelPistonSubsystem;
         this.mDefaultFlywheelCommand = new DefaultFlywheelCommand(_mFlywheelSubsystem);
-        this.mExtendFlywheelPistonCommand = new ExtendFlywheelPistonCommand(mFlywheelPistonSubsystem);
-        this.mRetractFlywheelPistonCommand = new RetractFlywheelPistonCommand(mFlywheelPistonSubsystem);
+        this.mFullExtendFlywheelPistonCommand = new FullExtendFlywheelPistonCommand(mFlywheelPistonSubsystem);
+        this.mFullRetractFlywheelPistonCommand = new FullRetractFlywheelPistonCommand(mFlywheelPistonSubsystem);
 
         addRequirements(_mFlywheelSubsystem, _mFlywheelPistonSubsystem);
     }
@@ -83,19 +85,19 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
         double distance = DistanceMath.getDistY(mLimelightSubsystem.getVerticleOffset());
         if ( GREEN_START_ZONE < distance && distance < GREEN_END_ZONE ) {   // Green Zone (Back)
             mDefaultFlywheelCommand.setSpeedRPMs(GREEN_SPEED);        //needs to be changed!
-            addCommands(mRetractFlywheelPistonCommand, mDefaultFlywheelCommand);
+            addCommands(mFullRetractFlywheelPistonCommand, mDefaultFlywheelCommand);
 
         } else if ( YELLOW_START_ZONE < distance && distance < YELLOW_END_ZONE ) {   // Yellow Zone (Back)
             mDefaultFlywheelCommand.setSpeedRPMs(YELLOW_SPEED);
-            addCommands(mRetractFlywheelPistonCommand, mDefaultFlywheelCommand);
+            addCommands(mFullRetractFlywheelPistonCommand, mDefaultFlywheelCommand);
 
         } else if ( BLUE_START_ZONE < distance && distance < BLUE_END_ZONE ) {   // Blue Zone (Back)
             mDefaultFlywheelCommand.setSpeedRPMs(BLUE_SPEED);
-            addCommands(mExtendFlywheelPistonCommand, mDefaultFlywheelCommand);
+            addCommands(mFullExtendFlywheelPistonCommand, mDefaultFlywheelCommand);
 
         } else if ( RED_START_ZONE < distance && distance < RED_END_ZONE ) {   // Red Zone (Front)  :)
             mDefaultFlywheelCommand.setSpeedRPMs(RED_SPEED);
-            addCommands(mExtendFlywheelPistonCommand, mDefaultFlywheelCommand);
+            addCommands(mFullExtendFlywheelPistonCommand, mDefaultFlywheelCommand);
         }
     }
 
