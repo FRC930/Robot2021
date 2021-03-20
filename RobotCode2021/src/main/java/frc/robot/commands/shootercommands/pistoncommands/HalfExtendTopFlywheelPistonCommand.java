@@ -15,12 +15,12 @@ import frc.robot.subsystems.FlywheelPistonSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem.SolenoidValues;
 import frc.robot.utilities.ShuffleboardUtility;
 
-public class ExtendFlywheelPistonCommand extends CommandBase {
+public class HalfExtendTopFlywheelPistonCommand extends CommandBase {
 
   private FlywheelPistonSubsystem flywheelAngleSubsystem;
   private ShuffleboardUtility shuffleboardUtility;
 
-  public ExtendFlywheelPistonCommand(FlywheelPistonSubsystem flywheelAngleSubsystem) {
+  public HalfExtendTopFlywheelPistonCommand(FlywheelPistonSubsystem flywheelAngleSubsystem) {
     this.flywheelAngleSubsystem = flywheelAngleSubsystem;
     shuffleboardUtility = ShuffleboardUtility.getInstance();
     addRequirements(flywheelAngleSubsystem);
@@ -28,7 +28,8 @@ public class ExtendFlywheelPistonCommand extends CommandBase {
     // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    flywheelAngleSubsystem.set(SolenoidValues.EXTEND);
+    flywheelAngleSubsystem.setTop(SolenoidValues.EXTEND);
+    flywheelAngleSubsystem.setBottom(SolenoidValues.RETRACT);
     // True = far shot
     shuffleboardUtility.putShooterAngle(true);
   }
