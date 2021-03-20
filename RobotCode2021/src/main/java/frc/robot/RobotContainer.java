@@ -37,6 +37,9 @@ import frc.robot.triggers.*;
 import frc.robot.utilities.*;
 
 import java.util.logging.Logger;
+
+import static org.mockito.ArgumentMatchers.startsWith;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import frc.robot.Constants;
@@ -207,12 +210,14 @@ public class RobotContainer {
   private final StopHopperStateCommand stopHopperStateCommand;
   private final DefaultStopHopperCommand defaultStopHopperCommand;
 
+
   // --LED commands
   // TODO: Add LED commands here
 
   // --Shooter commands
   // --Flywheel commands
    private final DefaultFlywheelCommand defaultFlywheelCommand;
+   private final AccuracyChallengeCommand accuracyChallengeCommand;
 
   // --Turret commands
   private final JoystickTurretCommand joystickTurretCommand; // For manual
@@ -322,6 +327,7 @@ public class RobotContainer {
 
     // Flywheel
      defaultFlywheelCommand = new DefaultFlywheelCommand(flywheelSubsystem);
+     accuracyChallengeCommand = new AccuracyChallengeCommand(flywheelSubsystem, flywheelPistonSubsystem, limelightSubsystem);
 
     // turret
     joystickTurretCommand = new JoystickTurretCommand(turretSubsystem, coDriverController, XB_AXIS_LEFT_X);
@@ -405,6 +411,7 @@ public class RobotContainer {
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
 
     // --Command binds
+    JoystickButton startAccuracyChallengeButton = new JoystickButton(driverController, XB_START);
 
     // Rotational control command bind
     // rotationalButton.whileActiveOnce(new
@@ -478,6 +485,7 @@ public class RobotContainer {
     // manual
     stopHopperButton.whileActiveOnce(stopHopperStateCommand);
 
+    startAccuracyChallengeButton.toggleWhenPressed(accuracyChallengeCommand);
   } // end of method configureDriverBindings()
 
   private void configureCodriverBindings() {
