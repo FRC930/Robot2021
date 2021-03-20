@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FlywheelPistonSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.utilities.DistanceMath;
 import frc.robot.utilities.ShooterMath;
 
 //-------- COMMANDBASE CLASS --------\\
@@ -46,7 +47,7 @@ public class FlywheelVelocityCommand extends CommandBase {
     public void execute() {
         // FlywheelSubsystem get angle
         // Limelight get distance
-        this.shooterMathUtil.setPosition(flywheelPistonSubsystem.get() ? 31.4 : 39, limeLightSubsystem.getDistance());
+        this.shooterMathUtil.setPosition(flywheelPistonSubsystem.get() ? 31.4 : 39, DistanceMath.getDistY(limeLightSubsystem.getVerticleOffset()));
     }
 
     // Returns true when the command should end.
