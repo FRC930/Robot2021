@@ -300,7 +300,7 @@ public class RobotContainer {
     // (SHOOTER_LEAD_ID, SHOOTER_SLAVE_ID)
     flywheelSubsystem = new FlywheelSubsystem(19, 18);
     // (SHOOTER_SOLENOID_ID)
-    flywheelPistonSubsystem = new FlywheelPistonSubsystem(1);
+    flywheelPistonSubsystem = new FlywheelPistonSubsystem(1,4);
 
     // (TOWER_ID)
     towerSubsystem = new TowerSubsystem(16);
@@ -413,6 +413,15 @@ public class RobotContainer {
     // --Command binds
     JoystickButton startAccuracyChallengeButton = new JoystickButton(driverController, XB_START);
 
+    POVTrigger fullExtendButton = new POVTrigger(driverController, 0, XB_POV_UP);
+    POVTrigger fullRetractButton = new POVTrigger(driverController, 0, XB_POV_DOWN);
+    POVTrigger halfExtendTopButton = new POVTrigger(driverController, 0, XB_POV_LEFT);
+    POVTrigger halfExtendBottomButton = new POVTrigger(driverController, 0, XB_POV_RIGHT);
+
+    fullExtendButton.toggleWhenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem));
+    fullRetractButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    halfExtendTopButton.toggleWhenActive(new HalfExtendTopFlywheelPistonCommand(flywheelPistonSubsystem));
+    halfExtendBottomButton.toggleWhenActive(new HalfExtendBottomFlywheelPistonCommand(flywheelPistonSubsystem));
     // Rotational control command bind
     // rotationalButton.whileActiveOnce(new
     // RotationalControlCommandGroup(colorSensorSubsystem,
