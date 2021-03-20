@@ -1,3 +1,4 @@
+
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2019-2020 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -7,49 +8,65 @@
 
 //-------- IMPORTS --------\\
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+package frc.robot.commands.shootercommands;
 
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.utilities.DistanceMath;
 
-import frc.robot.commands.shootercommands.pistoncommands.*;
-
 import frc.robot.Constants;
-
-import frc.robot.subsystems.LimelightSubsystem;                                                                                                                                                                     
+import frc.robot.commands.shootercommands.flywheelcommands.DefaultFlywheelCommand;
+import frc.robot.commands.shootercommands.pistoncommands.ExtendFlywheelPistonCommand;
+import frc.robot.commands.shootercommands.pistoncommands.RetractFlywheelPistonCommand;
 
 //-------- COMMAND CLASS --------\\
 
-public class AccuracyChallengeCommand extends CommandBase {
+public class AccuracyChallengeCommand extends SequentialCommandGroup {
 
     //-------- CONSTANTS --------\\
+    //private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final int GREEN_START_ZONE = 83;
+    private final int GREEN_END_ZONE = 85;
+    private final double GREEN_SPEED = 500;
 
-    //You must include logger as a constant variable, and you must have logging in your files
-    /*private final Logger logger = Logger.getLogger(this.getClass().getName());*/
+    private final int YELLOW_START_ZONE = 143;
+    private final int YELLOW_END_ZONE = 145;
+    private final double YELLOW_SPEED = 2170.0;
 
-    /*private final Enum Zone {
+    private final int BLUE_START_ZONE = 203;
+    private final int BLUE_END_ZONE = 205;
+    private final double BLUE_SPEED = 3150.0;
 
-    }*/
+    private final int RED_START_ZONE = 215;
+    private final int RED_END_ZONE = 218;
+    private final double RED_SPEED = 3150.0;
+
 
     //-------- DECLARATIONS --------\\
 
-    //NOTE: You variables must be private AND must be named in a camel case format!
-    //Here is an example variable
-    //One of your variables MUST be a subsystem
-    private FlywheelSubsystem _myFlywheelSubsystem;    //NOTE: Do not include the m_
-    private FlywheelPistonSubsystem _myFlywheelPistonSubsystem;
-    private LimelightSubsystem _myLimelightSubsystem;
+    private FlywheelSubsystem mFlywheelSubsystem; 
+    private FlywheelPistonSubsystem mFlywheelPistonSubsystem;
+    private LimelightSubsystem mLimelightSubsystem;
+    private DefaultFlywheelCommand mDefaultFlywheelCommand;
+
+    private ExtendFlywheelPistonCommand mExtendFlywheelPistonCommand;
+    private RetractFlywheelPistonCommand mRetractFlywheelPistonCommand;
     
     //-------- CONSTRUCTOR --------\\
 
-    public AccuracyChallengeCommand(FlywheelSubsystem _myFlywheelSubsystem,
-                                    FlywheelPistonSubsystem _myFlywheelPistonSubsystem,
-                                    LimelightSubsystem _myLimelightSubsystem){
-        this._myLimelightSubsystem = _myLimelightSubsystem;
-        this._myFlywheelSubsystem = _myFlywheelSubsystem;
-        this._myFlywheelPistonSubsystem = _myFlywheelPistonSubsystem;
-        addRequirements(_myFlywheelSubsystem, _myFlywheelPistonSubsystem);
+    public AccuracyChallengeCommand(FlywheelSubsystem _mFlywheelSubsystem,
+                                    FlywheelPistonSubsystem _mFlywheelPistonSubsystem,
+                                    LimelightSubsystem _mLimelightSubsystem){
+        this.mLimelightSubsystem = _mLimelightSubsystem;
+        this.mFlywheelSubsystem = _mFlywheelSubsystem;
+        this.mFlywheelPistonSubsystem = _mFlywheelPistonSubsystem;
+        this.mDefaultFlywheelCommand = new DefaultFlywheelCommand(_mFlywheelSubsystem);
+        this.mExtendFlywheelPistonCommand = new ExtendFlywheelPistonCommand(mFlywheelPistonSubsystem);
+        this.mRetractFlywheelPistonCommand = new RetractFlywheelPistonCommand(mFlywheelPistonSubsystem);
+
+        addRequirements(_mFlywheelSubsystem, _mFlywheelPistonSubsystem);
     }
 
     //-------- METHODS --------\\
@@ -61,31 +78,26 @@ public class AccuracyChallengeCommand extends CommandBase {
     }
 
     // Called every time the scheduler runs while the command is scheduled.
-    //NOTE: DO NOT INCLUCE EXECUTE INSIDE SEQUENTIAL AND PARALLEL COMMANDS!!!!
     @Override
     public void execute() {
-        double distance = DistanceMath.getDistY(_myLimelightSubsystem.getVerticleOffset());
-        if ( 83 < distance && distance < 85 ) {   // Green Zone (Back)
-            _myFlywheelSubsystem.setSpeedRPMs(2000.0); //needs to be changed!
-        } else if ( 143 < distance && distance < 145 ) {   // Yellow Zone (Back)
-            _myFlywheelSubsystem.setSpeedRPMs(2170.0);
-        } else if ( 203 < distance && distance < 205 ) {   // Blue Zone (Back)
-            _myFlywheelSubsystem.setSpeedRPMs(3145.0);
-        } else if ( 215 < distance && distance < 218 ) {   // Red Zone (Front)  :)
-            _myFlywheelSubsystem.setSpeedRPMs(3155.0);
+        double distance = DistanceMath.getDistY(mLimelightSubsystem.getVerticleOffset());
+        if ( GREEN_START_ZONE < distance && distance < GREEN_END_ZONE ) {   // Green Zone (Back)
+            mDefaultFlywheelCommand.setSpeedRPMs(GREEN_SPEED);        //needs to be changed!
+            addCommands(mRetractFlywheelPistonCommand, mDefaultFlywheelCommand);
+
+        } else if ( YELLOW_START_ZONE < distance && distance < YELLOW_END_ZONE ) {   // Yellow Zone (Back)
+            mDefaultFlywheelCommand.setSpeedRPMs(YELLOW_SPEED);
+            addCommands(mRetractFlywheelPistonCommand, mDefaultFlywheelCommand);
+
+        } else if ( BLUE_START_ZONE < distance && distance < BLUE_END_ZONE ) {   // Blue Zone (Back)
+            mDefaultFlywheelCommand.setSpeedRPMs(BLUE_SPEED);
+            addCommands(mExtendFlywheelPistonCommand, mDefaultFlywheelCommand);
+
+        } else if ( RED_START_ZONE < distance && distance < RED_END_ZONE ) {   // Red Zone (Front)  :)
+            mDefaultFlywheelCommand.setSpeedRPMs(RED_SPEED);
+            addCommands(mExtendFlywheelPistonCommand, mDefaultFlywheelCommand);
         }
     }
-
-/*
-    public void execute() {
-        double distance = DistanceMath.getDistY(_myLimelightSubsystem.getVerticleOffset());
-        switch(distance) {
-            case 0:
-
-            break;
-        }
-    }
-*/
 
     // Called once the command ends or is interrupted.
     @Override

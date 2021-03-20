@@ -66,8 +66,6 @@ public class FlywheelSubsystem extends SubsystemBase {
         }
         encoder = motorLead.getEncoder();
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
-
-        kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(2750.0);
     }
 
     // -------- METHODS --------\\
@@ -84,11 +82,6 @@ public class FlywheelSubsystem extends SubsystemBase {
         return encoder.getVelocity();
         
     }
-
-    public void setSpeedRPMs(double RPMS) {
-        this.kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(RPMS);
-    }
-
     public double getRadiansPerSecond() {
         return this.kSpinupRadPerSec;
     }

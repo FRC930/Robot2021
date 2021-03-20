@@ -9,7 +9,7 @@
 
 package frc.robot.commands.shootercommands.flywheelcommands;
 
-import java.util.logging.*;
+//import java.util.logging.*;
 
 import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator;
 import edu.wpi.first.wpilibj.estimator.KalmanFilter;
@@ -33,7 +33,7 @@ public class DefaultFlywheelCommand extends CommandBase {
 
   private FlywheelSubsystem m_FlywheelSubsystem;
 
-  private double kSpinupRadPerSec;
+  private double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(2450.0);  
   public final double kFlywheelMomentOfInertia = 0.00094610399; 
   private final double kFlywheelGearing = 1.0;
   
@@ -64,7 +64,7 @@ public class DefaultFlywheelCommand extends CommandBase {
   private LinearSystemLoop<N1, N1, N1> m_loop;
 
   private ShuffleboardUtility ModelConfig = ShuffleboardUtility.getInstance();
-  private static final Logger logger = Logger.getLogger(DefaultFlywheelCommand.class.getName());
+  //private static final Logger logger = Logger.getLogger(DefaultFlywheelCommand.class.getName());
 
   // -------- CONSTRUCTOR --------\\
   public DefaultFlywheelCommand(FlywheelSubsystem flywheelSubsystem) {
