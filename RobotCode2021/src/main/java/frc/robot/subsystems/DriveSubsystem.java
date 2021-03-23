@@ -310,6 +310,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Create ChassisSpeeds to determine speed of robot frame
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speedForward, speedStrafe, speedRotation, heading);
+    //Turn off field centric ChassisSpeeds speeds = new ChassisSpeeds(speedForward, speedStrafe, speedRotation);
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(speeds);
 
     // Normalize speed so speed wont go over 1
