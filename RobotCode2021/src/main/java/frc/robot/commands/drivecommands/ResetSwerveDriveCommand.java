@@ -13,18 +13,19 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class ResetSwerveDriveCommand extends CommandBase {
-    private SwerveDriveSubsystem driveSubsystem;
-    public ResetSwerveDriveCommand(SwerveDriveSubsystem dSubsystem){
+    private DriveSubsystem driveSubsystem;
+    public ResetSwerveDriveCommand(DriveSubsystem dSubsystem){
         driveSubsystem = dSubsystem;
+        addRequirements(dSubsystem);
     }
     @Override
     public void initialize() {  
-        driveSubsystem.resetWheels();
+        
     }
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {  
-        
+        driveSubsystem.swerveResetWheels();
     }
     // Called once the command ends or is interrupted.
     @Override
@@ -37,6 +38,6 @@ public class ResetSwerveDriveCommand extends CommandBase {
         // if(driveSubsystem.getPose() ){
 
         // }
-        return true;
+        return false;
     }
 }

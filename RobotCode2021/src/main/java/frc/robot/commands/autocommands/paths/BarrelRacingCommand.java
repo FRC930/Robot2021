@@ -88,20 +88,23 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
     String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/BarrelRacing.wpilib.json";
     Trajectory trajectory;
     try {
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        logger.log(Constants.LOG_LEVEL_INFO, "BarrelRacing tragectory path: " + trajectoryPath.toString());
-        trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    } catch (IOException ex) {
-        DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-        logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
-        throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
+         Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+         logger.log(Constants.LOG_LEVEL_INFO, "BarrelRacing tragectory path: " + trajectoryPath.toString());
+         trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+     } catch (IOException ex) {
+         DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+         logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
+         throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
     }
 // this is our config for how much power goes to the motors
 var autoVoltageConstraint = AutonConfig.getInstance().getAutoVoltageConstraint();
 //PID values for X/Y and rotation
-double kP = 0.6;
-double kI = 0;
-double kD = 0;
+double kPX = 1.1;
+double kIX = 0;
+double kDX = 0;
+double kPY = /*1.1*/ 2;
+double kIY = 0;
+double kDY = 0;
 double kPRot = 0;
 double kIRot = 0;
 double kDRot = 0;
@@ -119,7 +122,7 @@ double maxA = Math.PI;
 // This is our first atuo command this will run the drivetrain using the first trajectory we made
 
 SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-    new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
+    new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
     new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 
 
@@ -131,7 +134,11 @@ Path Description:
 - Pick up two rendezvous point balls
 - Shoot all 5 balls held
 */
-
+Pose2d finalPose = AutonConfig.getInstance().getTrajectory().getStates().get(AutonConfig.getInstance().getTrajectory().getStates().size()-1).poseMeters;
+System.out.println("*******Initial Pose: "+ AutonConfig.getInstance().getTrajectory().getInitialPose() + " ********");
+dSubsystem.resetPose(AutonConfig.getInstance().getTrajectory().getInitialPose());
+System.out.println("*******Adjusted First Pose: " + dSubsystem.getPose() + "********");
+System.out.println("*******Final Pose: "+ finalPose + " ********");
 addCommands(command1);
 //returnIntakeCommand);
 }

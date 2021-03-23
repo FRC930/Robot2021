@@ -400,7 +400,7 @@ public class RobotContainer {
     JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
     // ZR Button
     JoystickButton shootButton = new JoystickButton(driverController, XB_RB);
-
+    JoystickButton resetSwerveButton = new JoystickButton(driverController, XB_Y);
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
 
@@ -424,7 +424,8 @@ public class RobotContainer {
     stopJamButton.whileActiveOnce(new StopJamCommandGroup(towerSubsystem, kickerSubsystem));
     stopJamButton.whenReleased(new StopTowerKickerCommandGroup(towerSubsystem, kickerSubsystem));
     // shootButton.whenPressed(new RunFlywheelCommand(flywheelSubsystem, 0.8));
-
+    
+    resetSwerveButton.whenHeld(new ResetSwerveDriveCommand(driveSubsystem));
     // Endgame command binds
     //toggleEndgame.toggleWhenActive(new EndgameCommandGroup(swerveDriveSubsystem, flywheelSubsystem, turretSubsystem));
 
