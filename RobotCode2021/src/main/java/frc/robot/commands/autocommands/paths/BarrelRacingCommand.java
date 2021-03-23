@@ -134,9 +134,9 @@ Path Description:
 - Pick up two rendezvous point balls
 - Shoot all 5 balls held
 */
-Pose2d finalPose = AutonConfig.getInstance().getTrajectory().getStates().get(AutonConfig.getInstance().getTrajectory().getStates().size()-1).poseMeters;
-System.out.println("*******Initial Pose: "+ AutonConfig.getInstance().getTrajectory().getInitialPose() + " ********");
-dSubsystem.resetPose(AutonConfig.getInstance().getTrajectory().getInitialPose());
+Pose2d finalPose = trajectory.getStates().get(trajectory.getStates().size()-1).poseMeters;
+System.out.println("*******Initial Pose: "+ trajectory.getInitialPose() + " ********");
+dSubsystem.resetPose(trajectory.getInitialPose());
 System.out.println("*******Adjusted First Pose: " + dSubsystem.getPose() + "********");
 System.out.println("*******Final Pose: "+ finalPose + " ********");
 addCommands(command1);
