@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.FlywheelPistonSubsystem.SolenoidValues;
 import frc.robot.utilities.DistanceMath;
 
 import frc.robot.Constants;
@@ -85,19 +86,25 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
         double distance = DistanceMath.getDistY(mLimelightSubsystem.getVerticleOffset());
         if ( GREEN_START_ZONE < distance && distance < GREEN_END_ZONE ) {   // Green Zone (Back)
             mDefaultFlywheelCommand.setSpeedRPMs(GREEN_SPEED);        //needs to be changed!
-            addCommands(mFullRetractFlywheelPistonCommand, mDefaultFlywheelCommand);
+            mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
+            mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
 
         } else if ( YELLOW_START_ZONE < distance && distance < YELLOW_END_ZONE ) {   // Yellow Zone (Back)
             mDefaultFlywheelCommand.setSpeedRPMs(YELLOW_SPEED);
-            addCommands(mFullRetractFlywheelPistonCommand, mDefaultFlywheelCommand);
+            mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
+            mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
+
 
         } else if ( BLUE_START_ZONE < distance && distance < BLUE_END_ZONE ) {   // Blue Zone (Back)
             mDefaultFlywheelCommand.setSpeedRPMs(BLUE_SPEED);
-            addCommands(mFullExtendFlywheelPistonCommand, mDefaultFlywheelCommand);
+            mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
+            mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
 
         } else if ( RED_START_ZONE < distance && distance < RED_END_ZONE ) {   // Red Zone (Front)  :)
             mDefaultFlywheelCommand.setSpeedRPMs(RED_SPEED);
-            addCommands(mFullExtendFlywheelPistonCommand, mDefaultFlywheelCommand);
+            mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
+            mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
+
         }
     }
 
@@ -109,6 +116,6 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 } // end of class AccuracyChallengeCommand

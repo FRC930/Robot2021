@@ -6,7 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 //-------- IMPORTS --------\\
-
+/*
 package frc.robot.commands.shootercommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -76,4 +76,4 @@ public class CheckIfShotPossibleCommand extends CommandBase {
         }
     } // End of isFinished() method
     
-} // End of Class
+} // End of Class */

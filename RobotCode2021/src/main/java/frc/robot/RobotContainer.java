@@ -300,7 +300,7 @@ public class RobotContainer {
     // (SHOOTER_LEAD_ID, SHOOTER_SLAVE_ID)
     flywheelSubsystem = new FlywheelSubsystem(19, 18);
     // (SHOOTER_SOLENOID_ID)
-    flywheelPistonSubsystem = new FlywheelPistonSubsystem(1,4);
+    flywheelPistonSubsystem = new FlywheelPistonSubsystem(1,2);
 
     // (TOWER_ID)
     towerSubsystem = new TowerSubsystem(16);
@@ -494,7 +494,7 @@ public class RobotContainer {
     // manual
     stopHopperButton.whileActiveOnce(stopHopperStateCommand);
 
-    startAccuracyChallengeButton.toggleWhenPressed(accuracyChallengeCommand);
+    //startAccuracyChallengeButton.toggleWhenPressed(accuracyChallengeCommand);
   } // end of method configureDriverBindings()
 
   private void configureCodriverBindings() {
@@ -556,7 +556,7 @@ public class RobotContainer {
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
       scheduler.setDefaultCommand(driveSubsystem, swerveDriveCommand);
       scheduler.setDefaultCommand(hopperSubsystem, defaultHopperCommand);
-      scheduler.setDefaultCommand(flywheelSubsystem, defaultFlywheelCommand);
+      scheduler.setDefaultCommand(flywheelSubsystem, accuracyChallengeCommand);
       scheduler.setDefaultCommand(limelightSubsystem,
           new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
     }
