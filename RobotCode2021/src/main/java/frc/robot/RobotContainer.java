@@ -556,7 +556,7 @@ public class RobotContainer {
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
       scheduler.setDefaultCommand(driveSubsystem, swerveDriveCommand);
       scheduler.setDefaultCommand(hopperSubsystem, defaultHopperCommand);
-      scheduler.setDefaultCommand(flywheelSubsystem, accuracyChallengeCommand);
+      scheduler.setDefaultCommand(flywheelSubsystem, defaultFlywheelCommand);
       scheduler.setDefaultCommand(limelightSubsystem,
           new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
     }
