@@ -494,7 +494,7 @@ public class RobotContainer {
     // manual
     stopHopperButton.whileActiveOnce(stopHopperStateCommand);
 
-    //startAccuracyChallengeButton.toggleWhenPressed(accuracyChallengeCommand);
+    startAccuracyChallengeButton.toggleWhenPressed(accuracyChallengeCommand);
   } // end of method configureDriverBindings()
 
   private void configureCodriverBindings() {

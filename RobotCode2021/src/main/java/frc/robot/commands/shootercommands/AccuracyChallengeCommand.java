@@ -84,27 +84,25 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     @Override
     public void execute() {
         double distance = DistanceMath.getDistY(mLimelightSubsystem.getVerticleOffset());
-        if ( GREEN_START_ZONE < distance && distance < GREEN_END_ZONE ) {   // Green Zone (Back)
+        if ( GREEN_START_ZONE <= distance && distance <= GREEN_END_ZONE ) {   // Green Zone (Back)
             mDefaultFlywheelCommand.setSpeedRPMs(GREEN_SPEED);        //needs to be changed!
             mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
             mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
-
-        } else if ( YELLOW_START_ZONE < distance && distance < YELLOW_END_ZONE ) {   // Yellow Zone (Back)
+        } 
+        else if ( YELLOW_START_ZONE <= distance && distance <= YELLOW_END_ZONE ) {   // Yellow Zone (Back)
             mDefaultFlywheelCommand.setSpeedRPMs(YELLOW_SPEED);
             mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
             mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
-
-
-        } else if ( BLUE_START_ZONE < distance && distance < BLUE_END_ZONE ) {   // Blue Zone (Back)
+        } 
+        else if ( BLUE_START_ZONE <= distance && distance <= BLUE_END_ZONE ) {   // Blue Zone (Back)
             mDefaultFlywheelCommand.setSpeedRPMs(BLUE_SPEED);
             mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
             mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
-
-        } else if ( RED_START_ZONE < distance && distance < RED_END_ZONE ) {   // Red Zone (Front)  :)
+        } 
+        else if ( RED_START_ZONE <= distance && distance <= RED_END_ZONE ) {   // Red Zone (Front)  :)
             mDefaultFlywheelCommand.setSpeedRPMs(RED_SPEED);
             mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
             mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
-
         }
     }
 
@@ -116,6 +114,6 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 } // end of class AccuracyChallengeCommand
