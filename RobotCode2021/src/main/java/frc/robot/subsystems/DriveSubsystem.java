@@ -521,7 +521,7 @@ public class DriveSubsystem extends SubsystemBase {
     Pose2d VRtn = new Pose2d();
     if(swerveDriveOdometry != null) {
       VRtn = swerveDriveOdometry.getPoseMeters();
-      //System.out.println("Pose X: " + VRtn.getX() + " Pose Y: " + VRtn.getY());
+      System.out.println("Pose X: " + VRtn.getX() + " Pose Y: " + VRtn.getY());
     } else {
       // TODO: get LOG_LEVEL_ERROR
       logger.log(Constants.LOG_LEVEL_WARNING, "calling null swerveDriveOdometry");
