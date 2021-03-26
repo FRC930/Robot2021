@@ -20,6 +20,8 @@ public class HalfExtendTopFlywheelPistonCommand extends CommandBase {
   private FlywheelPistonSubsystem flywheelAngleSubsystem;
   private ShuffleboardUtility shuffleboardUtility;
 
+    //-------- CONSTRUCTOR --------\\
+
   public HalfExtendTopFlywheelPistonCommand(FlywheelPistonSubsystem flywheelAngleSubsystem) {
     this.flywheelAngleSubsystem = flywheelAngleSubsystem;
     shuffleboardUtility = ShuffleboardUtility.getInstance();

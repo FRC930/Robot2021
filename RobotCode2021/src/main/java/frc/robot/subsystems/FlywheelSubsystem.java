@@ -69,19 +69,20 @@ public class FlywheelSubsystem extends SubsystemBase {
     }
 
     // -------- METHODS --------\\
-
+    //  telling us the voltage of the motorLead
     public double getVoltage() {
         return motorLead.getBusVoltage();
     }
-
+    //sets the the motorLead to the outputVolts
     public void setVoltage(double outputVolts) {
         motorLead.setVoltage(outputVolts);
     }
-
+    // tells us the velocity of the encoder
     public double getSpeed() {
         return encoder.getVelocity();
         
     }
+    //  tells us the radians per second of the flywheel
     public double getRadiansPerSecond() {
         return this.kSpinupRadPerSec;
     }

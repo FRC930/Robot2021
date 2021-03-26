@@ -20,7 +20,9 @@ public class FullExtendFlywheelPistonCommand extends CommandBase {
   private FlywheelPistonSubsystem flywheelAngleSubsystem;
   private ShuffleboardUtility shuffleboardUtility;
 
-  public FullExtendFlywheelPistonCommand(FlywheelPistonSubsystem flywheelAngleSubsystem) {
+    //-------- CONSTRUCTOR --------\\
+  
+    public FullExtendFlywheelPistonCommand(FlywheelPistonSubsystem flywheelAngleSubsystem) {
     this.flywheelAngleSubsystem = flywheelAngleSubsystem;
     shuffleboardUtility = ShuffleboardUtility.getInstance();
     addRequirements(flywheelAngleSubsystem);
@@ -32,8 +34,10 @@ public class FullExtendFlywheelPistonCommand extends CommandBase {
     flywheelAngleSubsystem.setBottom(SolenoidValues.EXTEND);
     // True = far shot
     shuffleboardUtility.putShooterAngle(true);
-  }
-
+  }  
+  
+//-------- COMMANDBASE METHODS --------\\
+  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {

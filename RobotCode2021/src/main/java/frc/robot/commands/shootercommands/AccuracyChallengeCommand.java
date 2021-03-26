@@ -30,6 +30,11 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
 
     //-------- CONSTANTS --------\\
     //private final Logger logger = Logger.getLogger(this.getClass().getName());
+
+    //Settings for zones.
+    //Choose end of each desired shooting area in given shooting zone (green/yellow/blue/red).
+    //Allows for motor speed optimization aswell (in rpms).
+
     private final int GREEN_START_ZONE = 83;
     private final int GREEN_END_ZONE = 85;
     private final double GREEN_SPEED = 500;
@@ -79,6 +84,13 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     public void initialize() {   
 
     }
+
+    // Code Below...
+    //------------------------------------------------------
+    // Checks if a the robot is in a given zone.
+    // Sets the motor to the related speed.
+    // Check around like 40 for config (Constants).
+    //------------------------------------------------------
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override

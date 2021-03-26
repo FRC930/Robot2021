@@ -90,10 +90,12 @@ public class DefaultFlywheelCommand extends CommandBase {
     kSpinupRadPerSec = m_FlywheelSubsystem.getRadiansPerSecond();
   }
 
+  //sets flywheel motor speed (in rpms)
   public void setSpeedRPMs(double RPMS) {
     this.kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(RPMS);
   }
 
+  // Constructor (the second one. m-modifiable)
   public DefaultFlywheelCommand(FlywheelSubsystem flywheelSubsystem, double velError, double controlTol,
       double modelAcc, double encodAcc, double maxVoltage, double dtSeconds) {
       
