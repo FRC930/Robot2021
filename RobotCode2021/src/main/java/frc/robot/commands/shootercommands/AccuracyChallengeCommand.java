@@ -30,6 +30,11 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
 
     //-------- CONSTANTS --------\\
     //private final Logger logger = Logger.getLogger(this.getClass().getName());
+
+    //Settings for zones.
+    //Choose end of each desired shooting area in given shooting zone (green/yellow/blue/red).
+    //Allows for motor speed optimization aswell (in rpms).
+
     private final int GREEN_START_ZONE = 83;
     private final int GREEN_END_ZONE = 85;
     private final double GREEN_SPEED = 500;
@@ -80,27 +85,33 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
 
     }
 
+    // Code Below...
+    //------------------------------------------------------
+    // Checks if a the robot is in a given zone.
+    // Sets the motor to the related speed.
+    // Check around like 40 for config (Constants).
+    //------------------------------------------------------
+
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         double distance = DistanceMath.getDistY(mLimelightSubsystem.getVerticleOffset());
-        if ( GREEN_START_ZONE < distance && distance < GREEN_END_ZONE ) {   // Green Zone (Back)
+        if ( GREEN_START_ZONE <= distance && distance <= GREEN_END_ZONE ) {   // Green Zone (Back)
             mDefaultFlywheelCommand.setSpeedRPMs(GREEN_SPEED);        //needs to be changed!
             mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
             mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
 
-        } else if ( YELLOW_START_ZONE < distance && distance < YELLOW_END_ZONE ) {   // Yellow Zone (Back)
+        } else if ( YELLOW_START_ZONE <= distance && distance <= YELLOW_END_ZONE ) {   // Yellow Zone (Back)
             mDefaultFlywheelCommand.setSpeedRPMs(YELLOW_SPEED);
             mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
             mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
 
-
-        } else if ( BLUE_START_ZONE < distance && distance < BLUE_END_ZONE ) {   // Blue Zone (Back)
+        } else if ( BLUE_START_ZONE <= distance && distance <= BLUE_END_ZONE ) {   // Blue Zone (Back)
             mDefaultFlywheelCommand.setSpeedRPMs(BLUE_SPEED);
             mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
             mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
 
-        } else if ( RED_START_ZONE < distance && distance < RED_END_ZONE ) {   // Red Zone (Front)  :)
+        } else if ( RED_START_ZONE <= distance && distance <= RED_END_ZONE ) {   // Red Zone (Front)  :)
             mDefaultFlywheelCommand.setSpeedRPMs(RED_SPEED);
             mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
             mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
