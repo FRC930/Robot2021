@@ -75,6 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The odometry of the differential drive
   private DifferentialDriveOdometry tankDriveOdometry;
+  private SwerveDriveOdometry swerveDriveOdometry;
 
   // The differential drive object itself
   private DifferentialDrive differentialDrive;
@@ -110,7 +111,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
   private double gyroAngle;
-  private SwerveDriveOdometry swerveDriveOdometry;
 
   /*
   private final SwerveDrivePoseEstimator m_poseEstimator =
@@ -158,8 +158,8 @@ public class DriveSubsystem extends SubsystemBase {
         break;
 
       case SWERVE_DRIVE:
-        setSwerveDriveMotors();
         gyro = new PigeonIMU(_intake.getIntakeMotor());
+        setSwerveDriveMotors();
         usingGyro = _usingGyro;
         slowSpeed = _slowSpeed;
         swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics, Rotation2d.fromDegrees(0.0));
@@ -238,6 +238,7 @@ public class DriveSubsystem extends SubsystemBase {
   // SWERVE DRIVE
   public void setSwerveDriveMotors() {
     // instantiates the swerve modules on the robot (We use 4)
+   swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics,getAngleHeading(), new Pose2d(0, 0, new Rotation2d()));
     swerveRightFront = new SwerveModule(driveRightFrontIDs[0], driveRightFrontIDs[1], driveRightFrontIDs[2]);
     swerveRightBack = new SwerveModule(driveRightBackIDs[0], driveRightBackIDs[1], driveRightBackIDs[2]);
     swerveLeftFront = new SwerveModule(driveLeftFrontIDs[0], driveLeftFrontIDs[1], driveLeftFrontIDs[2]);
@@ -385,6 +386,16 @@ public class DriveSubsystem extends SubsystemBase {
   public double getHeading() {
     gyro.getYawPitchRoll(yawPitchRollValues);
     return Math.IEEEremainder(yawPitchRollValues[0], 360);
+  }
+
+  public Rotation2d getAngleHeading() {
+    Rotation2d angle;
+    angle = new Rotation2d(getHeading());
+    return angle;
+  }
+
+  public void resetSwerveOdemetry() {
+    swerveDriveOdometry.resetPosition(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), getAngleHeading());
   }
 
   // TANK DRIVE

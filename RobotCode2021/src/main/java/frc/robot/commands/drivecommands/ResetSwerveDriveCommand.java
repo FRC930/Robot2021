@@ -14,6 +14,7 @@ import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class ResetSwerveDriveCommand extends CommandBase {
     private DriveSubsystem driveSubsystem;
+    
     public ResetSwerveDriveCommand(DriveSubsystem dSubsystem){
         driveSubsystem = dSubsystem;
         addRequirements(dSubsystem);
@@ -26,6 +27,7 @@ public class ResetSwerveDriveCommand extends CommandBase {
     @Override
     public void execute() {  
         driveSubsystem.swerveResetWheels();
+        //driveSubsystem.resetSwerveOdemetry();
     }
     // Called once the command ends or is interrupted.
     @Override

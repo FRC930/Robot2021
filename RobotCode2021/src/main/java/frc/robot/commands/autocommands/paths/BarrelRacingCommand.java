@@ -105,22 +105,22 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
         String trajectory7JSON = Filesystem.getDeployDirectory() + "/Paths/BarrelRacing/BarrelRacing7.wpilib.json";
         String trajectory8JSON = Filesystem.getDeployDirectory() + "/Paths/BarrelRacing/BarrelRacing8.wpilib.json";
         String trajectory9JSON = Filesystem.getDeployDirectory() + "/Paths/BarrelRacing/BarrelRacing9.wpilib.json";
-        try {
-            logger.log(Constants.LOG_LEVEL_INFO, "BarrelRacing tragectory path: " + Filesystem.getDeployDirectory().toPath().resolve(trajectory1JSON));
-            trajectory1 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory1JSON));
-            trajectory2 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory2JSON));
-            trajectory3 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory3JSON));
-            trajectory4 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory4JSON));
-            trajectory5 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory5JSON));
-            trajectory6 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory6JSON));
-            trajectory7 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory7JSON));
-            trajectory8 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory8JSON));
-            trajectory9 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory9JSON));
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + trajectory1JSON, ex.getStackTrace());
-            logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectory1JSON);
-            throw new RuntimeException("Unable to open trajectory: " + trajectory1JSON);
-        }
+        // try {
+        //     logger.log(Constants.LOG_LEVEL_INFO, "BarrelRacing tragectory path: " + Filesystem.getDeployDirectory().toPath().resolve(trajectory1JSON));
+        //     trajectory1 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory1JSON));
+        //     trajectory2 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory2JSON));
+        //     trajectory3 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory3JSON));
+        //     trajectory4 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory4JSON));
+        //     trajectory5 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory5JSON));
+        //     trajectory6 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory6JSON));
+        //     trajectory7 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory7JSON));
+        //     trajectory8 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory8JSON));
+        //     trajectory9 = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajectory9JSON));
+        // } catch (IOException ex) {
+        //     DriverStation.reportError("Unable to open trajectory: " + trajectory1JSON, ex.getStackTrace());
+        //     logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectory1JSON);
+        //     throw new RuntimeException("Unable to open trajectory: " + trajectory1JSON);
+        // }
         //Offsets calculated on 3/25 meeting
         double xOffset = inchesToMeters(35.25);
         double yOffset = inchesToMeters(6.5);
@@ -145,11 +145,32 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
             // Robot starts at X: 0 Y: 0 and a rotation of 0 
              new Pose2d(1.207, -2.528, new Rotation2d(Math.toRadians(27.869698473156408))),
              List.of( 
-                 new Translation2d(3.089 + xOffset, -2.131 + yOffset),
-                 new Translation2d(4.394 + xOffset, -2.464 + yOffset)
+                 new Translation2d(3.089 + xOffset, -2.131 + yOffset)
+             ),
+             new Pose2d(4.5464 + xOffset, -2.3116 + yOffset, new Rotation2d(Math.toRadians(27.869698473156408))),
+             // Pass config
+             AutonConfig.getInstance().getTrajectoryConfig()
+            );
+            trajectory2 = TrajectoryGenerator.generateTrajectory(
+            // Robot starts at X: 0 Y: 0 and a rotation of 0 
+             new Pose2d(4.5464 + xOffset, -2.3116 + yOffset, new Rotation2d(Math.toRadians(27.869698473156408))),
+             List.of( 
+                 new Translation2d(4.648 + xOffset, -3.212 - yOffset)
              ),
              //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-             new Pose2d(4.648 + xOffset, -3.112 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+             new Pose2d(4.523 - xOffset, -3.683 - yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+             // Pass config
+             AutonConfig.getInstance().getTrajectoryConfig()
+            );
+
+            trajectory3 = TrajectoryGenerator.generateTrajectory(
+            // Robot starts at X: 0 Y: 0 and a rotation of 0 
+             new Pose2d(3.823 - xOffset, -3.683 - yOffset, new Rotation2d(Math.toRadians(27.869698473156408))),
+             List.of( 
+                 new Translation2d(3.099 - xOffset, -2.921 + yOffset)
+             ),
+             //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+             new Pose2d(4.14 + xOffset, -2.312 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
              // Pass config
              AutonConfig.getInstance().getTrajectoryConfig()
             );
@@ -162,7 +183,7 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
         // Creates a command that can be added to the command scheduler in the sequential command
         // The Ramsete Controller is a trajectory tracker that is built in to WPILib.
         // This tracker can be used to accurately track trajectories with correction for minor disturbances.
-
+            
         // This is our first atuo command this will run the drivetrain using the first trajectory we made
         SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
@@ -173,24 +194,24 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
         SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
-        SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-            new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-            new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
-        SwerveControllerCommand command5 = new SwerveControllerCommand(trajectory5, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-            new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-            new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
-        SwerveControllerCommand command6 = new SwerveControllerCommand(trajectory6, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-            new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-            new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
-        SwerveControllerCommand command7 = new SwerveControllerCommand(trajectory7, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-            new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-            new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
-        SwerveControllerCommand command8 = new SwerveControllerCommand(trajectory8, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-            new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-            new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
-        SwerveControllerCommand command9 = new SwerveControllerCommand(trajectory9, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-            new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-            new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
+        // SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
+        //     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+        //     new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
+        // SwerveControllerCommand command5 = new SwerveControllerCommand(trajectory5, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
+        //     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+        //     new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
+        // SwerveControllerCommand command6 = new SwerveControllerCommand(trajectory6, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
+        //     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+        //     new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
+        // SwerveControllerCommand command7 = new SwerveControllerCommand(trajectory7, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
+        //     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+        //     new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
+        // SwerveControllerCommand command8 = new SwerveControllerCommand(trajectory8, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
+        //     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+        //     new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
+        // SwerveControllerCommand command9 = new SwerveControllerCommand(trajectory9, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
+        //     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+        //     new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 
         /*
         Path Description:
@@ -206,7 +227,7 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
         //dSubsystem.resetPose(trajectory1.getInitialPose());
         System.out.println("*******Adjusted First Robot Pose: " + dSubsystem.getPose() + "********");
         System.out.println("*******Final Path Pose: "+ finalPose + " ********");
-        addCommands(command1/*, command2, command3, command4, command5, command6, command7, command8, command9*/);
+        addCommands(command1, command2/*, command3, command4, command5, command6, command7, command8, command9*/);
         //returnIntakeCommand);
     }
     //converts our inches into meters
