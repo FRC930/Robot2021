@@ -32,8 +32,8 @@ public class IntakePistonSubsystem extends SubsystemBase {
    
     //-------- CONSTRUCTOR --------\\
 
-    public IntakePistonSubsystem() {
-        intakePistonController = new Solenoid(Constants.INTAKE_SOLENOID_ID);
+    public IntakePistonSubsystem(int INTAKE_SOLENOID_ID) {
+        intakePistonController = new Solenoid(INTAKE_SOLENOID_ID);
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
     }
 
@@ -42,11 +42,11 @@ public class IntakePistonSubsystem extends SubsystemBase {
     public void setIntakePistonState(boolean state) {
         intakePistonController.set(state);
         
-        logger.log(Constants.LOG_LEVEL_FINE, "setIntakePistonState: " + state);
+        logger.log(Constants.LOG_LEVEL_INFO, "setIntakePistonState: " + state);
     }
 
     public boolean getIntakePistonState() {
-        logger.log(Constants.LOG_LEVEL_FINE, "getIntakePistonState: " + intakePistonController.get());
+        logger.log(Constants.LOG_LEVEL_INFO, "getIntakePistonState: " + intakePistonController.get());
 
         return intakePistonController.get();
     }

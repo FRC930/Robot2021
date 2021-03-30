@@ -1,3 +1,4 @@
+
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2019-2020 FIRST. All Rights Reserved.                        */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -46,8 +47,8 @@ public class ColorWheelSpinnerSubsystem extends SubsystemBase {
      * This is the default constructor that will initialize
      * {@link #wheelSpinnerMotor} to the correct motor.
      */
-    public ColorWheelSpinnerSubsystem() {
-        wheelSpinnerMotor = new VictorSPX(Constants.COLOR_WHEEL_ID);
+    public ColorWheelSpinnerSubsystem(int COLOR_WHEEL_ID) {
+        wheelSpinnerMotor = new VictorSPX(COLOR_WHEEL_ID);
     }
 
     // -------- METHODS --------\\
@@ -62,6 +63,7 @@ public class ColorWheelSpinnerSubsystem extends SubsystemBase {
     public double getMotorSpeed() {
 
         logger.entering(ColorWheelSpinnerSubsystem.class.getName(), "getMotorSpeed()");
+        logger.log(Constants.LOG_LEVEL_FINER, "Motor Speed: " + wheelSpinnerMotor.getMotorOutputPercent());
         logger.exiting(ColorWheelSpinnerSubsystem.class.getName(), "getMotorSpeed()");
 
         return wheelSpinnerMotor.getMotorOutputPercent();

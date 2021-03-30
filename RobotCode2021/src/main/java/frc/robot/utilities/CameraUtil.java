@@ -2,15 +2,23 @@ package frc.robot.utilities;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
+import java.util.logging.*;
+import frc.robot.Constants;
+
    
 public class CameraUtil {
+
+    
+    //Logger
+    private static final Logger logger = Logger.getLogger(CameraUtil.class.toString());
 
     public CameraUtil() {
 
     }
     // Starts the capture for the cameras
         public void startCapture() {
-
+            logger.entering(CameraUtil.class.getName(), "setPosition()");
+            logger.log(Constants.LOG_LEVEL_INFO, "Starting Cameras' Capture...");
             // creates a thread which runs concurrently with the program
             new Thread(() -> {
 
@@ -25,6 +33,8 @@ public class CameraUtil {
             //camera2.setFPS(Constants.CAMERA2_FPS);
 
             }).start();
+            logger.log(Constants.LOG_LEVEL_INFO, "Cameras' Capture Started!");
+            logger.exiting(CameraUtil.class.getName(), "setPosition");
 
         }
 }

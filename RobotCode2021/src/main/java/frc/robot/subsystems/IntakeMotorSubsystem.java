@@ -38,8 +38,8 @@ public class IntakeMotorSubsystem extends SubsystemBase {
     /**
      * This constructor initializes the {@link #intakeMotorController} to the proper hardware
      */
-    public IntakeMotorSubsystem() {
-        intakeMotorController = new WPI_TalonSRX(Constants.INTAKE_ID);
+    public IntakeMotorSubsystem(int INTAKE_ID) {
+        intakeMotorController = new WPI_TalonSRX(INTAKE_ID);
     }
 
     //-------- METHODS --------\\
@@ -54,6 +54,10 @@ public class IntakeMotorSubsystem extends SubsystemBase {
     public void setMotorSpeed(double speed) {
         intakeMotorController.set(ControlMode.PercentOutput, -speed);
         logger.log(Constants.LOG_LEVEL_FINE,"sets motor speed");
+    }
+
+    public WPI_TalonSRX getIntakeMotor() {
+        return intakeMotorController;
     }
 
     /**

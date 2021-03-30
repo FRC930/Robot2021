@@ -10,15 +10,17 @@ package frc.robot.commands.drivecommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class StopDriveCommand extends CommandBase {
     private DriveSubsystem driveSubsystem;
     public StopDriveCommand(DriveSubsystem dSubsystem){
         driveSubsystem = dSubsystem;
     }
+    //ToDo: make generic for both tank and swerve
     @Override
     public void initialize() {  
-        driveSubsystem.runAt(0, 0); 
+        driveSubsystem.swerveStop(); 
     }
     // Called every time the scheduler runs while the command is scheduled.
     @Override

@@ -20,7 +20,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.RobotBase;
-
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,6 +34,14 @@ public class TurretSubsystem extends SubsystemBase {
     // constant used in the conversion from encoder units to degrees
     private final double DEGREE_CONVERSION_NUMBER = .0013889;
 
+    // When the turret encoder is reset, the turret faces forward and the encoder is
+    // reset to 180 degrees. These units are in raw values.
+    private final double UPPER_LIMIT = 0.697;
+    private final double LOWER_LIMIT = 0.335;
+
+    private final double TURRET_MAX_SPEED = 0.6;
+    private final double TURRET_MAX_SET_POSITION_SPEED = Constants.TURRET_MAX_SET_POSITION_SPEED;
+
     // -------- DECLARATIONS --------\\
 
     // The motor controller that will control the turret
@@ -45,10 +52,12 @@ public class TurretSubsystem extends SubsystemBase {
 
     // -------- CONSTRUCTOR --------\\
 
-    public TurretSubsystem() {
-        this.turretMotor = new WPI_TalonSRX(Constants.TURRET_ID);
+    public TurretSubsystem(int TURRET_ID, int ENCODER_PORT_ID) {
+        this.turretMotor = new WPI_TalonSRX(TURRET_ID);
+
+        // Dont use encoder in robot sim
         if(RobotBase.isReal()){
-            this.encoder = new DutyCycleEncoder(Constants.ENCODER_PORT_ID);
+            this.encoder = new DutyCycleEncoder(ENCODER_PORT_ID);
         }
         //shuffleboardUtility = ShuffleboardUtility.getInstance();
         logger.log(Constants.LOG_LEVEL_INFO, "Starting TurretSubsystem");
@@ -57,22 +66,22 @@ public class TurretSubsystem extends SubsystemBase {
     // -------- METHODS --------\\
 
     public void setSpeed(double speed) {
+        // Dont use encoder in robot sim
         if(RobotBase.isReal()){
             encoderPosition = encoder.get();
-}
-        else {
         }
 
-    encoderPosition = 0.0;
+        //encoderPosition = 0.0;
 
 
         SmartDashboard.putNumber("Turret speed unclamped", speed);
+        SmartDashboard.putNumber("Turret pos", encoderPosition);
         speed = clamp(speed);
-        if (encoderPosition > Constants.UPPER_LIMIT) {
+        if (encoderPosition > UPPER_LIMIT) {
             if (speed < 0) {
                 speed = 0;
             }
-        } else if (encoderPosition < Constants.LOWER_LIMIT) {
+        } else if (encoderPosition < LOWER_LIMIT) {
             if (speed > 0) {
                 speed = 0;
             }
@@ -80,7 +89,7 @@ public class TurretSubsystem extends SubsystemBase {
 
         this.turretMotor.set(ControlMode.PercentOutput, speed);
         
-        logger.log(Constants.LOG_LEVEL_INFO, "Set speed to " + getSpeed());
+        logger.log(Constants.LOG_LEVEL_FINER, "Set speed to " + getSpeed());
     }
 
     public double getSpeed() {
@@ -89,10 +98,10 @@ public class TurretSubsystem extends SubsystemBase {
 
     // converts encoder units to degrees
     public double unitsToDegrees(double units) {
+        // Dont use encoder in robot sim
         if(RobotBase.isReal()){
-        return this.encoder.get() / DEGREE_CONVERSION_NUMBER;
-    }
-        else {
+            return this.encoder.get() / DEGREE_CONVERSION_NUMBER;
+        } else {
             return 0.0;
         }
     }
@@ -104,19 +113,19 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     public double getRawEncoderPosition() {
+        // Dont use encoder in robot sim
         if(RobotBase.isReal()){
             return this.encoder.get();
-        }
-        else {
+        } else {
             return 0.0;
         }
     }
 
     private double clamp(double speed) {
-        if (speed > Constants.TURRET_MAX_SPEED) {
-            speed = Constants.TURRET_MAX_SPEED;
-        } else if (speed < -Constants.TURRET_MAX_SPEED) {
-            speed = -Constants.TURRET_MAX_SPEED;
+        if (speed > TURRET_MAX_SPEED) {
+            speed = TURRET_MAX_SPEED;
+        } else if (speed < -TURRET_MAX_SPEED) {
+            speed = -TURRET_MAX_SPEED;
         }
         return speed;
     }

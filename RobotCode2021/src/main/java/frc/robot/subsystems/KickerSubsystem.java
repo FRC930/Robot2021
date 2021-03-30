@@ -37,10 +37,12 @@ public class KickerSubsystem extends SubsystemBase {
 
     //-------- CONSTRUCTOR --------\\
 
-    public KickerSubsystem() {
-        kickerMotor = new WPI_VictorSPX(Constants.KICKER_ID);  
+    public KickerSubsystem(int KICKER_ID, int HOPPER_ENCODER_PORT_ID) {
+        kickerMotor = new WPI_VictorSPX(KICKER_ID);  
+
+        //Dont use encoder in simulation
         if(RobotBase.isReal()){
-            this.encoder = new DutyCycleEncoder(Constants.HOPPER_ENCODER_PORT_ID);
+            this.encoder = new DutyCycleEncoder(HOPPER_ENCODER_PORT_ID);
             kickerMotor.setInverted(true);
         }
     }   
@@ -50,7 +52,7 @@ public class KickerSubsystem extends SubsystemBase {
     //sets the speed to the tower motor 
     public void setSpeed(double speed) {
         logger.entering(KickerSubsystem.class.getName(), "setSpeed()");
-        logger.log(Constants.LOG_LEVEL_INFO, "motorSpeed: " + speed);
+        logger.log(Constants.LOG_LEVEL_FINER, "motorSpeed: " + speed);
 
         kickerMotor.set(ControlMode.PercentOutput, speed);
 
@@ -60,13 +62,14 @@ public class KickerSubsystem extends SubsystemBase {
     // returns the speed from the tower motor
     public double getSpeed() { 
         logger.entering(KickerSubsystem.class.getName(), "getSpeed()");
-        logger.log(Constants.LOG_LEVEL_INFO, "motorSpeed: " + kickerMotor.getMotorOutputPercent());
+        logger.log(Constants.LOG_LEVEL_FINER, "motorSpeed: " + kickerMotor.getMotorOutputPercent());
         logger.exiting (KickerSubsystem.class.getName(), "getSpeed()");
         
         return kickerMotor.getMotorOutputPercent();
     }
 
     public double getEncoder(){
+        //Dont use encoder in simulation
         if(RobotBase.isReal()){
             return encoder.get();
         }

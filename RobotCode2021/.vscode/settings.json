@@ -1,5 +1,6 @@
 {
   "java.configuration.updateBuildConfiguration": "automatic",
+  "java.server.launchMode": "Standard",
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
@@ -10,6 +11,16 @@
     "**/.classpath": true,
     "**/.project": true,
     "**/.settings": true,
-    "**/.factorypath": true
-  }
+    "**/.factorypath": true,
+    "**/*~": true
+  },
+
+  "java.test.config": {
+    "name": "testlibs",
+    "env": {
+      "path": "{$workspaceFolder}\\build\\tmp\\jniExtractDir"
+    }
+  },
+
+  "java.test.deafultConfig": "testlibs"
 }
