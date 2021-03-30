@@ -174,6 +174,72 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
              // Pass config
              AutonConfig.getInstance().getTrajectoryConfig()
             );
+            trajectory4 = TrajectoryGenerator.generateTrajectory(
+            // Robot starts at X: 0 Y: 0 and a rotation of 0 
+             new Pose2d(4.14 + xOffset, -2.312 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))),
+             List.of( 
+                 new Translation2d(5.046 + xOffset, -2.347 + yOffset)
+             ),
+             //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+             new Pose2d(6.908 + xOffset, -1.69 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+             // Pass config
+             AutonConfig.getInstance().getTrajectoryConfig()
+            );
+            trajectory5 = TrajectoryGenerator.generateTrajectory(
+                // Robot starts at X: 0 Y: 0 and a rotation of 0 
+                new Pose2d(6.908 + xOffset, -1.69 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))),
+                 List.of( 
+                     new Translation2d(6.629 - xOffset, -0.877 - yOffset)
+                 ),
+                 //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+                 new Pose2d(5.41 - xOffset, -1.563 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+                 // Pass config
+                 AutonConfig.getInstance().getTrajectoryConfig()
+            );
+            trajectory6 = TrajectoryGenerator.generateTrajectory(
+                // Robot starts at X: 0 Y: 0 and a rotation of 0 
+                new Pose2d(5.41 + xOffset, -1.563 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))),
+                 List.of( 
+                     new Translation2d(6.108 + xOffset, -2.807 - yOffset)
+                 ),
+                 //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+                 new Pose2d(7.277 + xOffset, -3.607 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+                 // Pass config
+                 AutonConfig.getInstance().getTrajectoryConfig()
+            );
+            trajectory7 = TrajectoryGenerator.generateTrajectory(
+                // Robot starts at X: 0 Y: 0 and a rotation of 0 
+                new Pose2d(7.277 - xOffset, -3.607 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))),
+                 List.of( 
+                     new Translation2d(8.381 + xOffset, -3.264 - yOffset)
+                 ),
+                 //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+                 new Pose2d(7.861 - xOffset, -2.299 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+                 // Pass config
+                 AutonConfig.getInstance().getTrajectoryConfig()
+            );
+            trajectory8 = TrajectoryGenerator.generateTrajectory(
+                // Robot starts at X: 0 Y: 0 and a rotation of 0 
+                new Pose2d(7.861 - xOffset, -2.299 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))),
+                 List.of( 
+                     new Translation2d(6.02 + xOffset, -2.312 - yOffset)
+                 ),
+                 //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+                 new Pose2d(4.598 - xOffset, -1.924 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+                 // Pass config
+                 AutonConfig.getInstance().getTrajectoryConfig()
+            );
+            trajectory9 = TrajectoryGenerator.generateTrajectory(
+                // Robot starts at X: 0 Y: 0 and a rotation of 0 
+                new Pose2d(4.598 - xOffset, -1.924 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))),
+                 List.of( 
+                     new Translation2d(2.925 + xOffset, -1.803 - yOffset)
+                 ),
+                 //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+                 new Pose2d(1.277 - xOffset, -1.872 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+                 // Pass config
+                 AutonConfig.getInstance().getTrajectoryConfig()
+            );
         /* Previous attempts to align paths:
         * trajectory1 = trajectory1.relativeTo(dSubsystem.getPose());
         * trajectory1 = trajectory1.transformBy(pathOffset);
