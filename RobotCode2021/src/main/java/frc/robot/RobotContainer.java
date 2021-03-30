@@ -315,7 +315,7 @@ public class RobotContainer {
     // L Button
     JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
     // ZR Button
-    JoystickButton shootButton = new JoystickButton(driverController, XB_AXIS_RT);
+    JoystickButton shootButton = new JoystickButton(driverController, XB_A);
 
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
