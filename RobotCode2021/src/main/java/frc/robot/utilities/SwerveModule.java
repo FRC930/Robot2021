@@ -121,7 +121,7 @@ public class SwerveModule {
             setAngle(getAngle().getDegrees());
         }
 
-        setSpeed(speed*.80);
+        setSpeed(speed*0.8);
     }
 
     //gets the angle of wheel
