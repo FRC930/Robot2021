@@ -109,7 +109,7 @@ public class SwerveModule {
     * 
     * @param state The SwerveModuleState this module should follow
     */
-    public void drive(SwerveModuleState state) {
+    public void drive(SwerveModuleState state, double speedModifier) {
         SwerveModuleState optimized = SwerveModuleState.optimize(state, getAngle());
         double angle = optimized.angle.getDegrees();
         double speed = optimized.speedMetersPerSecond / Constants.KMAXSPEED;
@@ -121,7 +121,7 @@ public class SwerveModule {
             setAngle(getAngle().getDegrees());
         }
 
-        setSpeed(speed*0.9);
+        setSpeed(speed * speedModifier);
     }
 
     //gets the angle of wheel

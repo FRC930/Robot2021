@@ -111,6 +111,8 @@ public class DriveSubsystem extends SubsystemBase {
   private double gyroAngle;
   private SwerveDriveOdometry swerveDriveOdometry;
 
+  private double speedModifier = 0.0;
+
   /*
   private final SwerveDrivePoseEstimator m_poseEstimator =
       new SwerveDrivePoseEstimator(
@@ -317,10 +319,10 @@ public class DriveSubsystem extends SubsystemBase {
     //    This also will lower other wheel speeds if a speed goes over 1 on any wheel
     SwerveDriveKinematics.normalizeWheelSpeeds(states, Constants.KMAXSPEED);
 
-    swerveLeftFront.drive(states[0]);
-    swerveRightFront.drive(states[1]);
-    swerveLeftBack.drive(states[2]);
-    swerveRightBack.drive(states[3]);
+    swerveLeftFront.drive(states[0], speedModifier);
+    swerveRightFront.drive(states[1], speedModifier);
+    swerveLeftBack.drive(states[2], speedModifier);
+    swerveRightBack.drive(states[3], speedModifier);
 
     logger.exiting(DriveSubsystem.class.getName(), "swerveDrive()");
   } // end of method drive()
@@ -328,10 +330,10 @@ public class DriveSubsystem extends SubsystemBase {
   public void swerveDrive(SwerveModuleState[] states) {
     logger.entering(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
 
-    swerveLeftFront.drive(states[0]);
-    swerveRightFront.drive(states[1]);
-    swerveLeftBack.drive(states[2]);
-    swerveRightBack.drive(states[3]);
+    swerveLeftFront.drive(states[0], speedModifier);
+    swerveRightFront.drive(states[1], speedModifier);
+    swerveLeftBack.drive(states[2], speedModifier);
+    swerveRightBack.drive(states[3], speedModifier);
     
     logger.exiting(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
   } // end of method swerveDrive()
@@ -551,6 +553,11 @@ public class DriveSubsystem extends SubsystemBase {
     swerveRightFront.setAngle(0);
     swerveLeftBack.setAngle(0);
     swerveRightBack.setAngle(0);
+  }
+
+  // SWERVE DRIVE
+  public void setSpeedModifier(double newSpeedModifier) {
+    speedModifier = newSpeedModifier;
   }
 
   // SWERVE DRIVE
