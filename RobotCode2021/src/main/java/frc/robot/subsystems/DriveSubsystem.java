@@ -111,7 +111,7 @@ public class DriveSubsystem extends SubsystemBase {
   private double gyroAngle;
   private SwerveDriveOdometry swerveDriveOdometry;
 
-  private double speedModifier = 0.0;
+  private double speedModifier = 1.0;
 
   /*
   private final SwerveDrivePoseEstimator m_poseEstimator =
