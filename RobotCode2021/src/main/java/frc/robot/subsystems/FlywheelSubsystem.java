@@ -41,8 +41,7 @@ public class FlywheelSubsystem extends SubsystemBase {
     private final CANEncoder encoder;
 
     
-    private double kSpinupRadPerSec;
-
+    private double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(2450.0);  
 
     // -------- CONSTRUCTOR --------\\
 
@@ -86,6 +85,10 @@ public class FlywheelSubsystem extends SubsystemBase {
     public double getRadiansPerSecond() {
         return this.kSpinupRadPerSec;
     }
-    
+
+     //sets flywheel motor speed (in rpms)
+    public void setSpeedRPMs(double RPMS) {
+        this.kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(RPMS);
+    } 
 }
 // end of class ShooterSubsystem

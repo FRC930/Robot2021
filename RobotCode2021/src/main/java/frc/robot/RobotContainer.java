@@ -38,8 +38,6 @@ import frc.robot.utilities.*;
 
 import java.util.logging.Logger;
 
-import static org.mockito.ArgumentMatchers.startsWith;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import frc.robot.Constants;
@@ -411,7 +409,7 @@ public class RobotContainer {
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
 
     // --Command binds
-    JoystickButton startAccuracyChallengeButton = new JoystickButton(driverController, XB_START);
+    JoystickButton startAccuracyChallengeButton = new JoystickButton(coDriverController, XB_START);
 
     POVTrigger fullExtendButton = new POVTrigger(driverController, 0, XB_POV_UP);
     POVTrigger fullRetractButton = new POVTrigger(driverController, 0, XB_POV_DOWN);
@@ -494,8 +492,9 @@ public class RobotContainer {
     // manual
     stopHopperButton.whileActiveOnce(stopHopperStateCommand);
 
-    startAccuracyChallengeButton.toggleWhenPressed(accuracyChallengeCommand);
+    startAccuracyChallengeButton.whileActiveContinuous(accuracyChallengeCommand);
   } // end of method configureDriverBindings()
+
 
   private void configureCodriverBindings() {
 

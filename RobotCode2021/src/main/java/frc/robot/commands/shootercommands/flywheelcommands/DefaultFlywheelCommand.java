@@ -33,7 +33,7 @@ public class DefaultFlywheelCommand extends CommandBase {
 
   private FlywheelSubsystem m_FlywheelSubsystem;
 
-  private double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(2450.0);  
+  private double kSpinupRadPerSec; 
   public final double kFlywheelMomentOfInertia = 0.00094610399; 
   private final double kFlywheelGearing = 1.0;
   
@@ -90,11 +90,6 @@ public class DefaultFlywheelCommand extends CommandBase {
     kSpinupRadPerSec = m_FlywheelSubsystem.getRadiansPerSecond();
   }
 
-  //sets flywheel motor speed (in rpms)
-  public void setSpeedRPMs(double RPMS) {
-    this.kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(RPMS);
-  }
-
   // Constructor (the second one. m-modifiable)
   public DefaultFlywheelCommand(FlywheelSubsystem flywheelSubsystem, double velError, double controlTol,
       double modelAcc, double encodAcc, double maxVoltage, double dtSeconds) {
@@ -136,6 +131,7 @@ public class DefaultFlywheelCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_FlywheelSubsystem.getRadiansPerSecond();
     // Sets the target speed of our flywheel. This is similar to setting the setpoint of a PID controller.
     // We just pressed the trigger, so let's set our next reference
      m_loop.setNextR(VecBuilder.fill(kSpinupRadPerSec));

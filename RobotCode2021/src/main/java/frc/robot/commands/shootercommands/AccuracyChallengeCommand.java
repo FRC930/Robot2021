@@ -57,8 +57,6 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     private FlywheelSubsystem mFlywheelSubsystem; 
     private FlywheelPistonSubsystem mFlywheelPistonSubsystem;
     private LimelightSubsystem mLimelightSubsystem;
-    private DefaultFlywheelCommand mDefaultFlywheelCommand;
-
     private FullExtendFlywheelPistonCommand mFullExtendFlywheelPistonCommand;
     private FullRetractFlywheelPistonCommand mFullRetractFlywheelPistonCommand;
     
@@ -70,7 +68,6 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
         this.mLimelightSubsystem = _mLimelightSubsystem;
         this.mFlywheelSubsystem = _mFlywheelSubsystem;
         this.mFlywheelPistonSubsystem = _mFlywheelPistonSubsystem;
-        this.mDefaultFlywheelCommand = new DefaultFlywheelCommand(_mFlywheelSubsystem);
         this.mFullExtendFlywheelPistonCommand = new FullExtendFlywheelPistonCommand(mFlywheelPistonSubsystem);
         this.mFullRetractFlywheelPistonCommand = new FullRetractFlywheelPistonCommand(mFlywheelPistonSubsystem);
 
@@ -95,27 +92,27 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double distance = DistanceMath.getDistY(mLimelightSubsystem.getVerticleOffset());
-        if ( GREEN_START_ZONE <= distance && distance <= GREEN_END_ZONE ) {   // Green Zone (Back)
-            mDefaultFlywheelCommand.setSpeedRPMs(GREEN_SPEED);        //needs to be changed!
-            mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
-            mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
-        } 
-        else if ( YELLOW_START_ZONE <= distance && distance <= YELLOW_END_ZONE ) {   // Yellow Zone (Back)
-            mDefaultFlywheelCommand.setSpeedRPMs(YELLOW_SPEED);
-            mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
-            mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
-        } 
-        else if ( BLUE_START_ZONE <= distance && distance <= BLUE_END_ZONE ) {   // Blue Zone (Back)
-            mDefaultFlywheelCommand.setSpeedRPMs(BLUE_SPEED);
-            mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
-            mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
-        } 
-        else if ( RED_START_ZONE <= distance && distance <= RED_END_ZONE ) {   // Red Zone (Front)  :)
-            mDefaultFlywheelCommand.setSpeedRPMs(RED_SPEED);
-            mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
-            mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
-        }
+         double distance = DistanceMath.getDistY(mLimelightSubsystem.getVerticleOffset());
+         if ( GREEN_START_ZONE <= distance && distance <= GREEN_END_ZONE ) {   // Green Zone (Back)
+             mFlywheelSubsystem.setSpeedRPMs(GREEN_SPEED);        //needs to be changed!
+             mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
+             mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
+         } 
+         else if ( YELLOW_START_ZONE <= distance && distance <= YELLOW_END_ZONE ) {   // Yellow Zone (Back)
+             mFlywheelSubsystem.setSpeedRPMs(YELLOW_SPEED);
+             mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
+             mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
+         } 
+         else if ( BLUE_START_ZONE <= distance && distance <= BLUE_END_ZONE ) {   // Blue Zone (Back)
+             mFlywheelSubsystem.setSpeedRPMs(BLUE_SPEED);
+             mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
+             mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
+         } 
+         else if ( RED_START_ZONE <= distance && distance <= RED_END_ZONE ) {   // Red Zone (Front)  :)
+             mFlywheelSubsystem.setSpeedRPMs(RED_SPEED);
+             mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
+             mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
+         } 
     }
 
     // Called once the command ends or is interrupted.
@@ -128,4 +125,4 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     public boolean isFinished() {
         return true;
     }
-} // end of class AccuracyChallengeCommand
+} // end of class AccuracyChallengeCommand 
