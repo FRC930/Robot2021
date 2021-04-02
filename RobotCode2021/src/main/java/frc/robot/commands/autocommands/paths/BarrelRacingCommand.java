@@ -147,13 +147,13 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
              List.of( 
                  new Translation2d(3.089 + xOffset, -2.131 + yOffset)
              ),
-             new Pose2d(4.5464 + xOffset, -2.3116 /*+ yOffset*/, new Rotation2d(Math.toRadians(-62))),
+             new Pose2d(4.5464 + xOffset, -2.3116 - yOffset, new Rotation2d(Math.toRadians(-62))),
              // Pass config
              AutonConfig.getInstance().getTrajectoryConfig()
             );
             trajectory2 = TrajectoryGenerator.generateTrajectory(
             // Robot starts at X: 0 Y: 0 and a rotation of 0 
-             new Pose2d(4.5464 + xOffset, -2.3116 + yOffset, new Rotation2d(Math.toRadians(-62))),
+             new Pose2d(4.5464 + xOffset, -2.3116 - yOffset, new Rotation2d(Math.toRadians(-62))),
              List.of( 
                  new Translation2d(4.648 + xOffset, -3.5 - yOffset)
              ),
@@ -199,21 +199,21 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
                 // Robot starts at X: 0 Y: 0 and a rotation of 0 
                 new Pose2d(6.0 + inchesToMeters(30) - xOffset, -1.563 + inchesToMeters(38) + yOffset, new Rotation2d(Math.toRadians(-90))),
                  List.of( 
-                     new Translation2d(6.108 + inchesToMeters(30) + xOffset, -2.807 + inchesToMeters(38) - yOffset)
+                     new Translation2d(6.108 + inchesToMeters(10) + xOffset, -2.807 + inchesToMeters(38) - yOffset)
                  ),
                  //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-                 new Pose2d(7.277 + inchesToMeters(10) + xOffset, -3.607 + inchesToMeters(38) - yOffset, new Rotation2d(Math.toRadians(-10))), //X: was 130y is -135
+                 new Pose2d(7.277 + inchesToMeters(4) + xOffset, -3.607 + inchesToMeters(32) - yOffset, new Rotation2d(Math.toRadians(-20))), //X: was 130y is -135
                  // Pass config
                  AutonConfig.getInstance().getTrajectoryConfig()
             );
             trajectory7 = TrajectoryGenerator.generateTrajectory(
                 // Robot starts at X: 0 Y: 0 and a rotation of 0 
-                new Pose2d(7.277 + inchesToMeters(10) + xOffset, -3.607 + inchesToMeters(38) + yOffset, new Rotation2d(Math.toRadians(-10))),
+                new Pose2d(7.277 + inchesToMeters(4) + xOffset, -3.607 + inchesToMeters(32) - yOffset, new Rotation2d(Math.toRadians(-20))),
                  List.of( 
-                     new Translation2d(8.381 + inchesToMeters(10) + xOffset, -3.264 + inchesToMeters(38) - yOffset)
+                     new Translation2d(8.381 + inchesToMeters(24) + xOffset, -3.264 + inchesToMeters(38) + yOffset)
                  ),
                  //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-                 new Pose2d(7.861 + inchesToMeters(10) + xOffset, -2.299 + inchesToMeters(38) + yOffset, new Rotation2d(Math.toRadians(150))), //X: was 130y is -135
+                 new Pose2d(7.861 + inchesToMeters(18) + xOffset, -2.299 + inchesToMeters(40) + yOffset, new Rotation2d(Math.toRadians(150))), //X: was 130y is -135
                  // Pass config
                  AutonConfig.getInstance().getTrajectoryConfig()
             );
@@ -250,8 +250,9 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
         // This tracker can be used to accurately track trajectories with correction for minor disturbances.
             
         // This is our first atuo command this will run the drivetrain using the first trajectory we made
-        SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-            new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+        SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, 
+            dSubsystem::getPose, dSubsystem.getSwerveKinematics(), new PIDController(kPX, kIX, kDX), 
+            new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot, 
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
         SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
