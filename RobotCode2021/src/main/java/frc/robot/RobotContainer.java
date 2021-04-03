@@ -22,7 +22,7 @@ import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
 import frc.robot.commands.towercommands.*;
 
 import frc.robot.commands.turretcommads.*;
-import frc.robot.commands.ultrasoniccommands.UltrasonicPingCommand;
+//import frc.robot.commands.ultrasoniccommands.UltrasonicPingCommand;
 import frc.robot.commands.endgamecommands.*;
 
 // --Subsystem imports
@@ -215,7 +215,7 @@ public class RobotContainer {
   private final TurretSubsystem turretSubsystem;
 
   // --Ultrasonic Subsystem
-  private final UltrasonicSubsystem ultrasonicSubsystem;
+  //private final UltrasonicSubsystem ultrasonicSubsystem;
 
   // --LED subsystem
   LEDSubsystem ledSubsystem;
@@ -243,7 +243,7 @@ public class RobotContainer {
   private final JoystickTurretCommand joystickTurretCommand; // For manual
 
   // --Ultrasonic commands
-  private final UltrasonicPingCommand ultrasonicPingCommand;
+  //private final UltrasonicPingCommand ultrasonicPingCommand;
 
   // --Auto Simulation
   
@@ -335,7 +335,7 @@ public class RobotContainer {
     turretSubsystem = new TurretSubsystem(15, 0);
 
     // (ANALOG_PORT_ID)
-    ultrasonicSubsystem = new UltrasonicSubsystem(1);
+    //ultrasonicSubsystem = new UltrasonicSubsystem(1);
 
     // --Commands
 
@@ -363,7 +363,7 @@ public class RobotContainer {
     shuffleboardUtility = ShuffleboardUtility.getInstance();
 
     // Ultrasonic
-    ultrasonicPingCommand = new UltrasonicPingCommand(ultrasonicSubsystem);
+    //ultrasonicPingCommand = new UltrasonicPingCommand(ultrasonicSubsystem);
 
     // TODO: Edit this to work with Shuffleboard utility (ADD IT BACK TOO)
     //saltAndPepperSkilletCommand = new SaltAndPepperSkilletCommand(swerveDriveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
@@ -565,7 +565,7 @@ public class RobotContainer {
     CommandScheduler scheduler = CommandScheduler.getInstance();
 
     scheduler.unregisterSubsystem(limelightSubsystem, hopperSubsystem, turretSubsystem, flywheelSubsystem,
-        kickerSubsystem, towerSubsystem, ultrasonicSubsystem);
+        kickerSubsystem, towerSubsystem/*, ultrasonicSubsystem*/);
     
     if (inManualMode) {
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
@@ -580,7 +580,7 @@ public class RobotContainer {
       scheduler.setDefaultCommand(flywheelSubsystem, defaultFlywheelCommand);
       scheduler.setDefaultCommand(limelightSubsystem,
           new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
-      scheduler.setDefaultCommand(ultrasonicSubsystem, new UltrasonicPingCommand(ultrasonicSubsystem));
+      //scheduler.setDefaultCommand(ultrasonicSubsystem, new UltrasonicPingCommand(ultrasonicSubsystem));
     }
 
   }

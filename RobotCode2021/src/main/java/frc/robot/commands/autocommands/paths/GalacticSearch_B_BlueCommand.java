@@ -106,64 +106,81 @@ public class GalacticSearch_B_BlueCommand extends SequentialCommandGroup {
         logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
         throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
     }
-// this is our config for how much power goes to the motors
-var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getSwerveKinematics(), Constants.KMAXSPEED);
-//PID values
-int kP = 1;
-int kI = 0;
-int kD = 0;
-double maxV = Math.PI * 2;
-double maxA = Math.PI;
-// Configurate the values of all trajectories for max velocity and acceleration
-TrajectoryConfig config =
-new TrajectoryConfig(Constants.KMAXSPEED,
-Constants.KMAXACCELERATION)
-// Add kinematics to ensure max speed is actually obeyed
-.setKinematics(dSubsystem.getSwerveKinematics())
-.setEndVelocity(1)
-// Apply the voltage constraint
-.addConstraint(autoVoltageConstraint);
+    // this is our config for how much power goes to the motors
+    var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getSwerveKinematics(), Constants.KMAXSPEED);
+    //PID values
+    int kP = 1;
+    int kI = 0;
+    int kD = 0;
+    double maxV = Math.PI * 2;
+    double maxA = Math.PI;
+    // Configurate the values of all trajectories for max velocity and acceleration
+    TrajectoryConfig config =
+    new TrajectoryConfig(Constants.KMAXSPEED,
+    Constants.KMAXACCELERATION)
+    // Add kinematics to ensure max speed is actually obeyed
+    .setKinematics(dSubsystem.getSwerveKinematics())
+    .setEndVelocity(1)
+    // Apply the voltage constraint
+    .addConstraint(autoVoltageConstraint);
 
-//a second trajectory config this one is reversed
-TrajectoryConfig reverseConfig =
-new TrajectoryConfig(Constants.KMAXSPEED,
-Constants.KMAXACCELERATION)
-// Add kinematics to ensure max speed is actually obeyed
-.setKinematics(dSubsystem.getSwerveKinematics())
-.setEndVelocity(1)
-// Apply the voltage constraint
-.addConstraint(autoVoltageConstraint)
-.setReversed(true);
+    //a second trajectory config this one is reversed
+    TrajectoryConfig reverseConfig =
+    new TrajectoryConfig(Constants.KMAXSPEED,
+    Constants.KMAXACCELERATION)
+    // Add kinematics to ensure max speed is actually obeyed
+    .setKinematics(dSubsystem.getSwerveKinematics())
+    .setEndVelocity(1)
+    // Apply the voltage constraint
+    .addConstraint(autoVoltageConstraint)
+    .setReversed(true);
 
-TrajectoryConfig slowConfig =
-new TrajectoryConfig(Constants.KMAXSPEED,
-2.0)
-// Add kinematics to ensure max speed is actually obeyed
-.setKinematics(dSubsystem.getSwerveKinematics())
-// Apply the voltage constraint
-.addConstraint(autoVoltageConstraint);
+    TrajectoryConfig slowConfig =
+    new TrajectoryConfig(Constants.KMAXSPEED,
+    2.0)
+    // Add kinematics to ensure max speed is actually obeyed
+    .setKinematics(dSubsystem.getSwerveKinematics())
+    // Apply the voltage constraint
+    .addConstraint(autoVoltageConstraint);
 
-trajectory1 = TrajectoryGenerator.generateTrajectory(
+    trajectory1 = TrajectoryGenerator.generateTrajectory(
         // Robot starts at X: 0 Y: 0 and a rotation of 0 
-         new Pose2d(inchesToMeters(30), inchesToMeters(60), new Rotation2d(Math.toRadians(0))),
+         new Pose2d(inchesToMeters(0), inchesToMeters(0), new Rotation2d(Math.toRadians(0))),
          List.of( 
-             new Translation2d(inchesToMeters(180), inchesToMeters(60))
          ),
-         new Pose2d(inchesToMeters(240), inchesToMeters(120), new Rotation2d(Math.toRadians(0))),
+         new Pose2d(inchesToMeters(170), inchesToMeters(0), new Rotation2d(Math.toRadians(0))),
          // Pass config
          AutonConfig.getInstance().getTrajectoryConfig()
         );
-        trajectory2 = TrajectoryGenerator.generateTrajectory(
+    trajectory2 = TrajectoryGenerator.generateTrajectory(
         // Robot starts at X: 0 Y: 0 and a rotation of 0 
-         new Pose2d(inchesToMeters(240), inchesToMeters(120), new Rotation2d(Math.toRadians(0))),
+         new Pose2d(inchesToMeters(170), inchesToMeters(0), new Rotation2d(Math.toRadians(45))),
          List.of( 
-             new Translation2d(inchesToMeters(300), inchesToMeters(60))
          ),
          //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-         new Pose2d(inchesToMeters(345), inchesToMeters(60), new Rotation2d(Math.toRadians(0))), //X: was 130y is -135
+         new Pose2d(inchesToMeters(230), inchesToMeters(60), new Rotation2d(Math.toRadians(45))), //X: was 130y is -135
+         // Pass config
+         AutonConfig.getInstance().getTrajectoryConfig()
+    );
+    trajectory3 = TrajectoryGenerator.generateTrajectory(
+        // Robot starts at X: 0 Y: 0 and a rotation of 0 
+         new Pose2d(inchesToMeters(230), inchesToMeters(60), new Rotation2d(Math.toRadians(-45))),
+         List.of( 
+         ),
+         new Pose2d(inchesToMeters(290), inchesToMeters(0), new Rotation2d(Math.toRadians(-45))),
          // Pass config
          AutonConfig.getInstance().getTrajectoryConfig()
         );
+    trajectory4 = TrajectoryGenerator.generateTrajectory(
+        // Robot starts at X: 0 Y: 0 and a rotation of 0 
+         new Pose2d(inchesToMeters(290), inchesToMeters(0), new Rotation2d(Math.toRadians(0))),
+         List.of( 
+         ),
+         //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+         new Pose2d(inchesToMeters(345), inchesToMeters(0), new Rotation2d(Math.toRadians(0))), //X: was 130y is -135
+         // Pass config
+         AutonConfig.getInstance().getTrajectoryConfig()
+    );
 
 // -------- RAMSETE Commands -------- \\
 // Creates a command that can be added to the command scheduler in the sequential command

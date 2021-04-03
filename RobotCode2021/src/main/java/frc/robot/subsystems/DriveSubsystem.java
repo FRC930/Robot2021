@@ -158,7 +158,7 @@ public class DriveSubsystem extends SubsystemBase {
     driveRightBackIDs = _driveRightBackIDs;
     driveLeftBackIDs = _driveLeftBackIDs;
 
-    gyroID = additionalIDs[0];
+    //gyroID = additionalIDs[0];
     
     switch(driveType) {
 
@@ -169,8 +169,8 @@ public class DriveSubsystem extends SubsystemBase {
 
       case SWERVE_DRIVE:
         setSwerveDriveMotors();
-        //gyro = new PigeonIMU(_intake.getIntakeMotor());
-        gyro = new PigeonIMU(gyroID);
+        gyro = new PigeonIMU(_intake.getIntakeMotor());
+        //gyro = new PigeonIMU(gyroID);
         usingGyro = _usingGyro;
         slowSpeed = _slowSpeed;
         swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics, Rotation2d.fromDegrees(0.0));
