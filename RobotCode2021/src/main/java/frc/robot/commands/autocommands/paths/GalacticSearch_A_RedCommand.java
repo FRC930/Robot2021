@@ -107,7 +107,7 @@ public class GalacticSearch_A_RedCommand extends SequentialCommandGroup {
          List.of( 
          ),
          //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-         new Pose2d(inchesToMeters(115), inchesToMeters(120), new Rotation2d(Math.toRadians(90))), //X: was 130y is -135
+         new Pose2d(inchesToMeters(115), inchesToMeters(120), new Rotation2d(Math.toRadians(105))), //X: was 130y is -135
          // Pass config
          AutonConfig.getInstance().getTrajectoryConfig()
         );
@@ -121,6 +121,17 @@ public class GalacticSearch_A_RedCommand extends SequentialCommandGroup {
          // Pass config
          AutonConfig.getInstance().getTrajectoryConfig()
         );
+        // test trajectory
+        // trajectory1 = TrajectoryGenerator.generateTrajectory(
+        //     // Robot starts at X: 0 Y: 0 and a rotation of 0 
+        //      new Pose2d(inchesToMeters(0), inchesToMeters(0), new Rotation2d(Math.toRadians(0))),
+        //      List.of( 
+        //      ),
+        //      //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+        //      new Pose2d(inchesToMeters(200), inchesToMeters(0), new Rotation2d(Math.toRadians(0))), //X: was 130y is -135
+        //      // Pass config
+        //      AutonConfig.getInstance().getTrajectoryConfig()
+        //     );
 // this is our config for how much power goes to the motors
 var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getSwerveKinematics(), Constants.KMAXSPEED);
 //PID values
@@ -130,7 +141,7 @@ double kPX = /*1.1*/ 0;
         double kPY = /*2*/ 0;
         double kIY = 0;
         double kDY = 0;
-        double kPRot = 0;
+        double kPRot = 1;
         double kIRot = 0;
         double kDRot = 0;
 double maxV = Math.PI * 2;
@@ -146,15 +157,15 @@ double maxA = Math.PI;
 
 SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> dSubsystem.getAngleHeading(), dSubsystem::swerveDrive, dSubsystem);
 
 SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> dSubsystem.getAngleHeading(), dSubsystem::swerveDrive, dSubsystem);
 
     SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> dSubsystem.getAngleHeading(), dSubsystem::swerveDrive, dSubsystem);
 
 
 /*

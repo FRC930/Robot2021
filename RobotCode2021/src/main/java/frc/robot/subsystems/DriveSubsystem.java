@@ -395,13 +395,14 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The gyro's yaw value, in degrees
      */
   public double getHeading() {
-    gyro.getYawPitchRoll(yawPitchRollValues);
-    return Math.IEEEremainder(yawPitchRollValues[0], 360);
+    //gyro.getYawPitchRoll(yawPitchRollValues);
+    //return Math.IEEEremainder(yawPitchRollValues[0], 360);
+    return gyro.getFusedHeading();
   }
 
   public Rotation2d getAngleHeading() {
     Rotation2d angle;
-    angle = new Rotation2d(getHeading());
+    angle = new Rotation2d(Math.toRadians(getHeading()));
     return angle;
   }
 
