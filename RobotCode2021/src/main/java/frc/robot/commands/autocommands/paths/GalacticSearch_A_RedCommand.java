@@ -45,6 +45,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 import frc.robot.commands.shootercommands.ShootPowerCellCommandGroup;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.utilities.AutonConfig;
 import frc.robot.commands.hoppercommands.SetAutonomousHopperCommand;
 import frc.robot.commands.hoppercommands.SetHopperCommand;
 import frc.robot.commands.turretcommads.AutoTurretTurnCommand;
@@ -56,6 +57,7 @@ import frc.robot.commands.shootercommands.flywheelcommands.DefaultFlywheelComman
 import frc.robot.commands.shootercommands.flywheelcommands.RunFlywheelAutoCommand;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import frc.robot.Constants;
@@ -69,14 +71,23 @@ import java.util.logging.*;
 // -------- PATH DESCRIPTION -------- \\
 // Alliance Side - Initial 3 & Trench 3 & Rendezvous 2
 
-public class GalaticSearch_A_RedCommand extends SequentialCommandGroup {
+public class GalacticSearch_A_RedCommand extends SequentialCommandGroup {
 
-    private static final Logger logger = Logger.getLogger(GalaticSearch_A_RedCommand.class.getName());
+    private static final Logger logger = Logger.getLogger(GalacticSearch_A_RedCommand.class.getName());
+    private Trajectory trajectory1;
+    private    Trajectory trajectory2;
+    private    Trajectory trajectory3;
+    private    Trajectory trajectory4;
+    private    Trajectory trajectory5;
+    private    Trajectory trajectory6;
+    private    Trajectory trajectory7;
+    private double xOffset = inchesToMeters(35.25);
+    private double yOffset = inchesToMeters(6.5);
   /**
    * Path Description: ----------------- Shoot 3 from initiation line move through
    * trench to grab 3 balls Shoot 3 from trench position
    */
-  public GalaticSearch_A_RedCommand(SwerveDriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
+  public GalacticSearch_A_RedCommand(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
       IntakeMotorSubsystem iMotorSubsystem, FlywheelSubsystem fSubsystem, TowerSubsystem tSubsystem,
       HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
       FlywheelPistonSubsystem fPistonSubsystem) {
@@ -84,19 +95,28 @@ public class GalaticSearch_A_RedCommand extends SequentialCommandGroup {
     // -------- Trajectories -------- \\
 
     // Generates a trajectory for a path to move towards furthest ball in trench run
-    String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/GalaticSearch_A_Red.wpilib.json";
-    Trajectory trajectory;
-    try {
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        logger.log(Constants.LOG_LEVEL_INFO, "GalaticSearch_A_Red tragectory path: " + trajectoryPath.toString());
-        trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    } catch (IOException ex) {
-        DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-        logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
-        throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
-    }
+    trajectory1 = TrajectoryGenerator.generateTrajectory(
+        // Robot starts at X: 0 Y: 0 and a rotation of 0 
+         new Pose2d(inchesToMeters(0), inchesToMeters(0), new Rotation2d(Math.toRadians(45))),
+         List.of( 
+         ),
+         new Pose2d(inchesToMeters(60), inchesToMeters(30), new Rotation2d(Math.toRadians(45))),
+         // Pass config
+         AutonConfig.getInstance().getTrajectoryConfig()
+        );
+        trajectory2 = TrajectoryGenerator.generateTrajectory(
+        // Robot starts at X: 0 Y: 0 and a rotation of 0 
+         new Pose2d(inchesToMeters(150), inchesToMeters(60), new Rotation2d(Math.toRadians(0))),
+         List.of( 
+             new Translation2d(inchesToMeters(180), inchesToMeters(150))
+         ),
+         //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+         new Pose2d(inchesToMeters(345), inchesToMeters(150), new Rotation2d(Math.toRadians(0))), //X: was 130y is -135
+         // Pass config
+         AutonConfig.getInstance().getTrajectoryConfig()
+        );
 // this is our config for how much power goes to the motors
-var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getKinematics(), Constants.KMAXSPEED);
+var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getSwerveKinematics(), Constants.KMAXSPEED);
 //PID values
 int kP = 1;
 int kI = 0;
@@ -108,7 +128,7 @@ TrajectoryConfig config =
 new TrajectoryConfig(Constants.KMAXSPEED,
 Constants.KMAXACCELERATION)
 // Add kinematics to ensure max speed is actually obeyed
-.setKinematics(dSubsystem.getKinematics())
+.setKinematics(dSubsystem.getSwerveKinematics())
 .setEndVelocity(1)
 // Apply the voltage constraint
 .addConstraint(autoVoltageConstraint);
@@ -118,7 +138,7 @@ TrajectoryConfig reverseConfig =
 new TrajectoryConfig(Constants.KMAXSPEED,
 Constants.KMAXACCELERATION)
 // Add kinematics to ensure max speed is actually obeyed
-.setKinematics(dSubsystem.getKinematics())
+.setKinematics(dSubsystem.getSwerveKinematics())
 .setEndVelocity(1)
 // Apply the voltage constraint
 .addConstraint(autoVoltageConstraint)
@@ -128,51 +148,9 @@ TrajectoryConfig slowConfig =
 new TrajectoryConfig(Constants.KMAXSPEED,
 2.0)
 // Add kinematics to ensure max speed is actually obeyed
-.setKinematics(dSubsystem.getKinematics())
+.setKinematics(dSubsystem.getSwerveKinematics())
 // Apply the voltage constraint
 .addConstraint(autoVoltageConstraint);
-
-
-// -------- Trajectories -------- \\
-// Generates a trajectory 
-
-//this is our first trajectory
-Trajectory trajectory1 = TrajectoryGenerator.generateTrajectory(
-    // Robot starts at X: 0 Y: 0 and a rotation of 0 
-    new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
-    List.of( 
-        // Midpoints
-    ),
-    //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-    new Pose2d(inchesToMeters(120), inchesToMeters(-115), new Rotation2d(Math.toRadians(-65))), //X: was 130y is -135
-    // Pass config
-    config
-);
-
-//this is our second trajectory it should be a inverse of the first one
-Trajectory trajectory2 = TrajectoryGenerator.generateTrajectory(
-    // Starts X: 0 inches Y: 0 inches and -65 degrees 
-    new Pose2d(inchesToMeters(120), inchesToMeters(-115), new Rotation2d(Math.toRadians(-65))), //-65
-    List.of( 
-        // Midpoints
-    ),
-    // return to intial position
-    new Pose2d(inchesToMeters(0), inchesToMeters(-20), new Rotation2d(Math.toRadians(15))),
-    // uses the second config
-    reverseConfig
-);
-
-Trajectory trajectory3 = TrajectoryGenerator.generateTrajectory(
-    // Robot starts at X: 0 Y: 0 and a rotation of 0 
-    new Pose2d(inchesToMeters(0), inchesToMeters(-20), new Rotation2d(Math.toRadians(15))),//set x to 0 was -20
-    List.of( 
-        // Midpoints
-    ),
-    //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-    new Pose2d(inchesToMeters(240), inchesToMeters(0), new Rotation2d(Math.toRadians(0))), //Y: -20
-    // Pass config
-    slowConfig
-);
 
 // -------- RAMSETE Commands -------- \\
 // Creates a command that can be added to the command scheduler in the sequential command
@@ -181,17 +159,13 @@ Trajectory trajectory3 = TrajectoryGenerator.generateTrajectory(
 
 // This is our first atuo command this will run the drivetrain using the first trajectory we made
 
-SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getKinematics(), 
+SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 
-SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getKinematics(), 
+SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
-
-SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getKinematics(), 
-    new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 
 
 /*
@@ -202,9 +176,14 @@ Path Description:
 - Pick up two rendezvous point balls
 - Shoot all 5 balls held
 */
-
-
-//returnIntakeCommand);
+    Pose2d finalPose = trajectory1.getStates().get(trajectory1.getStates().size()-1).poseMeters;
+    System.out.println("*******First Robot Pose: " + dSubsystem.getPose() + "********");
+    System.out.println("*******Initial Path Pose: "+ trajectory1.getInitialPose() + " ********");
+    //dSubsystem.resetPose(trajectory1.getInitialPose());
+    System.out.println("*******Adjusted First Robot Pose: " + dSubsystem.getPose() + "********");
+    System.out.println("*******Final Path Pose: "+ finalPose + " ********");
+    addCommands(command1/*, command2*/);
+    //returnIntakeCommand);
 }
 
 //converts our inches into meters

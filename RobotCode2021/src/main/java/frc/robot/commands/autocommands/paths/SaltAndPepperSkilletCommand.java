@@ -67,7 +67,7 @@ public class SaltAndPepperSkilletCommand extends SequentialCommandGroup {
             HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
             FlywheelPistonSubsystem fPistonSubsystem, TurretSubsystem turSubsystem) {
         // this is our config for how much power goes to the motors
-        var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.swerveGetKinematics(), Constants.KMAXSPEED);
+        var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getSwerveKinematics(), Constants.KMAXSPEED);
         //PID values
         double kP = 0;
         double kI = 0;
@@ -81,7 +81,7 @@ public class SaltAndPepperSkilletCommand extends SequentialCommandGroup {
         TrajectoryConfig config =
         new TrajectoryConfig(2, 1)
         // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(dSubsystem.swerveGetKinematics())
+        .setKinematics(dSubsystem.getSwerveKinematics())
         .setEndVelocity(1)
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint);
@@ -90,7 +90,7 @@ public class SaltAndPepperSkilletCommand extends SequentialCommandGroup {
         TrajectoryConfig reverseConfig =
         new TrajectoryConfig(2, 1)
         // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(dSubsystem.swerveGetKinematics())
+        .setKinematics(dSubsystem.getSwerveKinematics())
         .setEndVelocity(1)
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint)
@@ -99,7 +99,7 @@ public class SaltAndPepperSkilletCommand extends SequentialCommandGroup {
         TrajectoryConfig slowConfig =
         new TrajectoryConfig(2, 1)
         // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(dSubsystem.swerveGetKinematics())
+        .setKinematics(dSubsystem.getSwerveKinematics())
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint);
         
@@ -180,20 +180,20 @@ Trajectory trajectory4 = TrajectoryGenerator.generateTrajectory(
         SwerveControllerCommand command1 = new SwerveControllerCommand(
             trajectory1, 
             dSubsystem::getPose, 
-            dSubsystem.swerveGetKinematics(), 
+            dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), 
             new PIDController(kP, kI, kD), 
             new ProfiledPIDController(kPRot, kIRot, kDRot,new TrapezoidProfile.Constraints(maxV, maxA)), 
             angle, 
             dSubsystem::swerveDrive, 
             dSubsystem);
-            SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.swerveGetKinematics(), 
+            SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
-            SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.swerveGetKinematics(), 
+            SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
-            SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.swerveGetKinematics(), 
+            SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 

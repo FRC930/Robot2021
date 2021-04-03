@@ -4,10 +4,8 @@ package frc.robot;
 
 // --Library Commands
 import edu.wpi.first.wpilibj2.command.*;
-
 // --Our Commands
 import frc.robot.commands.autocommands.paths.*;
-import frc.robot.commands.autocommands.paths.TestCommand;
 import frc.robot.commands.drivecommands.*;
 
 import frc.robot.commands.hoppercommands.*;
@@ -30,6 +28,7 @@ import frc.robot.commands.endgamecommands.*;
 // --Subsystem imports
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.DriveSubsystem.DRIVE_TYPE;
+import frc.robot.subsystems.LimelightSubsystem.LimelightPipelines;
 // --Trigger imports
 import frc.robot.triggers.*;
 
@@ -612,9 +611,80 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SaltAndPepperSkilletCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
-        towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, turretSubsystem);
+    //return new SaltAndPepperSkilletCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+        //towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, turretSubsystem);
     // Run path following command, then stop at the end.
+    
+    //TODO remove when merge with conors branch
+    AutonConfig.initInstance(driveSubsystem);
+    /*
+    // Select the correct autonomous path with the galactic path enum we set
+    switch(GalacticPathUtil.getAutonomousPath(limelightSubsystem)) {
+      case RED_PATH_A:
+          return new GalacticSearch_A_RedCommand(driveSubsystem,
+                                                intakePistonSubsystem,
+                                                  intakeMotorSubsystem,
+                                                    flywheelSubsystem,
+                                                    towerSubsystem,
+                                                      hopperSubsystem,
+                                                      kickerSubsystem,
+                                                        limelightSubsystem,
+                                                        flywheelPistonSubsystem);
+      case BLUE_PATH_A:
+        return new GalacticSearch_A_BlueCommand(driveSubsystem,
+                                                intakePistonSubsystem,
+                                                  intakeMotorSubsystem,
+                                                    flywheelSubsystem,
+                                                    towerSubsystem,
+                                                      hopperSubsystem,
+                                                      kickerSubsystem,
+                                                        limelightSubsystem,
+                                                        flywheelPistonSubsystem);
+      case RED_PATH_B:
+        return new GalacticSearch_B_RedCommand(driveSubsystem,
+                                              intakePistonSubsystem,
+                                              intakeMotorSubsystem,
+                                                flywheelSubsystem,
+                                                towerSubsystem,
+                                                  hopperSubsystem,
+                                                  kickerSubsystem,
+                                                    limelightSubsystem,
+                                                    flywheelPistonSubsystem);
+      case BLUE_PATH_B:
+        return new GalacticSearch_B_BlueCommand(driveSubsystem,
+                                              intakePistonSubsystem,
+                                              intakeMotorSubsystem,
+                                                flywheelSubsystem,
+                                                towerSubsystem,
+                                                  hopperSubsystem,
+                                                  kickerSubsystem,
+                                                    limelightSubsystem,
+                                                    flywheelPistonSubsystem);
+      default:
+          System.out.println("No GalacticSearch path found!");
+          break;
+    }
+    
+    // Return a random path if we found nothing.
+    return new GalacticSearch_A_RedCommand(driveSubsystem,
+                                          intakePistonSubsystem,
+                                            intakeMotorSubsystem,
+                                              flywheelSubsystem,
+                                              towerSubsystem,
+                                                hopperSubsystem,
+                                                kickerSubsystem,
+                                                  limelightSubsystem,
+                                                  flywheelPistonSubsystem);
+    */
+    return new GalacticSearch_A_RedCommand(driveSubsystem,
+                                                intakePistonSubsystem,
+                                                  intakeMotorSubsystem,
+                                                    flywheelSubsystem,
+                                                    towerSubsystem,
+                                                      hopperSubsystem,
+                                                      kickerSubsystem,
+                                                        limelightSubsystem,
+                                                        flywheelPistonSubsystem); 
   }
 
   // -------- METHODS FOR SHUFFLEBOARD --------\\

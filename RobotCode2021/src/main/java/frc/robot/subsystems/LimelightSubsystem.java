@@ -81,7 +81,7 @@ public class LimelightSubsystem extends SubsystemBase {
     // enum for the different limelight pipelines
     public enum LimelightPipelines {
 
-        NO_ZOOM(0), ZOOM_2X(1);
+        NO_ZOOM(0), ZOOM_2X(1), GALACTIC_PATH(9);
 
         private final int pipelineNumber;
 
