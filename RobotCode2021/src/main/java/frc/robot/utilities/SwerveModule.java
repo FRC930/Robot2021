@@ -8,7 +8,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -24,6 +26,10 @@ public class SwerveModule {
 
     private CANCoder steerEncoder;
     
+    private PIDController drivePID;
+
+    private SimpleMotorFeedforward feedForward;
+
     private final ProfiledPIDController m_turningPIDController =
             new ProfiledPIDController(
                     0.25,
@@ -55,6 +61,8 @@ public class SwerveModule {
         driveFx.setNeutralMode(NeutralMode.Brake); // Force Brake mode
         //Set PID limits 
         m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
+        drivePID = new PIDController(1.49, 0, 0);
+        feedForward = new SimpleMotorFeedforward(0.67, 2.31, 0.0844);
     }
 
     /**
@@ -70,7 +78,7 @@ public class SwerveModule {
         //tab.addNumber("Turn"+steerFx.getDeviceID(), () -> turn);
         //SmartDashboard.putNumber("Turn"+steerFx.getDeviceID(), turn);
         logger.log(Level.INFO, "SetSpeed: " + turn + " | AbsPos: " + steerEncoder.getAbsolutePosition() + " | Rotation: " + rotation);
-
+        
         steerFx.set(ControlMode.PercentOutput, turn);
 
         //Wait till azmuith
@@ -96,6 +104,9 @@ public class SwerveModule {
     public void setSpeed(double speed) {
         logger.entering(SwerveModule.class.getName(), "setSpeed()");
         
+        //double ffSpeed = feedForward.calculate(speed) / Constants.KMAXSPEED;
+        //double pidSpeed = drivePID.calculate(ffSpeed);
+        //System.out.println("speed: " + speed + " ffSpeed: " + ffSpeed);
         driveFx.set(ControlMode.PercentOutput, speed);
         SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
         
