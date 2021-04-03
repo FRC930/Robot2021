@@ -98,19 +98,37 @@ public class GalacticSearch_A_BlueCommand extends SequentialCommandGroup {
     // Generates a trajectory for a path to move towards furthest ball in trench run
     trajectory1 = TrajectoryGenerator.generateTrajectory(
         // Robot starts at X: 0 Y: 0 and a rotation of 0 
-         new Pose2d(inchesToMeters(30), inchesToMeters(60), new Rotation2d(Math.toRadians(0))),
+         new Pose2d(inchesToMeters(0), inchesToMeters(0), new Rotation2d(Math.toRadians(0))),
          List.of( 
-            new Translation2d(inchesToMeters(180), inchesToMeters(30))
          ),
-         new Pose2d(inchesToMeters(210), inchesToMeters(120), new Rotation2d(Math.toRadians(0))),
+         new Pose2d(inchesToMeters(180), inchesToMeters(-30), new Rotation2d(Math.toRadians(80))),
          // Pass config
          AutonConfig.getInstance().getTrajectoryConfig()
         );
     trajectory2 = TrajectoryGenerator.generateTrajectory(
         // Robot starts at X: 0 Y: 0 and a rotation of 0 
-        new Pose2d(210, 120, new Rotation2d(Math.toRadians(0))),
+        new Pose2d(180, -30, new Rotation2d(Math.toRadians(80))),
         List.of( 
-            new Translation2d(inchesToMeters(270), inchesToMeters(90))
+        ),
+        //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+        new Pose2d(inchesToMeters(200), inchesToMeters(60), new Rotation2d(Math.toRadians(80))), //X: was 130y is -135
+        // Pass config
+        AutonConfig.getInstance().getTrajectoryConfig()
+    );
+    trajectory3 = TrajectoryGenerator.generateTrajectory(
+        // Robot starts at X: 0 Y: 0 and a rotation of 0 
+        new Pose2d(200, 60, new Rotation2d(Math.toRadians(63))),
+        List.of( 
+        ),
+        //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+        new Pose2d(inchesToMeters(260), inchesToMeters(30), new Rotation2d(Math.toRadians(-63))), //X: was 130y is -135
+        // Pass config
+        AutonConfig.getInstance().getTrajectoryConfig()
+    );
+    trajectory4 = TrajectoryGenerator.generateTrajectory(
+        // Robot starts at X: 0 Y: 0 and a rotation of 0 
+        new Pose2d(260, 30, new Rotation2d(Math.toRadians(0))),
+        List.of( 
         ),
         //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
         new Pose2d(inchesToMeters(345), inchesToMeters(60), new Rotation2d(Math.toRadians(0))), //X: was 130y is -135

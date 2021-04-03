@@ -159,7 +159,7 @@ public class DriveSubsystem extends SubsystemBase {
     driveRightBackIDs = _driveRightBackIDs;
     driveLeftBackIDs = _driveLeftBackIDs;
 
-    gyroID = additionalIDs[0];
+    //gyroID = additionalIDs[0];
     
     switch(driveType) {
 
@@ -171,6 +171,8 @@ public class DriveSubsystem extends SubsystemBase {
       case SWERVE_DRIVE:
         gyro = new PigeonIMU(_intake.getIntakeMotor());
         setSwerveDriveMotors();
+        gyro = new PigeonIMU(_intake.getIntakeMotor());
+        //gyro = new PigeonIMU(gyroID);
         usingGyro = _usingGyro;
         slowSpeed = _slowSpeed;
         swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics, Rotation2d.fromDegrees(0.0));
@@ -325,6 +327,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Create ChassisSpeeds to determine speed of robot frame
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speedForward, speedStrafe, speedRotation, heading);
+    //Turn off field centric ChassisSpeeds speeds = new ChassisSpeeds(speedForward, speedStrafe, speedRotation);
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(speeds);
 
     // Normalize speed so speed wont go over 1
