@@ -202,18 +202,19 @@ public class BarrelRacingCommand extends SequentialCommandGroup {
                      new Translation2d(6.108 + inchesToMeters(10) + xOffset, -2.807 + inchesToMeters(38) - yOffset)
                  ),
                  //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-                 new Pose2d(7.277 + inchesToMeters(4) + xOffset, -3.607 + inchesToMeters(32) - yOffset, new Rotation2d(Math.toRadians(-20))), //X: was 130y is -135
+                 new Pose2d(7.277 + inchesToMeters(-4) + xOffset, -3.607 + inchesToMeters(32) - yOffset, new Rotation2d(Math.toRadians(-20))), //X: was 130y is -135
                  // Pass config
                  AutonConfig.getInstance().getTrajectoryConfig()
             );
             trajectory7 = TrajectoryGenerator.generateTrajectory(
                 // Robot starts at X: 0 Y: 0 and a rotation of 0 
-                new Pose2d(7.277 + inchesToMeters(4) + xOffset, -3.607 + inchesToMeters(32) - yOffset, new Rotation2d(Math.toRadians(-20))),
+                new Pose2d(7.277 + inchesToMeters(-4) + xOffset, -3.607 + inchesToMeters(32) - yOffset, new Rotation2d(Math.toRadians(-20))),
                  List.of( 
-                     new Translation2d(8.381 + inchesToMeters(24) + xOffset, -3.264 + inchesToMeters(38) + yOffset)
+                     //new Translation2d(8.381 + inchesToMeters(24) + xOffset, -3.264 + inchesToMeters(38) + yOffset)
                  ),
                  //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-                 new Pose2d(7.861 + inchesToMeters(18) + xOffset, -2.299 + inchesToMeters(40) + yOffset, new Rotation2d(Math.toRadians(150))), //X: was 130y is -135
+                 new Pose2d(8.381 + inchesToMeters(24) + xOffset, -3.264 + inchesToMeters(18) + yOffset, new Rotation2d(Math.toRadians(-20))), //X: was 130y is -135
+                // new Pose2d(7.861 + inchesToMeters(18) + xOffset, -2.299 + inchesToMeters(40) + yOffset, new Rotation2d(Math.toRadians(150))), //X: was 130y is -135
                  // Pass config
                  AutonConfig.getInstance().getTrajectoryConfig()
             );
