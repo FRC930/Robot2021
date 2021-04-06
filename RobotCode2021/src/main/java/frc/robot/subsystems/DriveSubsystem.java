@@ -12,6 +12,7 @@ import java.util.logging.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 
 import frc.robot.utilities.AutonConfig;
 import frc.robot.utilities.SwerveModule;
@@ -411,6 +412,13 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void resetSwerveOdemetry() {
     swerveDriveOdometry.resetPosition(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), getAngleHeading());
+  }
+
+  /**
+   * Reboot the PigeonIMU (This takes around 4 seconds)
+   */
+  public void rebootGyro() {
+    gyro.enterCalibrationMode(CalibrationMode.BootTareGyroAccel);
   }
 
   // TANK DRIVE
