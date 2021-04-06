@@ -27,6 +27,7 @@ public class ResetSwerveDriveCommand extends CommandBase {
     @Override
     public void execute() {  
         driveSubsystem.swerveResetWheels();
+        driveSubsystem.rebootGyro();
         //driveSubsystem.resetSwerveOdemetry();
     }
     // Called once the command ends or is interrupted.
