@@ -615,7 +615,7 @@ public class DriveSubsystem extends SubsystemBase {
   // TODO: Figure out what the heck this does
   public void periodic() throws RuntimeException{
     //logger.entering(DriveSubsystem.class.getName(), "periodic()");
-
+    gyroAngle = gyro.getFusedHeading();
     if(tankDriveOdometry != null) {
       tankDriveOdometry.update(Rotation2d.fromDegrees(getHeading()), getLeftWheelRotations(), getRightWheelRotations());
     } else if (swerveDriveOdometry != null) {

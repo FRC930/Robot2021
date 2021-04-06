@@ -677,7 +677,7 @@ public class RobotContainer {
                                                   limelightSubsystem,
                                                   flywheelPistonSubsystem);
     */
-    return new GalacticSearch_A_RedCommand(driveSubsystem,
+    return new GalacticSearch_A_BlueCommand(driveSubsystem,
                                                 intakePistonSubsystem,
                                                   intakeMotorSubsystem,
                                                     flywheelSubsystem,
