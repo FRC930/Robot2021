@@ -20,22 +20,11 @@ public class GalacticPathUtil {
         BLUE_PATH_B,
         NULL
     }
-    private static GalacticPath galacPath = GalacticPath.NULL;
-
-    //SequentialCommand[] PathAAuto = {GalacticSearch_A_RedCommand, GalacticSearch_A_BlueCommand}
-
-    /**
-    * Sets the current galactic path to follow
-    * @param path Galactic path enum
-    */
-    public static void setGalacticPath(GalacticPath path) {
-        galacPath = path;
-    }
 
     /**
      * Returns the current galactic path enum
      * @param lSubsystem Current limelight object
-     * @return
+     * @return GalacticPath
      */
     public static GalacticPath getAutonomousPath(LimelightSubsystem lSubsystem) {
         lSubsystem.setPipeline(LimelightPipelines.GALACTIC_PATH);
@@ -45,7 +34,7 @@ public class GalacticPathUtil {
         double vOffset = lSubsystem.getVerticleOffset();
 
         // Path enum we want to return
-        GalacticPath path;
+        GalacticPath path = GalacticPath.NULL;
 
         if((hOffset > 4.50 && hOffset < 8.50) && (vOffset > 10.50 && vOffset < 14.50)) {
             path = GalacticPathUtil.GalacticPath.RED_PATH_A;
@@ -59,8 +48,6 @@ public class GalacticPathUtil {
         } else if((hOffset > 16.50 && hOffset < 20.50) && (vOffset > 11.50 && vOffset < 15.50)) {
             path = GalacticPathUtil.GalacticPath.BLUE_PATH_B;
         
-        } else {
-            path = GalacticPathUtil.GalacticPath.NULL;
         }
 
         return path;

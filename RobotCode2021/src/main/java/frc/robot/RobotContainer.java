@@ -618,7 +618,7 @@ public class RobotContainer {
     
     //TODO remove when merge with conors branch
     AutonConfig.initInstance(driveSubsystem);
-    /*
+
     // Select the correct autonomous path with the galactic path enum we set
     switch(GalacticPathUtil.getAutonomousPath(limelightSubsystem)) {
       case RED_PATH_A:
@@ -662,7 +662,7 @@ public class RobotContainer {
                                                     limelightSubsystem,
                                                     flywheelPistonSubsystem);
       default:
-          System.out.println("No GalacticSearch path found!");
+          logger.log(Level.SEVERE, "No GalacticPath found.");
           break;
     }
     
@@ -676,16 +676,6 @@ public class RobotContainer {
                                                 kickerSubsystem,
                                                   limelightSubsystem,
                                                   flywheelPistonSubsystem);
-    */
-    return new GalacticSearch_A_RedCommand(driveSubsystem,
-                                                intakePistonSubsystem,
-                                                  intakeMotorSubsystem,
-                                                    flywheelSubsystem,
-                                                    towerSubsystem,
-                                                      hopperSubsystem,
-                                                      kickerSubsystem,
-                                                        limelightSubsystem,
-                                                        flywheelPistonSubsystem); 
     // return new BarrelRacingCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
     //   towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem);
         // Run path following command, then stop at the end.
