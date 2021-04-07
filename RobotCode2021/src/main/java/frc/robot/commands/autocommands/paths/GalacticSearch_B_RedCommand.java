@@ -79,9 +79,6 @@ public class GalacticSearch_B_RedCommand extends SequentialCommandGroup {
     private    Trajectory trajectory2;
     private    Trajectory trajectory3;
     private    Trajectory trajectory4;
-    private    Trajectory trajectory5;
-    private    Trajectory trajectory6;
-    private    Trajectory trajectory7;
     private double xOffset = inchesToMeters(35.25);
     private double yOffset = inchesToMeters(6.5);
   /**
@@ -98,82 +95,61 @@ public class GalacticSearch_B_RedCommand extends SequentialCommandGroup {
     // Generates a trajectory for a path to move towards furthest ball in trench run
     trajectory1 = TrajectoryGenerator.generateTrajectory(
         // Robot starts at X: 0 Y: 0 and a rotation of 0 
-         new Pose2d(inchesToMeters(0), inchesToMeters(0), new Rotation2d(Math.toRadians(0))),
+         new Pose2d(inchesToMeters(0), inchesToMeters(0), new Rotation2d(Math.toRadians(45))),
          List.of( 
          ),
-         new Pose2d(inchesToMeters(80), inchesToMeters(0), new Rotation2d(Math.toRadians(0))),
+         new Pose2d(inchesToMeters(66), inchesToMeters(98), new Rotation2d(Math.toRadians(45))),
          // Pass config
-         AutonConfig.getInstance().getTrajectoryConfig()
+         AutonConfig.getInstance().getTrajectoryConfig(0, 4.5)
         );
     trajectory2 = TrajectoryGenerator.generateTrajectory(
         // Robot starts at X: 0 Y: 0 and a rotation of 0 
-         new Pose2d(inchesToMeters(80), inchesToMeters(0), new Rotation2d(Math.toRadians(45))),
+         new Pose2d(inchesToMeters(66), inchesToMeters(98), new Rotation2d(Math.toRadians(-45))),
          List.of( 
          ),
          //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-         new Pose2d(inchesToMeters(140), inchesToMeters(-60), new Rotation2d(Math.toRadians(-45))), //X: was 130y is -135
+         new Pose2d(inchesToMeters(175), inchesToMeters(-6), new Rotation2d(Math.toRadians(-45))), //X: was 130y is -135
          // Pass config
-         AutonConfig.getInstance().getTrajectoryConfig()
+         AutonConfig.getInstance().getTrajectoryConfig(0, 4.5)
     );
     trajectory3 = TrajectoryGenerator.generateTrajectory(
         // Robot starts at X: 0 Y: 0 and a rotation of 0 
-         new Pose2d(inchesToMeters(140), inchesToMeters(-60), new Rotation2d(Math.toRadians(45))),
+         new Pose2d(inchesToMeters(175), inchesToMeters(-6), new Rotation2d(Math.toRadians(45))),
          List.of( 
          ),
-         new Pose2d(inchesToMeters(200), inchesToMeters(0), new Rotation2d(Math.toRadians(45))),
+         new Pose2d(inchesToMeters(200), inchesToMeters(98), new Rotation2d(Math.toRadians(45))),
          // Pass config
-         AutonConfig.getInstance().getTrajectoryConfig()
+         AutonConfig.getInstance().getTrajectoryConfig(0, 4.5)
         );
     trajectory4 = TrajectoryGenerator.generateTrajectory(
         // Robot starts at X: 0 Y: 0 and a rotation of 0 
-         new Pose2d(inchesToMeters(200), inchesToMeters(0), new Rotation2d(Math.toRadians(0))),
+         new Pose2d(inchesToMeters(200), inchesToMeters(98), new Rotation2d(Math.toRadians(0))),
          List.of( 
          ),
          //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-         new Pose2d(inchesToMeters(345), inchesToMeters(0), new Rotation2d(Math.toRadians(0))), //X: was 130y is -135
+         new Pose2d(inchesToMeters(475), inchesToMeters(98), new Rotation2d(Math.toRadians(0))), //X: was 130y is -135
          // Pass config
-         AutonConfig.getInstance().getTrajectoryConfig()
+         AutonConfig.getInstance().getTrajectoryConfig(0, 5.5)
     );
 
 
 
 
 // this is our config for how much power goes to the motors
-var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getSwerveKinematics(), Constants.KMAXSPEED);
+//var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getSwerveKinematics(), Constants.KMAXSPEED);
 //PID values
-int kP = 1;
-int kI = 0;
-int kD = 0;
+double kPX = /*1.1*/ 0;
+        double kIX = 0;
+        double kDX = 0;
+        double kPY = /*2*/ 0;
+        double kIY = 0;
+        double kDY = 0;
+        double kPRot = 3;
+        double kIRot = 0;
+        double kDRot = 0;
 double maxV = Math.PI * 2;
 double maxA = Math.PI;
 // Configurate the values of all trajectories for max velocity and acceleration
-TrajectoryConfig config =
-new TrajectoryConfig(Constants.KMAXSPEED,
-Constants.KMAXACCELERATION)
-// Add kinematics to ensure max speed is actually obeyed
-.setKinematics(dSubsystem.getSwerveKinematics())
-.setEndVelocity(1)
-// Apply the voltage constraint
-.addConstraint(autoVoltageConstraint);
-
-//a second trajectory config this one is reversed
-TrajectoryConfig reverseConfig =
-new TrajectoryConfig(Constants.KMAXSPEED,
-Constants.KMAXACCELERATION)
-// Add kinematics to ensure max speed is actually obeyed
-.setKinematics(dSubsystem.getSwerveKinematics())
-.setEndVelocity(1)
-// Apply the voltage constraint
-.addConstraint(autoVoltageConstraint)
-.setReversed(true);
-
-TrajectoryConfig slowConfig =
-new TrajectoryConfig(Constants.KMAXSPEED,
-2.0)
-// Add kinematics to ensure max speed is actually obeyed
-.setKinematics(dSubsystem.getSwerveKinematics())
-// Apply the voltage constraint
-.addConstraint(autoVoltageConstraint);
 
 // -------- RAMSETE Commands -------- \\
 // Creates a command that can be added to the command scheduler in the sequential command
@@ -183,16 +159,23 @@ new TrajectoryConfig(Constants.KMAXSPEED,
 // This is our first atuo command this will run the drivetrain using the first trajectory we made
 
 SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-    new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
+    new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
 
-SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-    new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
+    SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
+    new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
 
-SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-    new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
+    SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
+    new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
+
+    SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
+    new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
+
+    DeployIntakeCommand deployCommand = new DeployIntakeCommand(iPistonSubsystem, iMotorSubsystem);
+
 
 
 /*
@@ -209,7 +192,7 @@ Path Description:
     //dSubsystem.resetPose(trajectory1.getInitialPose());
     System.out.println("*******Adjusted First Robot Pose: " + dSubsystem.getPose() + "********");
     System.out.println("*******Final Path Pose: "+ finalPose + " ********");
-    addCommands(command1, command2);
+    addCommands(deployCommand, command1, command2, command3, command4);
     //returnIntakeCommand);
 }
 

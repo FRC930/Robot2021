@@ -618,7 +618,7 @@ public class RobotContainer {
     
     //TODO remove when merge with conors branch
     AutonConfig.initInstance(driveSubsystem);
-    /*
+    
     // Select the correct autonomous path with the galactic path enum we set
     switch(GalacticPathUtil.getAutonomousPath(limelightSubsystem)) {
       case RED_PATH_A:
@@ -663,29 +663,18 @@ public class RobotContainer {
                                                     flywheelPistonSubsystem);
       default:
           System.out.println("No GalacticSearch path found!");
-          break;
+          return null;
     }
     
-    // Return a random path if we found nothing.
-    return new GalacticSearch_A_RedCommand(driveSubsystem,
-                                          intakePistonSubsystem,
-                                            intakeMotorSubsystem,
-                                              flywheelSubsystem,
-                                              towerSubsystem,
-                                                hopperSubsystem,
-                                                kickerSubsystem,
-                                                  limelightSubsystem,
-                                                  flywheelPistonSubsystem);
-    */
-    return new GalacticSearch_A_BlueCommand(driveSubsystem,
-                                                intakePistonSubsystem,
-                                                  intakeMotorSubsystem,
-                                                    flywheelSubsystem,
-                                                    towerSubsystem,
-                                                      hopperSubsystem,
-                                                      kickerSubsystem,
-                                                        limelightSubsystem,
-                                                        flywheelPistonSubsystem); 
+    // return new GalacticSearch_B_BlueCommand(driveSubsystem,
+    //                                             intakePistonSubsystem,
+    //                                               intakeMotorSubsystem,
+    //                                                 flywheelSubsystem,
+    //                                                 towerSubsystem,
+    //                                                   hopperSubsystem,
+    //                                                   kickerSubsystem,
+    //                                                     limelightSubsystem,
+    //                                                     flywheelPistonSubsystem); 
     // return new BarrelRacingCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
     //   towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem);
         // Run path following command, then stop at the end.
