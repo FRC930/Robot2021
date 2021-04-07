@@ -404,18 +404,25 @@ public class DriveSubsystem extends SubsystemBase {
     return gyro.getFusedHeading();
   }
 
+  /**
+   * Returns the current heading of the robot
+   * @return angle
+   */
   public Rotation2d getAngleHeading() {
     Rotation2d angle;
     angle = new Rotation2d(Math.toRadians(getHeading()));
     return angle;
   }
 
+  /**
+   * Reset the Swerve Odometry to "zero"
+   */
   public void resetSwerveOdemetry() {
     swerveDriveOdometry.resetPosition(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), getAngleHeading());
   }
 
   /**
-   * Reboot the PigeonIMU (This takes around 4 seconds)
+   * Reboot the PigeonIMU (This takes around 4-10 seconds)
    */
   public void rebootGyro() {
     gyro.enterCalibrationMode(CalibrationMode.BootTareGyroAccel);
