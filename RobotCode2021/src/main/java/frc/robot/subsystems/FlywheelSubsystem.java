@@ -41,7 +41,7 @@ public class FlywheelSubsystem extends SubsystemBase {
     private final CANEncoder encoder;
 
     
-    private double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(2450.0);  
+    private double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(2000.0);  
 
     // -------- CONSTRUCTOR --------\\
 

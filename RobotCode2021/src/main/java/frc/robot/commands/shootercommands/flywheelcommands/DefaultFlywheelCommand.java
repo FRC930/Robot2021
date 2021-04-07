@@ -131,7 +131,7 @@ public class DefaultFlywheelCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_FlywheelSubsystem.getRadiansPerSecond();
+    kSpinupRadPerSec = m_FlywheelSubsystem.getRadiansPerSecond();
     // Sets the target speed of our flywheel. This is similar to setting the setpoint of a PID controller.
     // We just pressed the trigger, so let's set our next reference
      m_loop.setNextR(VecBuilder.fill(kSpinupRadPerSec));

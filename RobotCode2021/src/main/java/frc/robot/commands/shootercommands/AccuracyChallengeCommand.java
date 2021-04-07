@@ -16,6 +16,8 @@ import frc.robot.subsystems.FlywheelPistonSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem.SolenoidValues;
 import frc.robot.utilities.DistanceMath;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.Constants;
 import frc.robot.commands.shootercommands.flywheelcommands.DefaultFlywheelCommand;
@@ -35,21 +37,16 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     //Choose end of each desired shooting area in given shooting zone (green/yellow/blue/red).
     //Allows for motor speed optimization aswell (in rpms).
 
-    private final int GREEN_START_ZONE = 83;
-    private final int GREEN_END_ZONE = 85;
-    private final double GREEN_SPEED = 500;
+    private final int GREEN_END_ZONE = 75;
+    private final double GREEN_SPEED = 3150.0;
 
-    private final int YELLOW_START_ZONE = 143;
-    private final int YELLOW_END_ZONE = 145;
-    private final double YELLOW_SPEED = 2170.0;
+    private final int YELLOW_END_ZONE = 115;
+    private final double YELLOW_SPEED = 2270.0;
 
-    private final int BLUE_START_ZONE = 203;
-    private final int BLUE_END_ZONE = 205;
+    private final int BLUE_END_ZONE = 160;
     private final double BLUE_SPEED = 3150.0;
 
-    private final int RED_START_ZONE = 215;
-    private final int RED_END_ZONE = 218;
-    private final double RED_SPEED = 3150.0;
+    private final double RED_SPEED = 3000.0;
 
 
     //-------- DECLARATIONS --------\\
@@ -59,6 +56,7 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     private LimelightSubsystem mLimelightSubsystem;
     private FullExtendFlywheelPistonCommand mFullExtendFlywheelPistonCommand;
     private FullRetractFlywheelPistonCommand mFullRetractFlywheelPistonCommand;
+    
     
     //-------- CONSTRUCTOR --------\\
 
@@ -79,7 +77,7 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {   
-
+        SmartDashboard.putString("Zone", "none");
     }
 
     // Code Below...
@@ -93,25 +91,31 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     @Override
     public void execute() {
          double distance = DistanceMath.getDistY(mLimelightSubsystem.getVerticleOffset());
-         if ( GREEN_START_ZONE <= distance && distance <= GREEN_END_ZONE ) {   // Green Zone (Back)
+         SmartDashboard.putNumber("Distance", distance);
+         SmartDashboard.putNumber("Speed", mFlywheelSubsystem.getRadiansPerSecond());
+         if (distance <= GREEN_END_ZONE ) {   // Green Zone (Back)
              mFlywheelSubsystem.setSpeedRPMs(GREEN_SPEED);        //needs to be changed!
              mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
              mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
+             SmartDashboard.putString("Zone", "Green");
          } 
-         else if ( YELLOW_START_ZONE <= distance && distance <= YELLOW_END_ZONE ) {   // Yellow Zone (Back)
+         else if ( GREEN_END_ZONE <= distance && distance <= YELLOW_END_ZONE ) {   // Yellow Zone (Back)
              mFlywheelSubsystem.setSpeedRPMs(YELLOW_SPEED);
-             mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
+             mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
              mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
+             SmartDashboard.putString("Zone", "Yellow");
          } 
-         else if ( BLUE_START_ZONE <= distance && distance <= BLUE_END_ZONE ) {   // Blue Zone (Back)
+         else if ( YELLOW_END_ZONE <= distance && distance <= BLUE_END_ZONE ) {   // Blue Zone (Back)
              mFlywheelSubsystem.setSpeedRPMs(BLUE_SPEED);
              mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
              mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
+             SmartDashboard.putString("Zone", "Blue");
          } 
-         else if ( RED_START_ZONE <= distance && distance <= RED_END_ZONE ) {   // Red Zone (Front)  :)
+         else if ( BLUE_END_ZONE <= distance) {   // Red Zone (Front)  :)
              mFlywheelSubsystem.setSpeedRPMs(RED_SPEED);
              mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
              mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
+             SmartDashboard.putString("Zone", "Red");
          } 
     }
 
