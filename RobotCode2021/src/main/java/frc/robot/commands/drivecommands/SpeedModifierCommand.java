@@ -3,6 +3,7 @@ package frc.robot.commands.drivecommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class SpeedModifierCommand extends CommandBase{
 
@@ -18,7 +19,7 @@ public class SpeedModifierCommand extends CommandBase{
     @Override
     public void execute() {  
         //System.out.println("SpeedModifierCommand reports: " + speedModifier);
-        //sdSubsystem.setSpeedModifier(speedModifier);        
+        sdSubsystem.setSpeedModifier(speedModifier);        
     }
     // Called once the command ends or is interrupted.
     @Override

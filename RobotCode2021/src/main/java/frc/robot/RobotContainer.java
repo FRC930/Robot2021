@@ -434,12 +434,15 @@ public class RobotContainer {
     // B Button
     //JoystickButton positionalButton = new JoystickButton(driverController, GC_B);
     // L Button
-    JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
+    //JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
     // ZR Button
     JoystickButton shootButton = new JoystickButton(driverController, XB_RB);
     JoystickButton resetSwerveButton = new JoystickButton(driverController, XB_Y);
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
+
+    //
+    JoystickButton speedModifierButton = new JoystickButton(driverController, XB_LB);
 
     // --Command binds
 
@@ -453,6 +456,8 @@ public class RobotContainer {
 
     // Drive command binds
     swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
+    speedModifierButton.whenActive(new SpeedModifierCommand(driveSubsystem, 0.5)) // allows the switching of speedModifier between a and b
+        .whenInactive(new SpeedModifierCommand(driveSubsystem, 0.8));
 
     // Shooter command binds
     shootButton.whenActive(new ShootPowerCellCommandGroup(flywheelSubsystem, towerSubsystem, hopperSubsystem,

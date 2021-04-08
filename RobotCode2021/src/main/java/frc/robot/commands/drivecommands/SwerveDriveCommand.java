@@ -64,11 +64,11 @@ public class SwerveDriveCommand extends CommandBase{
 
     // TODO: Create deadband constants for each axis
     // Set value to zero if under deadband limit
-    if (Math.abs(leftX) < 0.1) {
+    if (Math.abs(leftX) < 0.15) {
         logger.log(Level.INFO, "leftX < Left Joystick's X-Axis Deadband");
         leftX = 0;
     }
-    if (Math.abs(leftY) < 0.1) {
+    if (Math.abs(leftY) < 0.15) {
         logger.log(Level.INFO, "leftY < Left Joystick's Y-Axis Deadband");
         leftY = 0;
     }
@@ -78,9 +78,13 @@ public class SwerveDriveCommand extends CommandBase{
     }
 
     // Cube values to create smoother movement
-    leftX = -Math.pow(leftX, 3);
-    leftY = -Math.pow(leftY, 3);
-    rightX = -Math.pow(rightX, 3);
+    leftX = -Math.pow(leftX, 1);
+    leftY = -Math.pow(leftY, 1);
+    rightX = -Math.pow(rightX, 1);
+    
+    SmartDashboard.putNumber("Drive Leftx", leftX);
+    SmartDashboard.putNumber("Drive Lefty", leftY);
+    SmartDashboard.putNumber("Drive Rightx", rightX);
   
     // Sends resulting values to SwerveDriveSubsystem for the values to be translated into physical movement
     sdSubsystem.swerveDrive(leftX, leftY, rightX);
