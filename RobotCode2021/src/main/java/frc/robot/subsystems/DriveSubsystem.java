@@ -610,7 +610,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   // SWERVE DRIVE
-  public SwerveDriveKinematics swerveGetKinematics() {
+  public SwerveDriveKinematics getSwerveKinematics() {
     return m_kinematics;
   }
 
