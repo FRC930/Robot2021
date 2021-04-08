@@ -43,6 +43,11 @@ public class CheckIfShotPossibleCommand extends CommandBase {
     private DeadbandZone deadbandZone;
     private ShotChance shotChance;
 
+    //-------- CONSTANTS ---------\\
+
+    private final double FLYWHEEL_LOWER_ANGLE = 31.4;
+    private final double FLYWHEEL_UPPER_ANGLE = 39.0;
+
     //-------- CONSTRUCTOR --------\\
 
     public CheckIfShotPossibleCommand(LimelightSubsystem lLightSubsystem, FlywheelPistonSubsystem fPistonSubsystem) {
@@ -60,7 +65,7 @@ public class CheckIfShotPossibleCommand extends CommandBase {
     public boolean isFinished() {
 
         //Set the shot type to the shooter.
-        shooterMathUtil.setPosition((flywheelPistonSubsystem.get() ? Constants.FLYWHEEL_LOWER_ANGLE : Constants.FLYWHEEL_UPPER_ANGLE), limeLightSubsystem.getDistance()); 
+        shooterMathUtil.setPosition((flywheelPistonSubsystem.get() ? FLYWHEEL_LOWER_ANGLE : FLYWHEEL_UPPER_ANGLE), limeLightSubsystem.getDistance()); 
         shotOutcome = shooterMathUtil.getPossibleShot();
         
         deadbandMathUtil.setPosition(limeLightSubsystem.getHorizontalOffset(), limeLightSubsystem.getDistance());

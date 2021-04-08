@@ -4,10 +4,8 @@ package frc.robot;
 
 // --Library Commands
 import edu.wpi.first.wpilibj2.command.*;
-
 // --Our Commands
 import frc.robot.commands.autocommands.paths.*;
-import frc.robot.commands.autocommands.paths.TestCommand;
 import frc.robot.commands.drivecommands.*;
 
 import frc.robot.commands.hoppercommands.*;
@@ -24,12 +22,13 @@ import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
 import frc.robot.commands.towercommands.*;
 
 import frc.robot.commands.turretcommads.*;
-
+//import frc.robot.commands.ultrasoniccommands.UltrasonicPingCommand;
 import frc.robot.commands.endgamecommands.*;
 
 // --Subsystem imports
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.DriveSubsystem.DRIVE_TYPE;
+import frc.robot.subsystems.LimelightSubsystem.LimelightPipelines;
 // --Trigger imports
 import frc.robot.triggers.*;
 
@@ -52,6 +51,7 @@ import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
@@ -135,6 +135,28 @@ public class RobotContainer {
   private final int DRIVER_CONTROLLER_ID = 0; // The gamecube controller
   private final int CODRIVER_CONTROLLER_ID = 1; // The xbox controller
 
+  // MOTOR IDs
+  private final int INTAKE_ID = 17;
+
+  // PISTION IDs
+  private final int SHIFTER_SOLENOID_ID = 2;
+
+  // TURRET POSITIONS
+
+  //private final double TURRET_SET_POSITION_P = 2.5;
+  //private final double TURRET_SET_POSITION_I = 0.0;
+  //private final double TURRET_SET_POSITION_D = 0.0;
+
+  // encoder positions for setting turret to one of four directions
+  private final double TURRET_BACK_POSITION = 0.635;
+  private final double TURRET_FRONT_POSITION = 0.383;
+  private final double TURRET_RIGHT_POSITION = 0.51;
+  private final double TURRET_LEFT_POSITION = 0.256;
+
+  private final double FRONT_LEFT_POSITION = 0.3195;
+  private final double FRONT_RIGHT_POSITION = 0.4465;
+  private final double BACK_RIGHT_POSITION = 0.5725;
+
   // -------- DECLARATIONS --------\\
   private static final Logger frcRobotLogger = Logger.getLogger(RobotContainer.class.getPackageName());
 
@@ -192,6 +214,9 @@ public class RobotContainer {
   // --Turret subsystem
   private final TurretSubsystem turretSubsystem;
 
+  // --Ultrasonic Subsystem
+  //private final UltrasonicSubsystem ultrasonicSubsystem;
+
   // --LED subsystem
   LEDSubsystem ledSubsystem;
 
@@ -217,6 +242,8 @@ public class RobotContainer {
   // --Turret commands
   private final JoystickTurretCommand joystickTurretCommand; // For manual
 
+  // --Ultrasonic commands
+  //private final UltrasonicPingCommand ultrasonicPingCommand;
 
   // --Auto Simulation
   
@@ -252,13 +279,17 @@ public class RobotContainer {
     coDriverController = new Joystick(CODRIVER_CONTROLLER_ID);
     // --Subsystems
     // colorSensorSubsystem = new ColorSensorSubsystem();
-    // colorWheelSpinnerSubsystem = new ColorWheelSpinnerSubsystem();
+    // colorWheelSpinnerSubsystem = new ColorWheelSpinnerSubsystem(333);
 
     // (INTAKE_ID)
-    intakeMotorSubsystem = new IntakeMotorSubsystem(Constants.INTAKE_ID);
+    intakeMotorSubsystem = new IntakeMotorSubsystem(INTAKE_ID);
     // (INTAKE_SOLENOID_ID)
     intakePistonSubsystem = new IntakePistonSubsystem(0);
 
+    // GENERAL DRIVE ARRAYS
+    // due to the wiring of the gyro, both the intake and the gyro are tied together. because of this, we need to use the intake_id for this gyro.
+    // additionalDriveIDs [     gyroID,    shifterSolenoidID]
+    int[] additionalDriveIDs = {INTAKE_ID, SHIFTER_SOLENOID_ID};
     // SWERVE DRIVE ARRAYS
     int[] drfid = {3, 7, 11};
     int[] dlfid = {1, 5, 9};
@@ -273,19 +304,19 @@ public class RobotContainer {
     */
 
     // Must be initialized after intake
-    //the first boolean determines to use field orientation if true
+    // the first boolean determines to use field orientation if true
     // the second boolean if true halves the speed
-    driveSubsystem = new DriveSubsystem(drfid, dlfid, drbid, dlbid, DRIVE_TYPE.SWERVE_DRIVE, intakeMotorSubsystem, false, true);
+    driveSubsystem = new DriveSubsystem(additionalDriveIDs, drfid, dlfid, drbid, dlbid, DRIVE_TYPE.SWERVE_DRIVE, intakeMotorSubsystem, false, true);
     //swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
 
     // (HOPPER_ID)
     hopperSubsystem = new HopperSubsystem(13);
 
-    // (KICKER_ID)
-    kickerSubsystem = new KickerSubsystem(14);
+    // (KICKER_ID, HOPPER_ENCODER_PORT_ID)
+    kickerSubsystem = new KickerSubsystem(14, 1);
 
-    // (CLIMBER_ARM_ID)
-    //climberArmSubsystem = new ClimberArmSubsystem(12);
+    // (CLIMBER_ARM_ID, CLIMBER_ENCODER_PORT_ID)
+    //climberArmSubsystem = new ClimberArmSubsystem(12, 2);
 
     ledSubsystem = new LEDSubsystem(0,20);
 
@@ -302,6 +333,9 @@ public class RobotContainer {
 
     // (TURRET_ID, ENCODER_PORT_ID)
     turretSubsystem = new TurretSubsystem(15, 0);
+
+    // (ANALOG_PORT_ID)
+    //ultrasonicSubsystem = new UltrasonicSubsystem(1);
 
     // --Commands
 
@@ -327,6 +361,9 @@ public class RobotContainer {
     joystickTurretCommand = new JoystickTurretCommand(turretSubsystem, coDriverController, XB_AXIS_LEFT_X);
 
     shuffleboardUtility = ShuffleboardUtility.getInstance();
+
+    // Ultrasonic
+    //ultrasonicPingCommand = new UltrasonicPingCommand(ultrasonicSubsystem);
 
     // TODO: Edit this to work with Shuffleboard utility (ADD IT BACK TOO)
     //saltAndPepperSkilletCommand = new SaltAndPepperSkilletCommand(swerveDriveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
@@ -400,7 +437,7 @@ public class RobotContainer {
     //JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
     // ZR Button
     JoystickButton shootButton = new JoystickButton(driverController, XB_RB);
-
+    JoystickButton resetSwerveButton = new JoystickButton(driverController, XB_Y);
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
 
@@ -429,7 +466,8 @@ public class RobotContainer {
     stopJamButton.whileActiveOnce(new StopJamCommandGroup(towerSubsystem, kickerSubsystem));
     stopJamButton.whenReleased(new StopTowerKickerCommandGroup(towerSubsystem, kickerSubsystem));
     // shootButton.whenPressed(new RunFlywheelCommand(flywheelSubsystem, 0.8));
-
+    
+    resetSwerveButton.whenHeld(new ResetSwerveDriveCommand(driveSubsystem));
     // Endgame command binds
     //toggleEndgame.toggleWhenActive(new EndgameCommandGroup(swerveDriveSubsystem, flywheelSubsystem, turretSubsystem));
 
@@ -509,14 +547,15 @@ public class RobotContainer {
     autoTrackTurret.whileActiveOnce(new AutoAimTurretCommand(limelightSubsystem, turretSubsystem,
         new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D), coDriverController,
         XB_AXIS_LEFT_X));
-    turretFront.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.TURRET_FRONT_POSITION));
-    turretBack.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.TURRET_BACK_POSITION));
-    turretLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.TURRET_LEFT_POSITION));
-    turretRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.TURRET_RIGHT_POSITION));
 
-    turretFrontLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.FRONT_LEFT_POSITION));
-    turretFrontRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.FRONT_RIGHT_POSITION));
-    turretBackRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, Constants.BACK_RIGHT_POSITION));
+    turretFront.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_FRONT_POSITION));
+    turretBack.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_BACK_POSITION));
+    turretLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_LEFT_POSITION));
+    turretRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_RIGHT_POSITION));
+
+    turretFrontLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, FRONT_LEFT_POSITION));
+    turretFrontRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, FRONT_RIGHT_POSITION));
+    turretBackRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, BACK_RIGHT_POSITION));
 
     // endgameSafetyButton.whileActiveOnce(climberArmCommandGroup);
     intakePistonTrigger.toggleWhenActive(new ExtendIntakePistonCommand(intakePistonSubsystem))
@@ -532,7 +571,7 @@ public class RobotContainer {
     CommandScheduler scheduler = CommandScheduler.getInstance();
 
     scheduler.unregisterSubsystem(limelightSubsystem, hopperSubsystem, turretSubsystem, flywheelSubsystem,
-        kickerSubsystem, towerSubsystem);
+        kickerSubsystem, towerSubsystem/*, ultrasonicSubsystem*/);
     
     if (inManualMode) {
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
@@ -547,6 +586,7 @@ public class RobotContainer {
       scheduler.setDefaultCommand(flywheelSubsystem, defaultFlywheelCommand);
       scheduler.setDefaultCommand(limelightSubsystem,
           new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
+      //scheduler.setDefaultCommand(ultrasonicSubsystem, new UltrasonicPingCommand(ultrasonicSubsystem));
     }
 
   }
@@ -577,9 +617,72 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SaltAndPepperSkilletCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
-        towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, turretSubsystem);
+    //return new SaltAndPepperSkilletCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+        //towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, turretSubsystem);
     // Run path following command, then stop at the end.
+    
+    //TODO remove when merge with conors branch
+    AutonConfig.initInstance(driveSubsystem);
+    
+    // Select the correct autonomous path with the galactic path enum we set
+    switch(GalacticPathUtil.getAutonomousPath(limelightSubsystem)) {
+      case RED_PATH_A:
+          return new GalacticSearch_A_RedCommand(driveSubsystem,
+                                                intakePistonSubsystem,
+                                                  intakeMotorSubsystem,
+                                                    flywheelSubsystem,
+                                                    towerSubsystem,
+                                                      hopperSubsystem,
+                                                      kickerSubsystem,
+                                                        limelightSubsystem,
+                                                        flywheelPistonSubsystem);
+      case BLUE_PATH_A:
+        return new GalacticSearch_A_BlueCommand(driveSubsystem,
+                                                intakePistonSubsystem,
+                                                  intakeMotorSubsystem,
+                                                    flywheelSubsystem,
+                                                    towerSubsystem,
+                                                      hopperSubsystem,
+                                                      kickerSubsystem,
+                                                        limelightSubsystem,
+                                                        flywheelPistonSubsystem);
+      case RED_PATH_B:
+        return new GalacticSearch_B_RedCommand(driveSubsystem,
+                                              intakePistonSubsystem,
+                                              intakeMotorSubsystem,
+                                                flywheelSubsystem,
+                                                towerSubsystem,
+                                                  hopperSubsystem,
+                                                  kickerSubsystem,
+                                                    limelightSubsystem,
+                                                    flywheelPistonSubsystem);
+      case BLUE_PATH_B:
+        return new GalacticSearch_B_BlueCommand(driveSubsystem,
+                                              intakePistonSubsystem,
+                                              intakeMotorSubsystem,
+                                                flywheelSubsystem,
+                                                towerSubsystem,
+                                                  hopperSubsystem,
+                                                  kickerSubsystem,
+                                                    limelightSubsystem,
+                                                    flywheelPistonSubsystem);
+      default:
+          System.out.println("No GalacticSearch path found!");
+          throw new NullPointerException("No Path Selected");
+    }
+    
+    // return new GalacticSearch_B_BlueCommand(driveSubsystem,
+    //                                             intakePistonSubsystem,
+    //                                               intakeMotorSubsystem,
+    //                                                 flywheelSubsystem,
+    //                                                 towerSubsystem,
+    //                                                   hopperSubsystem,
+    //                                                   kickerSubsystem,
+    //                                                     limelightSubsystem,
+    //                                                     flywheelPistonSubsystem); 
+    // return new BarrelRacingCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+    //   towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem);
+        // Run path following command, then stop at the end.
   }
 
   // -------- METHODS FOR SHUFFLEBOARD --------\\

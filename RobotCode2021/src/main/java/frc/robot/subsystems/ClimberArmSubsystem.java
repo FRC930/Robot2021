@@ -45,12 +45,12 @@ public class ClimberArmSubsystem extends SubsystemBase {
      * <h3>ClimberArmSubsystem</h3> This default constructor initializes the
      * {@link #climberArmMotor motor controller} to the right motor controller.
      */
-    public ClimberArmSubsystem(int CLIMBER_ARM_ID) {
+    public ClimberArmSubsystem(int CLIMBER_ARM_ID, int CLIMBER_ENCODER_PORT_ID) {
         climberArmMotor = new WPI_VictorSPX(CLIMBER_ARM_ID);
 
         // Dont use the encoder in simulation
         if(RobotBase.isReal()){
-            this.encoder = new DutyCycleEncoder(Constants.CLIMBER_ENCODER_PORT_ID);
+            this.encoder = new DutyCycleEncoder(CLIMBER_ENCODER_PORT_ID);
             this.encoder.reset();
         }
     }
