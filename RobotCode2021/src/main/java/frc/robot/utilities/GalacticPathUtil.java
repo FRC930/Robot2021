@@ -36,18 +36,17 @@ public class GalacticPathUtil {
         // Path enum we want to return
         GalacticPath path = GalacticPath.NULL;
 
-        if((hOffset > 4.50 && hOffset < 8.50) && (vOffset > 10.50 && vOffset < 14.50)) {
+        if((hOffset > -13 && hOffset < -11.5) && (vOffset > -1 && vOffset < 1)) {
             path = GalacticPathUtil.GalacticPath.RED_PATH_A;
 
-        } else if((hOffset > 15.50 && hOffset < 18.50) && (vOffset > 10.50 && vOffset < 14.50)) {
+        } else if((hOffset > 12.75 && hOffset < 14.25) && (vOffset > 5.5 && vOffset < 6.5)) {
             path = GalacticPathUtil.GalacticPath.BLUE_PATH_A;
 
-        } else if((hOffset > 0.00 && hOffset < 2.50) && (vOffset > 4.50 && vOffset < 8.50)) {
+        } else if((hOffset > 4 && hOffset < 6.5) && (vOffset > 4 && vOffset < 5.80)) {
             path = GalacticPathUtil.GalacticPath.RED_PATH_B;
 
-        } else if((hOffset > 16.50 && hOffset < 20.50) && (vOffset > 11.50 && vOffset < 15.50)) {
+        } else {
             path = GalacticPathUtil.GalacticPath.BLUE_PATH_B;
-        
         }
 
         return path;

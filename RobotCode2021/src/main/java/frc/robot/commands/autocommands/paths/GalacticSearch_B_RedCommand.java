@@ -23,6 +23,7 @@ import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem;
 
 import frc.robot.commands.intakecommands.*;
+import frc.robot.commands.intakecommands.intakemotorcommands.RunIntakeMotorsCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
@@ -174,7 +175,7 @@ SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSub
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
     new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
 
-    DeployIntakeCommand deployCommand = new DeployIntakeCommand(iPistonSubsystem, iMotorSubsystem);
+    RunIntakeMotorsCommand rollerCommand = new RunIntakeMotorsCommand(iMotorSubsystem);
 
 
 
@@ -192,7 +193,7 @@ Path Description:
     //dSubsystem.resetPose(trajectory1.getInitialPose());
     System.out.println("*******Adjusted First Robot Pose: " + dSubsystem.getPose() + "********");
     System.out.println("*******Final Path Pose: "+ finalPose + " ********");
-    addCommands(deployCommand, command1, command2, command3, command4);
+    addCommands(rollerCommand, command1, command2, command3, command4);
     //returnIntakeCommand);
 }
 

@@ -663,7 +663,7 @@ public class RobotContainer {
                                                     flywheelPistonSubsystem);
       default:
           System.out.println("No GalacticSearch path found!");
-          return null;
+          throw new NullPointerException("No Path Selected");
     }
     
     // return new GalacticSearch_B_BlueCommand(driveSubsystem,
