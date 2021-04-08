@@ -24,7 +24,9 @@ import frc.robot.Constants;
 import frc.robot.utilities.SwerveModule;
 
 //-------- SUBSYSTEM CLASS --------\\
-
+/**
+ * [DEPRECATED] Use DriveSubsystem
+ */
 public class SwerveDriveSubsystem extends SubsystemBase {
 
   // -------- DECLARATIONS --------\\

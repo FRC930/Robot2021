@@ -344,14 +344,14 @@ public class DriveSubsystem extends SubsystemBase {
   } // end of method drive()
 
   public void swerveDrive(SwerveModuleState[] states) {
-    logger.entering(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
+    logger.entering(DriveSubsystem.class.getName(), "swerveDrive()");
 
     swerveLeftFront.drive(states[0]);
     swerveRightFront.drive(states[1]);
     swerveLeftBack.drive(states[2]);
     swerveRightBack.drive(states[3]);
     
-    logger.exiting(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
+    logger.exiting(DriveSubsystem.class.getName(), "swerveDrive()");
   } // end of method swerveDrive()
 
   // TANK DRIVE
@@ -437,6 +437,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getLeftWheelRotations() throws RuntimeException {
     double leftWheelRotationsReturn = 0;
+    
     if(tankLeftFront != null) {
       leftWheelRotationsReturn = tankLeftFront.getSelectedSensorPosition() * ((1.0 / 2048.0) * 0.152 * Math.PI) / DRIVE_GEAR_RATIO;
     } else {

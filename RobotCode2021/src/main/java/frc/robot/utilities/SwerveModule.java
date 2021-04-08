@@ -58,8 +58,10 @@ public class SwerveModule {
         steerFx = new WPI_TalonFX(turnID);
         steerEncoder = new CANCoder(encID);
 
-        driveFx.setNeutralMode(NeutralMode.Brake); // Force Brake mode
-        //Set PID limits 
+        // Force brake mode on the drive motors
+        driveFx.setNeutralMode(NeutralMode.Brake);
+
+        // Set PID limits 
         m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
         drivePID = new PIDController(1.49, 0, 0);
         feedForward = new SimpleMotorFeedforward(0.67, 2.31, 0.0844);
@@ -81,17 +83,7 @@ public class SwerveModule {
         
         steerFx.set(ControlMode.PercentOutput, turn);
 
-        //Wait till azmuith
-        // if(Math.abs(turn) > 0.08) {
-        //     canDrive = false;
-        // } else {
-        //     canDrive = true;
-        // }
-
-        //SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
         SmartDashboard.putNumber("Rotation"+steerFx.getDeviceID(), rotation);
-        //SmartDashboard.putNumber("Error"+steerFx.getDeviceID(), m_turningPIDController.getPositionError());
-        //SmartDashboard.putNumber("Abs_Rotation"+steerFx.getDeviceID(), steerEncoder.getAbsolutePosition());
 
         logger.exiting(SwerveModule.class.getName(), "setAngle");
     }

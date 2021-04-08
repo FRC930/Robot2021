@@ -10,7 +10,6 @@ package frc.robot.commands.drivecommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class ResetSwerveDriveCommand extends CommandBase {
     private DriveSubsystem driveSubsystem;

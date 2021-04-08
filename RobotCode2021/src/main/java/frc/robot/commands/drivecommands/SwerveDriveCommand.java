@@ -81,10 +81,6 @@ public class SwerveDriveCommand extends CommandBase{
     leftX = -Math.pow(leftX, 3);
     leftY = -Math.pow(leftY, 3);
     rightX = -Math.pow(rightX, 3);
-    
-    SmartDashboard.putNumber("Drive Leftx", leftX);
-    SmartDashboard.putNumber("Drive Lefty", leftY);
-    SmartDashboard.putNumber("Drive Rightx", rightX);
   
     // Sends resulting values to SwerveDriveSubsystem for the values to be translated into physical movement
     sdSubsystem.swerveDrive(leftX, leftY, rightX);
