@@ -128,12 +128,9 @@ public class LimelightSubsystem extends SubsystemBase {
     // whether the limelight sees a target or not 
     public boolean getValidTargets() {
 
-        // logger.entering(LimelightSubsystem.class.getName(), "getValidTargets()");
 
         validTarget = limelightTable.getEntry("tv").getDouble(DEFAULT_VALID_TARGET) > 0.0 ? true : false;
 
-        // logger.log(Level.FINE, "Valid Target?: " + validTarget);
-        // logger.exiting(LimelightSubsystem.class.getName(), "getValidTargets()");
 
         return validTarget;
     }
