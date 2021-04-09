@@ -76,7 +76,7 @@ public class SwerveModule {
         //tab.addNumber("Turn"+steerFx.getDeviceID(), () -> turn);
         //SmartDashboard.putNumber("Turn"+steerFx.getDeviceID(), turn);
         logger.log(Level.INFO, "SetSpeed: " + turn + " | AbsPos: " + steerEncoder.getAbsolutePosition() + " | Rotation: " + rotation);
-
+        
         steerFx.set(ControlMode.PercentOutput, turn);
 
         //Wait till azmuith
@@ -102,8 +102,9 @@ public class SwerveModule {
     public void setSpeed(double speed) {
         logger.entering(SwerveModule.class.getName(), "setSpeed()");
         
-        //speed = feedForward.calculate(speed);
-        //speed = drivePID.calculate(speed);
+        //double ffSpeed = feedForward.calculate(speed) / Constants.KMAXSPEED;
+        //double pidSpeed = drivePID.calculate(ffSpeed);
+        //System.out.println("speed: " + speed + " ffSpeed: " + ffSpeed);
         driveFx.set(ControlMode.PercentOutput, speed);
         SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
         

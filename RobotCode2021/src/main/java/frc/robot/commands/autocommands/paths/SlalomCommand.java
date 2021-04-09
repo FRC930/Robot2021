@@ -32,7 +32,24 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+
+import frc.robot.commands.shootercommands.ShootPowerCellCommandGroup;
+import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.utilities.AutonConfig;
+import frc.robot.commands.hoppercommands.SetAutonomousHopperCommand;
+import frc.robot.commands.hoppercommands.SetHopperCommand;
+import frc.robot.commands.turretcommads.AutoTurretTurnCommand;
+
+import frc.robot.commands.drivecommands.StopDriveCommand;
+import frc.robot.commands.turretcommads.AutoAimAutonomousCommand;
+import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
+import frc.robot.commands.shootercommands.flywheelcommands.DefaultFlywheelCommand;
+import frc.robot.commands.shootercommands.flywheelcommands.RunFlywheelAutoCommand;
+
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import frc.robot.Constants;
 
@@ -47,6 +64,15 @@ import java.util.logging.*;
 public class SlalomCommand extends SequentialCommandGroup {
 
     private static final Logger logger = Logger.getLogger(SlalomCommand.class.getName());
+    private Trajectory trajectory1;
+    private    Trajectory trajectory2;
+    private    Trajectory trajectory3;
+    private    Trajectory trajectory4;
+    private    Trajectory trajectory5;
+    private    Trajectory trajectory6;
+    private    Trajectory trajectory7;
+    private double xOffset = inchesToMeters(35.25);
+    private double yOffset = inchesToMeters(6.5);
   /**
    * Path Description: ----------------- Shoot 3 from initiation line move through
    * trench to grab 3 balls Shoot 3 from trench position
@@ -59,127 +85,171 @@ public class SlalomCommand extends SequentialCommandGroup {
     // -------- Trajectories -------- \\
 
     // Generates a trajectory for a path to move towards furthest ball in trench run
-    String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/Slalom.wpilib.json";
-    Trajectory trajectory;
-    try {
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        logger.log(Constants.LOG_LEVEL_INFO, "Slalom tragectory path: " + trajectoryPath.toString());
-        trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    } catch (IOException ex) {
-        DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-        logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
-        throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
-    }
+    trajectory1 = TrajectoryGenerator.generateTrajectory(
+        // Robot starts at X: 0 Y: 0 and a rotation of 0 
+         new Pose2d(1.174, -3.934, new Rotation2d(Math.toRadians(27.869698473156408))),
+         List.of( 
+             new Translation2d(2.097 + xOffset, -3.675 + yOffset)
+         ),
+         new Pose2d(3.166 + xOffset, -2.192 + yOffset, new Rotation2d(Math.toRadians(27.869698473156408))),
+         // Pass config
+         AutonConfig.getInstance().getTrajectoryConfig()
+        );
+    trajectory2 = TrajectoryGenerator.generateTrajectory(
+        // Robot starts at X: 0 Y: 0 and a rotation of 0 
+         new Pose2d(3.166 + xOffset, -2.192 + yOffset, new Rotation2d(Math.toRadians(27.869698473156408))),
+         List.of( 
+             new Translation2d(4.667 + xOffset, -1.76 - yOffset)
+         ),
+         //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+         new Pose2d(6.452 - xOffset, -3.683 - yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+         // Pass config
+         AutonConfig.getInstance().getTrajectoryConfig()
+        );
+
+    trajectory3 = TrajectoryGenerator.generateTrajectory(
+        // Robot starts at X: 0 Y: 0 and a rotation of 0 
+         new Pose2d(6.452 - xOffset, -3.683 - yOffset, new Rotation2d(Math.toRadians(27.869698473156408))),
+         List.of( 
+             new Translation2d(7.021 - xOffset, -3.701 + yOffset)
+         ),
+         //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+         new Pose2d(8.376 + xOffset, -3.718 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+         // Pass config
+         AutonConfig.getInstance().getTrajectoryConfig()
+        );
+    trajectory4 = TrajectoryGenerator.generateTrajectory(
+        // Robot starts at X: 0 Y: 0 and a rotation of 0 
+         new Pose2d(8.376 + xOffset, -3.718 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))),
+         List.of( 
+             new Translation2d(8.505 + xOffset, -2.33 + yOffset)
+         ),
+         //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+         new Pose2d(7.073 + xOffset, -2.278 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+         // Pass config
+         AutonConfig.getInstance().getTrajectoryConfig()
+        );
+    trajectory5 = TrajectoryGenerator.generateTrajectory(
+            // Robot starts at X: 0 Y: 0 and a rotation of 0 
+            new Pose2d(7.073 + xOffset, -2.278 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))),
+             List.of( 
+                 new Translation2d(6.629 - xOffset, -0.877 - yOffset)
+             ),
+             //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+             new Pose2d(6.349 - xOffset, -3.666 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+             // Pass config
+             AutonConfig.getInstance().getTrajectoryConfig()
+        );
+    trajectory6 = TrajectoryGenerator.generateTrajectory(
+            // Robot starts at X: 0 Y: 0 and a rotation of 0 
+            new Pose2d(6.349 + xOffset, -3.666 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))),
+             List.of( 
+                 new Translation2d(4.779 + xOffset, -3.994 - yOffset)
+             ),
+             //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+             new Pose2d(3.02 + xOffset, -3.692 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+             // Pass config
+             AutonConfig.getInstance().getTrajectoryConfig()
+        );
+        trajectory7 = TrajectoryGenerator.generateTrajectory(
+            // Robot starts at X: 0 Y: 0 and a rotation of 0 
+            new Pose2d(3.02 - xOffset, -3.692 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))),
+             List.of( 
+                 new Translation2d(2.097 + xOffset, -2.838 - yOffset)
+             ),
+             //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+             new Pose2d(0.579 - xOffset, -2.148 + yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+             // Pass config
+             AutonConfig.getInstance().getTrajectoryConfig()
+        );
 // this is our config for how much power goes to the motors
-var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getKinematics(), Constants.KMAXSPEED);
-//PID values
-int kP = 1;
-int kI = 0;
-int kD = 0;
-double maxV = Math.PI * 2;
-double maxA = Math.PI;
-// Configurate the values of all trajectories for max velocity and acceleration
-TrajectoryConfig config =
-new TrajectoryConfig(Constants.KMAXSPEED,
-Constants.KMAXACCELERATION)
-// Add kinematics to ensure max speed is actually obeyed
-.setKinematics(dSubsystem.getKinematics())
-.setEndVelocity(1)
-// Apply the voltage constraint
-.addConstraint(autoVoltageConstraint);
+    var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getKinematics(), Constants.KMAXSPEED);
+    //PID values
+    int kP = 1;
+    int kI = 0;
+    int kD = 0;
+    double maxV = Math.PI * 2;
+    double maxA = Math.PI;
+    // Configurate the values of all trajectories for max velocity and acceleration
+    TrajectoryConfig config =
+    new TrajectoryConfig(Constants.KMAXSPEED,
+    Constants.KMAXACCELERATION)
+    // Add kinematics to ensure max speed is actually obeyed
+    .setKinematics(dSubsystem.getKinematics())
+    .setEndVelocity(1)
+    // Apply the voltage constraint
+    .addConstraint(autoVoltageConstraint);
 
-//a second trajectory config this one is reversed
-TrajectoryConfig reverseConfig =
-new TrajectoryConfig(Constants.KMAXSPEED,
-Constants.KMAXACCELERATION)
-// Add kinematics to ensure max speed is actually obeyed
-.setKinematics(dSubsystem.getKinematics())
-.setEndVelocity(1)
-// Apply the voltage constraint
-.addConstraint(autoVoltageConstraint)
-.setReversed(true);
+    //a second trajectory config this one is reversed
+    TrajectoryConfig reverseConfig =
+    new TrajectoryConfig(Constants.KMAXSPEED,
+    Constants.KMAXACCELERATION)
+    // Add kinematics to ensure max speed is actually obeyed
+    .setKinematics(dSubsystem.getKinematics())
+    .setEndVelocity(1)
+    // Apply the voltage constraint
+    .addConstraint(autoVoltageConstraint)
+    .setReversed(true);
 
-TrajectoryConfig slowConfig =
-new TrajectoryConfig(Constants.KMAXSPEED,
-2.0)
-// Add kinematics to ensure max speed is actually obeyed
-.setKinematics(dSubsystem.getKinematics())
-// Apply the voltage constraint
-.addConstraint(autoVoltageConstraint);
+    TrajectoryConfig slowConfig =
+    new TrajectoryConfig(Constants.KMAXSPEED,
+    2.0)
+    // Add kinematics to ensure max speed is actually obeyed
+    .setKinematics(dSubsystem.getKinematics())
+    // Apply the voltage constraint
+    .addConstraint(autoVoltageConstraint);
 
+    // -------- RAMSETE Commands -------- \\
+    // Creates a command that can be added to the command scheduler in the sequential command
+    // The Ramsete Controller is a trajectory tracker that is built in to WPILib.
+    // This tracker can be used to accurately track trajectories with correction for minor disturbances.
 
-// -------- Trajectories -------- \\
-// Generates a trajectory 
+    // This is our first atuo command this will run the drivetrain using the first trajectory we made
 
-//this is our first trajectory
-Trajectory trajectory1 = TrajectoryGenerator.generateTrajectory(
-    // Robot starts at X: 0 Y: 0 and a rotation of 0 
-    new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
-    List.of( 
-        // Midpoints
-    ),
-    //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-    new Pose2d(inchesToMeters(120), inchesToMeters(-115), new Rotation2d(Math.toRadians(-65))), //X: was 130y is -135
-    // Pass config
-    config
-);
+    SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getKinematics(), 
+        new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
 
-//this is our second trajectory it should be a inverse of the first one
-Trajectory trajectory2 = TrajectoryGenerator.generateTrajectory(
-    // Starts X: 0 inches Y: 0 inches and -65 degrees 
-    new Pose2d(inchesToMeters(120), inchesToMeters(-115), new Rotation2d(Math.toRadians(-65))), //-65
-    List.of( 
-        // Midpoints
-    ),
-    // return to intial position
-    new Pose2d(inchesToMeters(0), inchesToMeters(-20), new Rotation2d(Math.toRadians(15))),
-    // uses the second config
-    reverseConfig
-);
+    SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getKinematics(), 
+        new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
 
-Trajectory trajectory3 = TrajectoryGenerator.generateTrajectory(
-    // Robot starts at X: 0 Y: 0 and a rotation of 0 
-    new Pose2d(inchesToMeters(0), inchesToMeters(-20), new Rotation2d(Math.toRadians(15))),//set x to 0 was -20
-    List.of( 
-        // Midpoints
-    ),
-    //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-    new Pose2d(inchesToMeters(240), inchesToMeters(0), new Rotation2d(Math.toRadians(0))), //Y: -20
-    // Pass config
-    slowConfig
-);
+    SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getKinematics(), 
+        new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
 
-// -------- RAMSETE Commands -------- \\
-// Creates a command that can be added to the command scheduler in the sequential command
-// The Ramsete Controller is a trajectory tracker that is built in to WPILib.
-// This tracker can be used to accurately track trajectories with correction for minor disturbances.
+    SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getKinematics(), 
+        new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
 
-// This is our first atuo command this will run the drivetrain using the first trajectory we made
+    SwerveControllerCommand command5 = new SwerveControllerCommand(trajectory5, dSubsystem::getPose, dSubsystem.getKinematics(), 
+        new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
 
-SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getKinematics(), 
-    new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+    SwerveControllerCommand command6 = new SwerveControllerCommand(trajectory6, dSubsystem::getPose, dSubsystem.getKinematics(), 
+        new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
 
-SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getKinematics(), 
-    new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
-
-SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getKinematics(), 
-    new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-    new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+    SwerveControllerCommand command7 = new SwerveControllerCommand(trajectory7, dSubsystem::getPose, dSubsystem.getKinematics(), 
+        new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
 
 
-/*
-Path Description:
------------------
-- Drive off intiation line
-- Move to the side 2 Rendezvous Point balls
-- Pick up two rendezvous point balls
-- Shoot all 5 balls held
-*/
-
-
-//returnIntakeCommand);
+    /*
+    Path Description:
+    -----------------
+    - Drive off intiation line
+    - Move to the side 2 Rendezvous Point balls
+    - Pick up two rendezvous point balls
+    - Shoot all 5 balls held
+    */
+    Pose2d finalPose = trajectory1.getStates().get(trajectory1.getStates().size()-1).poseMeters;
+    System.out.println("*******First Robot Pose: " + dSubsystem.getPose() + "********");
+    System.out.println("*******Initial Path Pose: "+ trajectory1.getInitialPose() + " ********");
+    //dSubsystem.resetPose(trajectory1.getInitialPose());
+    System.out.println("*******Adjusted First Robot Pose: " + dSubsystem.getPose() + "********");
+    System.out.println("*******Final Path Pose: "+ finalPose + " ********");
+    addCommands(command1, command2/*, command3, command4, command5, command6, command7, command8, command9*/);
 }
 
 //converts our inches into meters

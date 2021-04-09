@@ -45,6 +45,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 import frc.robot.commands.shootercommands.ShootPowerCellCommandGroup;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.utilities.AutonConfig;
 import frc.robot.commands.hoppercommands.SetAutonomousHopperCommand;
 import frc.robot.commands.hoppercommands.SetHopperCommand;
 import frc.robot.commands.turretcommads.AutoTurretTurnCommand;
@@ -56,6 +57,7 @@ import frc.robot.commands.shootercommands.flywheelcommands.DefaultFlywheelComman
 import frc.robot.commands.shootercommands.flywheelcommands.RunFlywheelAutoCommand;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import frc.robot.Constants;
@@ -72,6 +74,15 @@ import java.util.logging.*;
 public class GalaticSearch_A_BlueCommand extends SequentialCommandGroup {
 
     private static final Logger logger = Logger.getLogger(GalaticSearch_A_BlueCommand.class.getName());
+    private Trajectory trajectory1;
+    private    Trajectory trajectory2;
+    private    Trajectory trajectory3;
+    private    Trajectory trajectory4;
+    private    Trajectory trajectory5;
+    private    Trajectory trajectory6;
+    private    Trajectory trajectory7;
+    private double xOffset = inchesToMeters(35.25);
+    private double yOffset = inchesToMeters(6.5);
   /**
    * Path Description: ----------------- Shoot 3 from initiation line move through
    * trench to grab 3 balls Shoot 3 from trench position
@@ -84,17 +95,27 @@ public class GalaticSearch_A_BlueCommand extends SequentialCommandGroup {
     // -------- Trajectories -------- \\
 
     // Generates a trajectory for a path to move towards furthest ball in trench run
-    String trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/GalaticSearch_A_Blue.wpilib.json";
-    Trajectory trajectory;
-    try {
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        logger.log(Constants.LOG_LEVEL_INFO, "GalaticSearch_A_blue tragectory path: " + trajectoryPath.toString());
-        trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    } catch (IOException ex) {
-        DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-        logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
-        throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
-    }
+    trajectory1 = TrajectoryGenerator.generateTrajectory(
+        // Robot starts at X: 0 Y: 0 and a rotation of 0 
+         new Pose2d(0.441, -3.77, new Rotation2d(Math.toRadians(27.869698473156408))),
+         List.of( 
+             new Translation2d(4.589 + xOffset, -3.744 + yOffset)
+         ),
+         new Pose2d(5.283 + xOffset, -1.626 + yOffset, new Rotation2d(Math.toRadians(27.869698473156408))),
+         // Pass config
+         AutonConfig.getInstance().getTrajectoryConfig()
+        );
+        trajectory2 = TrajectoryGenerator.generateTrajectory(
+        // Robot starts at X: 0 Y: 0 and a rotation of 0 
+         new Pose2d(5.283 + xOffset, -1.626 + yOffset, new Rotation2d(Math.toRadians(27.869698473156408))),
+         List.of( 
+             new Translation2d(4.632 + xOffset, -0.725 - yOffset)
+         ),
+         //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
+         new Pose2d(8.677 - xOffset, -3.494 - yOffset, new Rotation2d(Math.toRadians(-97.978459709963636))), //X: was 130y is -135
+         // Pass config
+         AutonConfig.getInstance().getTrajectoryConfig()
+        );
 // this is our config for how much power goes to the motors
 var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getKinematics(), Constants.KMAXSPEED);
 //PID values
@@ -132,48 +153,6 @@ new TrajectoryConfig(Constants.KMAXSPEED,
 // Apply the voltage constraint
 .addConstraint(autoVoltageConstraint);
 
-
-// -------- Trajectories -------- \\
-// Generates a trajectory 
-
-//this is our first trajectory
-Trajectory trajectory1 = TrajectoryGenerator.generateTrajectory(
-    // Robot starts at X: 0 Y: 0 and a rotation of 0 
-    new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
-    List.of( 
-        // Midpoints
-    ),
-    //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-    new Pose2d(inchesToMeters(120), inchesToMeters(-115), new Rotation2d(Math.toRadians(-65))), //X: was 130y is -135
-    // Pass config
-    config
-);
-
-//this is our second trajectory it should be a inverse of the first one
-Trajectory trajectory2 = TrajectoryGenerator.generateTrajectory(
-    // Starts X: 0 inches Y: 0 inches and -65 degrees 
-    new Pose2d(inchesToMeters(120), inchesToMeters(-115), new Rotation2d(Math.toRadians(-65))), //-65
-    List.of( 
-        // Midpoints
-    ),
-    // return to intial position
-    new Pose2d(inchesToMeters(0), inchesToMeters(-20), new Rotation2d(Math.toRadians(15))),
-    // uses the second config
-    reverseConfig
-);
-
-Trajectory trajectory3 = TrajectoryGenerator.generateTrajectory(
-    // Robot starts at X: 0 Y: 0 and a rotation of 0 
-    new Pose2d(inchesToMeters(0), inchesToMeters(-20), new Rotation2d(Math.toRadians(15))),//set x to 0 was -20
-    List.of( 
-        // Midpoints
-    ),
-    //this is our end point we end our first trajectory at X: 80 inches Y:-80 inches and -65 degrees from orgin
-    new Pose2d(inchesToMeters(240), inchesToMeters(0), new Rotation2d(Math.toRadians(0))), //Y: -20
-    // Pass config
-    slowConfig
-);
-
 // -------- RAMSETE Commands -------- \\
 // Creates a command that can be added to the command scheduler in the sequential command
 // The Ramsete Controller is a trajectory tracker that is built in to WPILib.
@@ -194,17 +173,22 @@ SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSub
     new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
 
 
-/*
-Path Description:
------------------
-- Drive off intiation line
-- Move to the side 2 Rendezvous Point balls
-- Pick up two rendezvous point balls
-- Shoot all 5 balls held
-*/
-
-
-//returnIntakeCommand);
+ /*
+    Path Description:
+    -----------------
+    - Drive off intiation line
+    - Move to the side 2 Rendezvous Point balls
+    - Pick up two rendezvous point balls
+    - Shoot all 5 balls held
+    */
+    Pose2d finalPose = trajectory1.getStates().get(trajectory1.getStates().size()-1).poseMeters;
+    System.out.println("*******First Robot Pose: " + dSubsystem.getPose() + "********");
+    System.out.println("*******Initial Path Pose: "+ trajectory1.getInitialPose() + " ********");
+    //dSubsystem.resetPose(trajectory1.getInitialPose());
+    System.out.println("*******Adjusted First Robot Pose: " + dSubsystem.getPose() + "********");
+    System.out.println("*******Final Path Pose: "+ finalPose + " ********");
+    addCommands(command1, command2);
+    //returnIntakeCommand);
 }
 
 //converts our inches into meters

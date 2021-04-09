@@ -1,8 +1,16 @@
 package frc.robot.utilities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.*;
 
+
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -36,7 +44,7 @@ public class AutonConfig {
         new TrajectoryConfig(2, 1)
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(dSubsystem.getSwerveKinematics())
-        .setEndVelocity(1)
+        .setEndVelocity(0)
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint);
 
@@ -83,4 +91,35 @@ public class AutonConfig {
     public TrajectoryConfig getSlowConfig(){
         return slowConfig;
     }
+
+    // Custom transformBy from the trajectory class
+    public Trajectory transformBy(Trajectory trajectory, Transform2d transform) {
+        var firstState = trajectory.getStates().get(0);
+        var firstPose = firstState.poseMeters;
+    
+        // Calculate the transformed first pose.
+        List<State> newStates = new ArrayList<>();
+    
+        newStates.add(
+            new State(
+                firstState.timeSeconds,
+                firstState.velocityMetersPerSecond,
+                firstState.accelerationMetersPerSecondSq,
+                firstPose,
+                firstState.curvatureRadPerMeter));
+    
+        for (int i = 1; i < trajectory.getStates().size(); i++) {
+          var state = trajectory.getStates().get(i);
+          // We are transforming relative to the coordinate frame of the new initial pose.
+          newStates.add(
+              new State(
+                  state.timeSeconds,
+                  state.velocityMetersPerSecond,
+                  state.accelerationMetersPerSecondSq,
+                  state.poseMeters.plus(transform),
+                  state.curvatureRadPerMeter));
+        }
+    
+        return new Trajectory(newStates);
+      }
 }
