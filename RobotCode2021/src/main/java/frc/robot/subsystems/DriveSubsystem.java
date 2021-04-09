@@ -46,47 +46,32 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  // -------- CONSTANTS --------\\
+  //----- TANK VARIABLES -----\\
   private final double DRIVE_GEAR_RATIO = 9.88;
-  private static final Logger logger = Logger.getLogger(DriveSubsystem.class.getName());
-
-  // -------- DECLARATIONS --------\\
   private WPI_TalonFX tankRightFront;
   private WPI_TalonFX tankRightBack;
   private WPI_TalonFX tankLeftFront;
   private WPI_TalonFX tankLeftBack;
-  //private ShuffleboardUtility shuffleboardUtility;
+  // The odometry of the differential drive
+  private DifferentialDriveOdometry tankDriveOdometry;
+  // The differential drive object itself
+  private DifferentialDrive differentialDrive;
+  // Values, used to store the yaw, pitch, and roll (the robot's rotation)
+  private double yawPitchRollValues[] = new double[3];
+  // The intake talon motor controller, has the gyro attached to it
+  private WPI_TalonSRX gyroTalon;
+  private int shifterSolenoidID;
+  private Solenoid shifter;
+  private Solenoid endgameClamp;
+  // tank drive, auton config
+  private final double MOTOR_RAMP_RATE = 0.75;//0.5;
 
+   //----- SWERVE VARIABLES -----\\
   private SwerveModule swerveRightFront;
   private SwerveModule swerveRightBack;
   private SwerveModule swerveLeftFront;
   private SwerveModule swerveLeftBack;
-
-  // The intake talon motor controller, has the gyro attached to it
-  private WPI_TalonSRX gyroTalon;
-
-  // The gyro, used for autonomous
-  private PigeonIMU gyro;
-
-  private Solenoid shifter;
-  private Solenoid endgameClamp;
-
-  // Values, used to store the yaw, pitch, and roll (the robot's rotation)
-  private double yawPitchRollValues[] = new double[3];
-
-  // The odometry of the differential drive
-  private DifferentialDriveOdometry tankDriveOdometry;
   private SwerveDriveOdometry swerveDriveOdometry;
-
-  // The differential drive object itself
-  private DifferentialDrive differentialDrive;
-
-  //TODO: ORGANIZE SWERVE DRIVE VARIABLES
-  private int[] driveRightFrontIDs;
-  private int[] driveLeftFrontIDs;
-  private int[] driveRightBackIDs;
-  private int[] driveLeftBackIDs;
-
   private final Translation2d m_frontLeftLocation = new Translation2d(
     Units.inchesToMeters(10.625),
     Units.inchesToMeters(9.25)
@@ -103,39 +88,15 @@ public class DriveSubsystem extends SubsystemBase {
     Units.inchesToMeters(-10.625),
     Units.inchesToMeters(-9.25)
   );
-  private double prevX = 0;
-  private double prevY = 0;
-
-  private boolean usingGyro;
-
-  private boolean slowSpeed;
-
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
   private double gyroAngle;
-
   private int gyroID;
-
-  // tank drive
-  private int shifterSolenoidID;
-
-  // tank drive, auton config
-  private final double MOTOR_RAMP_RATE = 0.75;//0.5;
-
   private double speedModifier = 1.0;
 
-  /*
-  private final SwerveDrivePoseEstimator m_poseEstimator =
-      new SwerveDrivePoseEstimator(
-          new Rotation2d(Units.degreesToRadians(m_gyro.getAbsoluteCompassHeading())),
-          new Pose2d(),
-          m_kinematics,
-          VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-          VecBuilder.fill(Units.degreesToRadians(0.01)),
-          VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
-  */
-
-  //Drive type enum
-  public static enum DRIVE_TYPE {
+   //----- MISCELLANEOUS VARIABLES -----\\
+   private static final Logger logger = Logger.getLogger(DriveSubsystem.class.getName());
+   //Drive type enum
+   public static enum DRIVE_TYPE {
     TANK_DRIVE(0),
     SWERVE_DRIVE(1);
 
@@ -150,10 +111,31 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
   public static DRIVE_TYPE driveType;
+  private int[] driveRightFrontIDs;
+  private int[] driveRightBackIDs;
+  private int[] driveLeftFrontIDs;
+  private int[] driveLeftBackIDs;
+ // The gyro, used for autonomous
+ private PigeonIMU gyro;
+  //private ShuffleboardUtility shuffleboardUtility;
+
+  /*
+  private final SwerveDrivePoseEstimator m_poseEstimator =
+      new SwerveDrivePoseEstimator(
+          new Rotation2d(Units.degreesToRadians(m_gyro.getAbsoluteCompassHeading())),
+          new Pose2d(),
+          m_kinematics,
+          VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+          VecBuilder.fill(Units.degreesToRadians(0.01)),
+          VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+  */
+
+  
+ 
 
   // -------- CONSTRUCTOR --------\\
 
-  public DriveSubsystem(int[] additionalIDs, int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, DRIVE_TYPE _driveType, IntakeMotorSubsystem _intake, boolean _usingGyro, boolean _slowSpeed) {
+  public DriveSubsystem(int[] additionalIDs, int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, DRIVE_TYPE _driveType, IntakeMotorSubsystem _intake) {
     
     driveType = _driveType;
 
@@ -176,8 +158,6 @@ public class DriveSubsystem extends SubsystemBase {
         setSwerveDriveMotors();
         gyro = new PigeonIMU(_intake.getIntakeMotor());
         //gyro = new PigeonIMU(gyroID);
-        usingGyro = _usingGyro;
-        slowSpeed = _slowSpeed;
         swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics, Rotation2d.fromDegrees(0.0));
         break;
 
