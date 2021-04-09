@@ -76,9 +76,7 @@ public class SwerveModule {
         logger.entering(SwerveModule.class.getName(), "setAngle");
 
         double turn = m_turningPIDController.calculate(Math.toRadians(steerEncoder.getAbsolutePosition()), Math.toRadians(rotation));
-        //ShuffleboardTab tab = Shuffleboard.getTab("Tab 5");
-        //tab.addNumber("Turn"+steerFx.getDeviceID(), () -> turn);
-        //SmartDashboard.putNumber("Turn"+steerFx.getDeviceID(), turn);
+
         logger.log(Level.INFO, "SetSpeed: " + turn + " | AbsPos: " + steerEncoder.getAbsolutePosition() + " | Rotation: " + rotation);
         
         steerFx.set(ControlMode.PercentOutput, turn);
@@ -96,9 +94,6 @@ public class SwerveModule {
     public void setSpeed(double speed) {
         logger.entering(SwerveModule.class.getName(), "setSpeed()");
         
-        //double ffSpeed = feedForward.calculate(speed) / Constants.KMAXSPEED;
-        //double pidSpeed = drivePID.calculate(ffSpeed);
-        //System.out.println("speed: " + speed + " ffSpeed: " + ffSpeed);
         driveFx.set(ControlMode.PercentOutput, speed);
         SmartDashboard.putNumber("Speed"+driveFx.getDeviceID(), speed);
         
@@ -117,7 +112,6 @@ public class SwerveModule {
         double angle = optimized.angle.getDegrees();
         double speed = optimized.speedMetersPerSecond / Constants.KMAXSPEED;
 
-        //if (speed > 0.00178 || speed < -0.00178) {
         if (speed != 0.0) {
             setAngle(angle);
         } else {
