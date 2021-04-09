@@ -15,7 +15,6 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.hal.simulation.DriverStationDataJNI;
 import edu.wpi.first.networktables.NetworkTableEntry;
 
 //-------- CLASS --------\\

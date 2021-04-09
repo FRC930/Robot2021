@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.SwerveDriveSubsystem;
 
 /**
  * DeadbandMath
@@ -14,7 +13,6 @@ import frc.robot.subsystems.SwerveDriveSubsystem;
 public class AutonConfig {
     
     //All measurements are in meters
-    private final double BALL_RADIUS = 0.0889;
 
     private SwerveDriveKinematicsConstraint autoVoltageConstraint;
 

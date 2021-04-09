@@ -1,5 +1,4 @@
 package frc.robot.utilities;
-import frc.robot.Constants;
 
 // We are using imperial (inches)
 public class SwerveMath {

@@ -8,10 +8,7 @@
 package frc.robot.commands.autocommands.paths;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakePistonSubsystem;
 import frc.robot.subsystems.IntakeMotorSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
@@ -21,48 +18,26 @@ import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem;
-
-import frc.robot.commands.intakecommands.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 
 import java.util.List;
 
-import edu.wpi.first.wpilibj.controller.RamseteController;
-
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-
-import frc.robot.commands.shootercommands.ShootPowerCellCommandGroup;
-import frc.robot.subsystems.TurretSubsystem;
-import frc.robot.commands.hoppercommands.SetAutonomousHopperCommand;
-import frc.robot.commands.hoppercommands.SetHopperCommand;
-import frc.robot.commands.turretcommads.AutoTurretTurnCommand;
-
-import frc.robot.commands.drivecommands.StopDriveCommand;
-import frc.robot.commands.turretcommads.AutoAimAutonomousCommand;
-import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
-import frc.robot.commands.shootercommands.flywheelcommands.DefaultFlywheelCommand;
-import frc.robot.commands.shootercommands.flywheelcommands.RunFlywheelAutoCommand;
-
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import frc.robot.Constants;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 
 import java.util.logging.*;
 
