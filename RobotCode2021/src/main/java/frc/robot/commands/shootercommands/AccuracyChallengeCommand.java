@@ -16,14 +16,9 @@ import frc.robot.subsystems.FlywheelPistonSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem.SolenoidValues;
 import frc.robot.utilities.DistanceMath;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import frc.robot.Constants;
-import frc.robot.commands.shootercommands.flywheelcommands.DefaultFlywheelCommand;
 import frc.robot.commands.shootercommands.pistoncommands.FullExtendFlywheelPistonCommand;
-import frc.robot.commands.shootercommands.pistoncommands.FullExtendFlywheelPistonCommand;
-import frc.robot.commands.shootercommands.pistoncommands.FullRetractFlywheelPistonCommand;
 import frc.robot.commands.shootercommands.pistoncommands.FullRetractFlywheelPistonCommand;
 
 //-------- COMMAND CLASS --------\\
@@ -54,8 +49,6 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     private FlywheelSubsystem mFlywheelSubsystem; 
     private FlywheelPistonSubsystem mFlywheelPistonSubsystem;
     private LimelightSubsystem mLimelightSubsystem;
-    private FullExtendFlywheelPistonCommand mFullExtendFlywheelPistonCommand;
-    private FullRetractFlywheelPistonCommand mFullRetractFlywheelPistonCommand;
     
     
     //-------- CONSTRUCTOR --------\\
@@ -66,8 +59,6 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
         this.mLimelightSubsystem = _mLimelightSubsystem;
         this.mFlywheelSubsystem = _mFlywheelSubsystem;
         this.mFlywheelPistonSubsystem = _mFlywheelPistonSubsystem;
-        this.mFullExtendFlywheelPistonCommand = new FullExtendFlywheelPistonCommand(mFlywheelPistonSubsystem);
-        this.mFullRetractFlywheelPistonCommand = new FullRetractFlywheelPistonCommand(mFlywheelPistonSubsystem);
 
         addRequirements(_mFlywheelSubsystem, _mFlywheelPistonSubsystem);
     }
