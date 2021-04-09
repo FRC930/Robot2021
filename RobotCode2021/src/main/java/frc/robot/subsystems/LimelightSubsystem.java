@@ -22,7 +22,10 @@ import frc.robot.Constants;
 //import frc.robot.utilities.ShuffleboardUtility;
 
 //-------- SUBSYSTEM CLASS --------\\
-
+/**
+ * Subsystem for handling the limelight
+ * Only one limelight can be plugged in at a time
+ */
 public class LimelightSubsystem extends SubsystemBase {
 
     // -------- CONSTANTS --------\\
