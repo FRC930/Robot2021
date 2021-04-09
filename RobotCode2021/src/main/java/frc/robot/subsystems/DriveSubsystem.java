@@ -12,7 +12,9 @@ import java.util.logging.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 
+import frc.robot.utilities.AutonConfig;
 import frc.robot.utilities.SwerveModule;
 import edu.wpi.first.wpilibj.estimator.SwerveDrivePoseEstimator;
 
@@ -74,6 +76,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The odometry of the differential drive
   private DifferentialDriveOdometry tankDriveOdometry;
+  private SwerveDriveOdometry swerveDriveOdometry;
 
   // The differential drive object itself
   private DifferentialDrive differentialDrive;
@@ -109,7 +112,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
   private double gyroAngle;
-  private SwerveDriveOdometry swerveDriveOdometry;
+
+  private int gyroID;
+
+  // tank drive
+  private int shifterSolenoidID;
+
+  // tank drive, auton config
+  private final double MOTOR_RAMP_RATE = 0.75;//0.5;
 
   private double speedModifier = 1.0;
 
@@ -143,7 +153,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // -------- CONSTRUCTOR --------\\
 
-  public DriveSubsystem(int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, DRIVE_TYPE _driveType, IntakeMotorSubsystem _intake, boolean _usingGyro, boolean _slowSpeed) {
+  public DriveSubsystem(int[] additionalIDs, int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs, int[] _driveRightBackIDs, int[] _driveLeftBackIDs, DRIVE_TYPE _driveType, IntakeMotorSubsystem _intake, boolean _usingGyro, boolean _slowSpeed) {
     
     driveType = _driveType;
 
@@ -151,16 +161,21 @@ public class DriveSubsystem extends SubsystemBase {
     driveLeftFrontIDs = _driveLeftFrontIDs;
     driveRightBackIDs = _driveRightBackIDs;
     driveLeftBackIDs = _driveLeftBackIDs;
+
+    //gyroID = additionalIDs[0];
     
     switch(driveType) {
 
       case TANK_DRIVE:
+        shifterSolenoidID = additionalIDs[1];
         setTankDriveMotors();
         break;
 
       case SWERVE_DRIVE:
+        gyro = new PigeonIMU(_intake.getIntakeMotor());
         setSwerveDriveMotors();
         gyro = new PigeonIMU(_intake.getIntakeMotor());
+        //gyro = new PigeonIMU(gyroID);
         usingGyro = _usingGyro;
         slowSpeed = _slowSpeed;
         swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics, Rotation2d.fromDegrees(0.0));
@@ -172,6 +187,8 @@ public class DriveSubsystem extends SubsystemBase {
         break;
 
     }
+    //initializing autonomous config. Done for performance reasons
+    AutonConfig.initInstance(this);
   }
 
   //-------- METHODS --------\\
@@ -189,16 +206,16 @@ public class DriveSubsystem extends SubsystemBase {
     // Move gyro to port 16 so simulator does not break
     if(RobotBase.isReal())
     {
-      gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
+      gyroTalon = new WPI_TalonSRX(gyroID);
     } else {
-      gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID + 10);
+      gyroTalon = new WPI_TalonSRX(gyroID + 10);
     }
 
     // the gyro attached to the talon, used to track position and rotation
     // TODO: Change this because GyroSubsystem already instantiates this!
     gyro = new PigeonIMU(gyroTalon);
   
-    shifter = new Solenoid(Constants.SHIFTER_SOLENOID_ID);
+    shifter = new Solenoid(shifterSolenoidID);
 
     //shuffleboardUtility = ShuffleboardUtility.getInstance();
 
@@ -226,8 +243,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
     
     // Sets the ramp rate of the robot, this will need to be configued
-    tankLeftFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
-    tankRightFront.configOpenloopRamp(Constants.MOTOR_RAMP_RATE);
+    tankLeftFront.configOpenloopRamp(MOTOR_RAMP_RATE);
+    tankRightFront.configOpenloopRamp(MOTOR_RAMP_RATE);
     // Sets up the differntial drive
     // drive = new DifferentialDrive(tankRightFront, tankLeftFront);
     shifter.set(true);
@@ -237,6 +254,7 @@ public class DriveSubsystem extends SubsystemBase {
   // SWERVE DRIVE
   public void setSwerveDriveMotors() {
     // instantiates the swerve modules on the robot (We use 4)
+   swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics,getAngleHeading(), new Pose2d(0, 0, new Rotation2d()));
     swerveRightFront = new SwerveModule(driveRightFrontIDs[0], driveRightFrontIDs[1], driveRightFrontIDs[2]);
     swerveRightBack = new SwerveModule(driveRightBackIDs[0], driveRightBackIDs[1], driveRightBackIDs[2]);
     swerveLeftFront = new SwerveModule(driveLeftFrontIDs[0], driveLeftFrontIDs[1], driveLeftFrontIDs[2]);
@@ -328,14 +346,14 @@ public class DriveSubsystem extends SubsystemBase {
   } // end of method drive()
 
   public void swerveDrive(SwerveModuleState[] states) {
-    logger.entering(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
+    logger.entering(DriveSubsystem.class.getName(), "swerveDrive()");
 
     swerveLeftFront.drive(states[0], speedModifier);
     swerveRightFront.drive(states[1], speedModifier);
     swerveLeftBack.drive(states[2], speedModifier);
     swerveRightBack.drive(states[3], speedModifier);
     
-    logger.exiting(SwerveDriveSubsystem.class.getName(), "swerveDrive()");
+    logger.exiting(DriveSubsystem.class.getName(), "swerveDrive()");
   } // end of method swerveDrive()
 
   // TANK DRIVE
@@ -383,8 +401,33 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The gyro's yaw value, in degrees
      */
   public double getHeading() {
-    gyro.getYawPitchRoll(yawPitchRollValues);
-    return Math.IEEEremainder(yawPitchRollValues[0], 360);
+    //gyro.getYawPitchRoll(yawPitchRollValues);
+    //return Math.IEEEremainder(yawPitchRollValues[0], 360);
+    return gyro.getFusedHeading();
+  }
+
+  /**
+   * Returns the current heading of the robot
+   * @return angle
+   */
+  public Rotation2d getAngleHeading() {
+    Rotation2d angle;
+    angle = new Rotation2d(Math.toRadians(getHeading()));
+    return angle;
+  }
+
+  /**
+   * Reset the Swerve Odometry to "zero"
+   */
+  public void resetSwerveOdemetry() {
+    swerveDriveOdometry.resetPosition(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), getAngleHeading());
+  }
+
+  /**
+   * Reboot the PigeonIMU (This takes around 4-10 seconds)
+   */
+  public void rebootGyro() {
+    gyro.enterCalibrationMode(CalibrationMode.BootTareGyroAccel);
   }
 
   // TANK DRIVE
@@ -396,6 +439,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getLeftWheelRotations() throws RuntimeException {
     double leftWheelRotationsReturn = 0;
+    
     if(tankLeftFront != null) {
       leftWheelRotationsReturn = tankLeftFront.getSelectedSensorPosition() * ((1.0 / 2048.0) * 0.152 * Math.PI) / DRIVE_GEAR_RATIO;
     } else {
@@ -521,6 +565,7 @@ public class DriveSubsystem extends SubsystemBase {
     Pose2d VRtn = new Pose2d();
     if(swerveDriveOdometry != null) {
       VRtn = swerveDriveOdometry.getPoseMeters();
+      System.out.println("Pose X: " + VRtn.getX() + " Pose Y: " + VRtn.getY());
     } else {
       // TODO: get LOG_LEVEL_ERROR
       logger.log(Constants.LOG_LEVEL_WARNING, "calling null swerveDriveOdometry");
@@ -538,6 +583,10 @@ public class DriveSubsystem extends SubsystemBase {
       default:
         return getSwervePose();
     }
+  }
+
+  public void resetPose(Pose2d newPose){
+    swerveDriveOdometry.resetPosition(newPose, Rotation2d.fromDegrees(0));
   }
   // SWERVE DRIVE
   public void swerveStop(){
@@ -561,7 +610,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   // SWERVE DRIVE
-  public SwerveDriveKinematics swerveGetKinematics() {
+  public SwerveDriveKinematics getSwerveKinematics() {
     return m_kinematics;
   }
 
@@ -589,7 +638,7 @@ public class DriveSubsystem extends SubsystemBase {
   // TODO: Figure out what the heck this does
   public void periodic() throws RuntimeException{
     //logger.entering(DriveSubsystem.class.getName(), "periodic()");
-
+    gyroAngle = gyro.getFusedHeading();
     if(tankDriveOdometry != null) {
       tankDriveOdometry.update(Rotation2d.fromDegrees(getHeading()), getLeftWheelRotations(), getRightWheelRotations());
     } else if (swerveDriveOdometry != null) {

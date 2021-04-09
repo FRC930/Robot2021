@@ -12,7 +12,7 @@ import frc.robot.subsystems.TowerSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
-import frc.robot.subsystems.SwerveDriveSubsystem;
+
 import frc.robot.subsystems.FlywheelPistonSubsystem;
 
 import frc.robot.commands.intakecommands.*;
@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 import frc.robot.commands.shootercommands.ShootPowerCellCommandGroup;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.utilities.AutonConfig;
 import frc.robot.commands.hoppercommands.SetAutonomousHopperCommand;
 import frc.robot.commands.hoppercommands.SetHopperCommand;
 import frc.robot.commands.turretcommads.AutoTurretTurnCommand;
@@ -67,7 +68,8 @@ public class SaltAndPepperSkilletCommand extends SequentialCommandGroup {
             HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
             FlywheelPistonSubsystem fPistonSubsystem, TurretSubsystem turSubsystem) {
         // this is our config for how much power goes to the motors
-        var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.swerveGetKinematics(), Constants.KMAXSPEED);
+        //var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.swerveGetKinematics(), Constants.KMAXSPEED);
+        var autoVoltageConstraint = AutonConfig.getInstance().getAutoVoltageConstraint();
         //PID values
         double kP = 0;
         double kI = 0;
@@ -78,30 +80,13 @@ public class SaltAndPepperSkilletCommand extends SequentialCommandGroup {
         double maxV = Math.PI * 2;
         double maxA = Math.PI;
         // Configurate the values of all trajectories for max velocity and acceleration
-        TrajectoryConfig config =
-        new TrajectoryConfig(2, 1)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(dSubsystem.swerveGetKinematics())
-        .setEndVelocity(1)
-        // Apply the voltage constraint
-        .addConstraint(autoVoltageConstraint);
+        TrajectoryConfig config = AutonConfig.getInstance().getTrajectoryConfig();
         
         //a second trajectory config this one is reversed
-        TrajectoryConfig reverseConfig =
-        new TrajectoryConfig(2, 1)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(dSubsystem.swerveGetKinematics())
-        .setEndVelocity(1)
-        // Apply the voltage constraint
-        .addConstraint(autoVoltageConstraint)
-        .setReversed(true);
+        TrajectoryConfig reverseConfig = AutonConfig.getInstance().getReverseConfig();
 
-        TrajectoryConfig slowConfig =
-        new TrajectoryConfig(2, 1)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(dSubsystem.swerveGetKinematics())
-        // Apply the voltage constraint
-        .addConstraint(autoVoltageConstraint);
+        TrajectoryConfig slowConfig = AutonConfig.getInstance().getSlowConfig();
+        
         
 
         // -------- Trajectories -------- \\
@@ -180,20 +165,20 @@ Trajectory trajectory4 = TrajectoryGenerator.generateTrajectory(
         SwerveControllerCommand command1 = new SwerveControllerCommand(
             trajectory1, 
             dSubsystem::getPose, 
-            dSubsystem.swerveGetKinematics(), 
+            dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), 
             new PIDController(kP, kI, kD), 
             new ProfiledPIDController(kPRot, kIRot, kDRot,new TrapezoidProfile.Constraints(maxV, maxA)), 
             angle, 
             dSubsystem::swerveDrive, 
             dSubsystem);
-            SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.swerveGetKinematics(), 
+            SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
-            SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.swerveGetKinematics(), 
+            SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
-            SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.swerveGetKinematics(), 
+            SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
             new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 

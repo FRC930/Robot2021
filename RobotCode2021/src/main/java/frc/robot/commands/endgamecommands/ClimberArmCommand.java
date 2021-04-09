@@ -32,6 +32,9 @@ public class ClimberArmCommand extends CommandBase
     private double position;
     private int coDriverAxis;
     private double speed;
+
+    private final double CLIMBER_LIMIT = -2.4;
+
     //-------- CONSTRUCTOR --------\\
 
     public ClimberArmCommand (ClimberArmSubsystem climberArmSubsystem, Joystick coDriver, int coDriverAxis){
@@ -59,7 +62,7 @@ public class ClimberArmCommand extends CommandBase
         position = climberArmSubsystem.getRawEncoderPosition();
 
         // if the coDriver pushes joystick up it will set the speed to the Climber Arm
-        if(Math.abs(stickY) > 0.1 && position > Constants.CLIMBER_LIMIT) {  //&& position <= 0) {
+        if(Math.abs(stickY) > 0.1 && position > CLIMBER_LIMIT) {  //&& position <= 0) {
             speed = -Math.pow(stickY, 3) * 0.75;
             //System.out.println("Speed " + speed);
             logger.log(Constants.LOG_LEVEL_INFO, "Absolute Stick axis value: " + stickY + " > " + 0.1);

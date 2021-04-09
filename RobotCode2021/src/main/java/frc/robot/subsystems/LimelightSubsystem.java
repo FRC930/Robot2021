@@ -75,6 +75,22 @@ public class LimelightSubsystem extends SubsystemBase {
 
     //private FIFOStack smoother = new FIFOStack(10);
 
+    // enum for the different limelight pipelines
+    public enum LimelightPipelines {
+
+        NO_ZOOM(0), ZOOM_2X(1), GALACTIC_PATH(9);
+
+        private final int pipelineNumber;
+
+        LimelightPipelines(int pipelineNumber) {
+            this.pipelineNumber = pipelineNumber;
+        }
+
+        public int getPipeline() {
+            return this.pipelineNumber;
+        }
+    }
+
     //-------- CONSTRUCTOR --------\\
 
     public LimelightSubsystem(NetworkTable _limelightTable) {

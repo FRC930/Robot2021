@@ -44,6 +44,11 @@ public class CheckIfShotPossibleCommand extends CommandBase {
     private DeadbandZone deadbandZone;
     private ShotChance shotChance;
 
+    //-------- CONSTANTS ---------\\
+
+    private final double FLYWHEEL_LOWER_ANGLE = 31.4;
+    private final double FLYWHEEL_UPPER_ANGLE = 39.0;
+
     //-------- CONSTRUCTOR --------\\
 
     public CheckIfShotPossibleCommand(LimelightSubsystem lLightSubsystem, FlywheelPistonSubsystem fPistonSubsystem) {

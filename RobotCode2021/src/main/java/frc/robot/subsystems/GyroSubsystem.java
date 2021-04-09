@@ -45,13 +45,13 @@ public class GyroSubsystem extends SubsystemBase {
     
     //-------- CONSTRUCTOR --------\\
 
-    public GyroSubsystem() {
+    public GyroSubsystem(int INTAKE_ID) {
         // Move gyro to port 16 so simulator does not break
         if(RobotBase.isReal())
         {
-            gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID);
+            gyroTalon = new WPI_TalonSRX(INTAKE_ID);
         } else {
-            gyroTalon = new WPI_TalonSRX(Constants.INTAKE_ID + 10);
+            gyroTalon = new WPI_TalonSRX(INTAKE_ID + 10);
         }
         
         gyro = new PigeonIMU(gyroTalon);
