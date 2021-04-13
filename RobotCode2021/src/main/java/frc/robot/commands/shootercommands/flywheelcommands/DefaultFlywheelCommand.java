@@ -9,7 +9,7 @@
 
 package frc.robot.commands.shootercommands.flywheelcommands;
 
-import java.util.logging.*;
+//import java.util.logging.*;
 
 import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator;
 import edu.wpi.first.wpilibj.estimator.KalmanFilter;
@@ -33,7 +33,7 @@ public class DefaultFlywheelCommand extends CommandBase {
 
   private FlywheelSubsystem m_FlywheelSubsystem;
 
-  private final double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(2450.0);
+  private double kSpinupRadPerSec; 
   public final double kFlywheelMomentOfInertia = 0.00094610399; 
   private final double kFlywheelGearing = 1.0;
   
@@ -64,7 +64,7 @@ public class DefaultFlywheelCommand extends CommandBase {
   private LinearSystemLoop<N1, N1, N1> m_loop;
 
   private ShuffleboardUtility ModelConfig = ShuffleboardUtility.getInstance();
-  private static final Logger logger = Logger.getLogger(DefaultFlywheelCommand.class.getName());
+  //private static final Logger logger = Logger.getLogger(DefaultFlywheelCommand.class.getName());
 
   // -------- CONSTRUCTOR --------\\
   public DefaultFlywheelCommand(FlywheelSubsystem flywheelSubsystem) {
@@ -86,8 +86,11 @@ public class DefaultFlywheelCommand extends CommandBase {
         0.020);
 
     m_loop = new LinearSystemLoop<>(m_flywheelPlant, m_controller, m_observer, mMaxVoltage, mDtSeconds);
+
+    kSpinupRadPerSec = m_FlywheelSubsystem.getRadiansPerSecond();
   }
 
+  // Constructor (the second one. m-modifiable)
   public DefaultFlywheelCommand(FlywheelSubsystem flywheelSubsystem, double velError, double controlTol,
       double modelAcc, double encodAcc, double maxVoltage, double dtSeconds) {
       
@@ -105,8 +108,8 @@ public class DefaultFlywheelCommand extends CommandBase {
         kFlywheelGearing);
 
     m_controller = new LinearQuadraticRegulator<>(m_flywheelPlant,
-      	VecBuilder.fill(mVelError), // qelms.
-        VecBuilder.fill(mControlTol), // relms. 
+      	VecBuilder.fill(mVelError), // qelms
+        VecBuilder.fill(mControlTol), // relms 
         0.020); // Nominal time between loops. 0.020 for TimedRobot
 
     m_observer = new KalmanFilter<>(Nat.N1(), Nat.N1(), m_flywheelPlant, VecBuilder.fill(mModelAcc), 
@@ -128,6 +131,7 @@ public class DefaultFlywheelCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    kSpinupRadPerSec = m_FlywheelSubsystem.getRadiansPerSecond();
     // Sets the target speed of our flywheel. This is similar to setting the setpoint of a PID controller.
     // We just pressed the trigger, so let's set our next reference
      m_loop.setNextR(VecBuilder.fill(kSpinupRadPerSec));

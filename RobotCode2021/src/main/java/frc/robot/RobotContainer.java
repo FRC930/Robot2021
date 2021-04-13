@@ -36,6 +36,7 @@ import frc.robot.triggers.*;
 import frc.robot.utilities.*;
 
 import java.util.logging.Logger;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import frc.robot.Constants;
@@ -232,12 +233,14 @@ public class RobotContainer {
   private final StopHopperStateCommand stopHopperStateCommand;
   private final DefaultStopHopperCommand defaultStopHopperCommand;
 
+
   // --LED commands
   // TODO: Add LED commands here
 
   // --Shooter commands
   // --Flywheel commands
    private final DefaultFlywheelCommand defaultFlywheelCommand;
+   private final AccuracyChallengeCommand accuracyChallengeCommand;
 
   // --Turret commands
   private final JoystickTurretCommand joystickTurretCommand; // For manual
@@ -326,7 +329,7 @@ public class RobotContainer {
     // (SHOOTER_LEAD_ID, SHOOTER_SLAVE_ID)
     flywheelSubsystem = new FlywheelSubsystem(19, 18);
     // (SHOOTER_SOLENOID_ID)
-    flywheelPistonSubsystem = new FlywheelPistonSubsystem(1);
+    flywheelPistonSubsystem = new FlywheelPistonSubsystem(1,2);
 
     // (TOWER_ID)
     towerSubsystem = new TowerSubsystem(16);
@@ -356,6 +359,7 @@ public class RobotContainer {
 
     // Flywheel
      defaultFlywheelCommand = new DefaultFlywheelCommand(flywheelSubsystem);
+     accuracyChallengeCommand = new AccuracyChallengeCommand(flywheelSubsystem, flywheelPistonSubsystem, limelightSubsystem);
 
     // turret
     joystickTurretCommand = new JoystickTurretCommand(turretSubsystem, coDriverController, XB_AXIS_LEFT_X);
@@ -445,7 +449,17 @@ public class RobotContainer {
     JoystickButton speedModifierButton = new JoystickButton(driverController, XB_LB);
 
     // --Command binds
+    JoystickButton startAccuracyChallengeButton = new JoystickButton(coDriverController, XB_START);
 
+    POVTrigger fullExtendButton = new POVTrigger(driverController, 0, XB_POV_UP);
+    POVTrigger fullRetractButton = new POVTrigger(driverController, 0, XB_POV_DOWN);
+    POVTrigger halfExtendTopButton = new POVTrigger(driverController, 0, XB_POV_LEFT);
+    POVTrigger halfExtendBottomButton = new POVTrigger(driverController, 0, XB_POV_RIGHT);
+
+    fullExtendButton.toggleWhenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem));
+    fullRetractButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    halfExtendTopButton.toggleWhenActive(new HalfExtendTopFlywheelPistonCommand(flywheelPistonSubsystem));
+    halfExtendBottomButton.toggleWhenActive(new HalfExtendBottomFlywheelPistonCommand(flywheelPistonSubsystem));
     // Rotational control command bind
     // rotationalButton.whileActiveOnce(new
     // RotationalControlCommandGroup(colorSensorSubsystem,
@@ -514,14 +528,16 @@ public class RobotContainer {
 
     // manual flywheel piston stuff
     manualFlywheelPistonButton.whenActive(new
-    ExtendFlywheelPistonCommand(flywheelPistonSubsystem)).whenInactive(new
-    RetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    FullExtendFlywheelPistonCommand(flywheelPistonSubsystem)).whenInactive(new
+    FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
 
     reverseHopperButton.whileActiveOnce(new SetHopperCommand(hopperSubsystem, Constants.HOPPER_REVERSE_SPEED, true));
     // manual
     stopHopperButton.whileActiveOnce(stopHopperStateCommand);
 
+    startAccuracyChallengeButton.whileActiveContinuous(accuracyChallengeCommand);
   } // end of method configureDriverBindings()
+
 
   private void configureCodriverBindings() {
 

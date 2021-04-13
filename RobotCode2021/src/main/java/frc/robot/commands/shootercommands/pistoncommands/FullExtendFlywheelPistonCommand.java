@@ -15,12 +15,14 @@ import frc.robot.subsystems.FlywheelPistonSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem.SolenoidValues;
 import frc.robot.utilities.ShuffleboardUtility;
 
-public class ExtendFlywheelPistonCommand extends CommandBase {
+public class FullExtendFlywheelPistonCommand extends CommandBase {
 
   private FlywheelPistonSubsystem flywheelAngleSubsystem;
   private ShuffleboardUtility shuffleboardUtility;
 
-  public ExtendFlywheelPistonCommand(FlywheelPistonSubsystem flywheelAngleSubsystem) {
+    //-------- CONSTRUCTOR --------\\
+  
+    public FullExtendFlywheelPistonCommand(FlywheelPistonSubsystem flywheelAngleSubsystem) {
     this.flywheelAngleSubsystem = flywheelAngleSubsystem;
     shuffleboardUtility = ShuffleboardUtility.getInstance();
     addRequirements(flywheelAngleSubsystem);
@@ -28,11 +30,14 @@ public class ExtendFlywheelPistonCommand extends CommandBase {
     // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    flywheelAngleSubsystem.set(SolenoidValues.EXTEND);
+    flywheelAngleSubsystem.setTop(SolenoidValues.EXTEND);
+    flywheelAngleSubsystem.setBottom(SolenoidValues.EXTEND);
     // True = far shot
     shuffleboardUtility.putShooterAngle(true);
-  }
-
+  }  
+  
+//-------- COMMANDBASE METHODS --------\\
+  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {

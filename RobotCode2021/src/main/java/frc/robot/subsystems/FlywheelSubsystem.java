@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.logging.Logger;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.util.Units;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -39,6 +40,8 @@ public class FlywheelSubsystem extends SubsystemBase {
 
     private final CANEncoder encoder;
 
+    
+    private double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(2000.0);  
 
     // -------- CONSTRUCTOR --------\\
 
@@ -65,19 +68,27 @@ public class FlywheelSubsystem extends SubsystemBase {
     }
 
     // -------- METHODS --------\\
-
+    //  telling us the voltage of the motorLead
     public double getVoltage() {
         return motorLead.getBusVoltage();
     }
-
+    //sets the the motorLead to the outputVolts
     public void setVoltage(double outputVolts) {
         motorLead.setVoltage(outputVolts);
     }
-
+    // tells us the velocity of the encoder
     public double getSpeed() {
         return encoder.getVelocity();
         
     }
+    //  tells us the radians per second of the flywheel
+    public double getRadiansPerSecond() {
+        return this.kSpinupRadPerSec;
+    }
 
+     //sets flywheel motor speed (in rpms)
+    public void setSpeedRPMs(double RPMS) {
+        this.kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(RPMS);
+    } 
 }
 // end of class ShooterSubsystem
