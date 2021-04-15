@@ -47,8 +47,8 @@ public class ColorWheelSpinnerSubsystem extends SubsystemBase {
      * This is the default constructor that will initialize
      * {@link #wheelSpinnerMotor} to the correct motor.
      */
-    public ColorWheelSpinnerSubsystem() {
-        wheelSpinnerMotor = new VictorSPX(Constants.COLOR_WHEEL_ID);
+    public ColorWheelSpinnerSubsystem(int COLOR_WHEEL_ID) {
+        wheelSpinnerMotor = new VictorSPX(COLOR_WHEEL_ID);
     }
 
     // -------- METHODS --------\\

@@ -21,7 +21,10 @@ import frc.robot.Constants;
 //import frc.robot.utilities.ShuffleboardUtility;
 
 //-------- SUBSYSTEM CLASS --------\\
-
+/**
+ * Subsystem for handling the limelight
+ * Only one limelight can be plugged in at a time
+ */
 public class LimelightSubsystem extends SubsystemBase {
 
     // -------- CONSTANTS --------\\
@@ -80,7 +83,7 @@ public class LimelightSubsystem extends SubsystemBase {
     // enum for the different limelight pipelines
     public enum LimelightPipelines {
 
-        NO_ZOOM(0), ZOOM_2X(1);
+        NO_ZOOM(0), ZOOM_2X(1), GALACTIC_PATH(9);
 
         private final int pipelineNumber;
 

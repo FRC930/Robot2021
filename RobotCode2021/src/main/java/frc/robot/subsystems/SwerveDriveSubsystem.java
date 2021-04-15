@@ -24,7 +24,9 @@ import frc.robot.Constants;
 import frc.robot.utilities.SwerveModule;
 
 //-------- SUBSYSTEM CLASS --------\\
-
+/**
+ * [DEPRECATED] Use DriveSubsystem
+ */
 public class SwerveDriveSubsystem extends SubsystemBase {
 
   // -------- DECLARATIONS --------\\
@@ -117,10 +119,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     SwerveDriveKinematics.normalizeWheelSpeeds(states, Constants.KMAXSPEED);
 
-    FLDrive.drive(states[0]);
-    FRDrive.drive(states[1]);
-    BLDrive.drive(states[2]);
-    BRDrive.drive(states[3]);
+    FLDrive.drive(states[0], 0.8);
+    FRDrive.drive(states[1], 0.8);
+    BLDrive.drive(states[2], 0.8);
+    BRDrive.drive(states[3], 0.8);
     
     logger.exiting(SwerveDriveSubsystem.class.getName(), "drive()");
   } // end of method drive()
@@ -133,10 +135,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     System.out.println("Set BL:" + states[2].toString());
     System.out.println("Set BR:" + states[3].toString());
     System.out.println("Pose: " + od.getPoseMeters());
-    FLDrive.drive(states[0]);
-    FRDrive.drive(states[1]);
-    BLDrive.drive(states[2]);
-    BRDrive.drive(states[3]);
+    FLDrive.drive(states[0], 0.8);
+    FRDrive.drive(states[1], 0.8);
+    BLDrive.drive(states[2], 0.8);
+    BRDrive.drive(states[3], 0.8);
     logger.exiting(SwerveDriveSubsystem.class.getName(), "drive");
   } // end of method drive()
 

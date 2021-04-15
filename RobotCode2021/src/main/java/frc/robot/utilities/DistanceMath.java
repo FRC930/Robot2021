@@ -7,8 +7,8 @@ import frc.robot.Constants;
 
 public class DistanceMath {
   public static final double GOAL_HEIGHT = 98;
-  public static final double CAMERA_HEIGHT = 27.5455;
-  public static final double CAMERA_ANGLE = 20;
+  public static final double CAMERA_HEIGHT = 27.5455;  //check with CAD for the exact number
+  public static final double CAMERA_ANGLE = 20;        //angle has changed, find the new angle
   
   //Logger
   private static final Logger logger = Logger.getLogger(CameraUtil.class.toString());
@@ -23,6 +23,7 @@ public class DistanceMath {
     logger.entering(DistanceMath.class.getName(), "getDistY()");
     logger.log(Constants.LOG_LEVEL_FINER, "Starting Cameras' Capture...");
     logger.exiting(DistanceMath.class.getName(), "getDistY()");
+
     return (GOAL_HEIGHT-CAMERA_HEIGHT)/Math.tan(Math.toRadians(CAMERA_ANGLE+ty));
   }
   

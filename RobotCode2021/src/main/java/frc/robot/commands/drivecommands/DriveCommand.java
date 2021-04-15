@@ -19,6 +19,9 @@ public class DriveCommand extends CommandBase {
 
   //-------- CONSTANTS --------\\
 
+  private final double DRIVE_DEADBAND_JOYSTICK = 0.000125;
+  private final double DRIVE_TURNING_MULTIPLIER = 0.5;
+
   //-------- DECLARATIONS --------\\
 
   private final DriveSubsystem driveSubsystem;
@@ -67,14 +70,14 @@ public class DriveCommand extends CommandBase {
     stickY = -Math.pow(stickY, 3);
 
     // Multiplies for smoothing turning
-    stickX *= -Constants.DRIVE_TURNING_MULTIPLIER;
+    stickX *= -DRIVE_TURNING_MULTIPLIER;
 
     // Dead band after the cube sets to zero if under the dead band
-    if (Math.abs(stickX) < Constants.DRIVE_DEADBAND_JOYSTICK) {
+    if (Math.abs(stickX) < DRIVE_DEADBAND_JOYSTICK) {
       logger.log(Level.INFO, "stickX < DRIVE_DEADBAND_JOYSTICK");
       stickX = 0;
     }
-    if (Math.abs(stickY) < Constants.DRIVE_DEADBAND_JOYSTICK) {
+    if (Math.abs(stickY) < DRIVE_DEADBAND_JOYSTICK) {
       logger.log(Level.INFO, "stickY < DRIVE_DEADBAND_JOYSTICK");
       stickY = 0;
     }

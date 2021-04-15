@@ -26,6 +26,7 @@ public class EndgameCommandGroup extends SequentialCommandGroup {
     //-------- CONSTANTS --------\\
     
     //private static final Logger logger = Logger.getLogger(ClimberArmCommand.class.getName());
+    private final double TURRET_RIGHT_POSITION = 0.51;
 
     //-------- CONSTRUCTOR --------\\
     
@@ -39,7 +40,7 @@ public class EndgameCommandGroup extends SequentialCommandGroup {
         addCommands(
             new ToggleShiftCommand(driveSubsystem),
             new KillFlywheelCommand(flywheelSubsystem),
-            new SetTurretPositionCommand(turretSubsystem, Constants.TURRET_RIGHT_POSITION)
+            new SetTurretPositionCommand(turretSubsystem, TURRET_RIGHT_POSITION)
         );
        
     } // end of the constructor EndgameCommandGroup

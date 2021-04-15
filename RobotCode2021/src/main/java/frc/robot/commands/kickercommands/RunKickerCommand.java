@@ -26,6 +26,10 @@ public class RunKickerCommand extends CommandBase {
 
     private KickerSubsystem kickerSubsystem;
     //private static final Logger logger = Logger.getLogger(RunKickerCommand.class.getName());
+    private final double KICKER_SPEED = 1.0;
+
+    //-------- CONSTANTS ----------\\
+    //private final double KICKER_ENCODER_OFFSET = 0;
     
     //-------- CONSTRUCTOR --------\\
 
@@ -39,17 +43,17 @@ public class RunKickerCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        kickerSubsystem.setSpeed(Constants.KICKER_SPEED);
+        kickerSubsystem.setSpeed(KICKER_SPEED);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        // logger.log(Constants.LOG_LEVEL_FINE, "Math.round((((" + kickerSubsystem.getEncoder() + " - " + Constants.KICKER_ENCODER_OFFSET +"-" + "/ 10) % 2) * 100)) % 2) == 1");
-        // if(((Math.round((((kickerSubsystem.getEncoder() - Constants.KICKER_ENCODER_OFFSET) / 10) % 2) * 100)) % 2) == 1)
+        // logger.log(Constants.LOG_LEVEL_FINE, "Math.round((((" + kickerSubsystem.getEncoder() + " - " + KICKER_ENCODER_OFFSET +"-" + "/ 10) % 2) * 100)) % 2) == 1");
+        // if(((Math.round((((kickerSubsystem.getEncoder() - KICKER_ENCODER_OFFSET) / 10) % 2) * 100)) % 2) == 1)
         // {
         //     logger.log(Constants.LOG_LEVEL_FINE, "kickers running");
-        //     kickerSubsystem.setSpeed(Constants.KICKER_SPEED);
+        //     kickerSubsystem.setSpeed(KICKER_SPEED);
         // } else {
         //     kickerSubsystem.setSpeed(0.0);
         //     logger.log(Constants.LOG_LEVEL_FINE, "kickers not running");
