@@ -9,7 +9,7 @@ import frc.robot.subsystems.TowerSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
-import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -30,7 +30,7 @@ public class TestCommand extends SequentialCommandGroup {
      * Creates a new Autonomous.
      */
 
-    public TestCommand(SwerveDriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
+    public TestCommand(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
             IntakeMotorSubsystem iMotorSubsystem, FlywheelSubsystem fSubsystem, TowerSubsystem towSubsystem,
             HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
             FlywheelPistonSubsystem fPistonSubsystem, TurretSubsystem turSubsystem) {
@@ -70,9 +70,9 @@ public class TestCommand extends SequentialCommandGroup {
         
         // This is our first atuo command this will run the drivetrain using the first trajectory we made
 
-        SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory, dSubsystem::getPose, dSubsystem.getKinematics(), 
+        SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
             new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kPRot, kIRot, kDRot,
-            new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+            new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 
         
 

@@ -16,7 +16,7 @@ import frc.robot.subsystems.TowerSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
-import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -77,7 +77,7 @@ public class SlalomCommand extends SequentialCommandGroup {
    * Path Description: ----------------- Shoot 3 from initiation line move through
    * trench to grab 3 balls Shoot 3 from trench position
    */
-  public SlalomCommand(SwerveDriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
+  public SlalomCommand(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
       IntakeMotorSubsystem iMotorSubsystem, FlywheelSubsystem fSubsystem, TowerSubsystem tSubsystem,
       HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
       FlywheelPistonSubsystem fPistonSubsystem) {
@@ -163,41 +163,12 @@ public class SlalomCommand extends SequentialCommandGroup {
              AutonConfig.getInstance().getTrajectoryConfig()
         );
 // this is our config for how much power goes to the motors
-    var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getKinematics(), Constants.KMAXSPEED);
-    //PID values
+   //PID values
     int kP = 1;
     int kI = 0;
     int kD = 0;
     double maxV = Math.PI * 2;
     double maxA = Math.PI;
-    // Configurate the values of all trajectories for max velocity and acceleration
-    TrajectoryConfig config =
-    new TrajectoryConfig(Constants.KMAXSPEED,
-    Constants.KMAXACCELERATION)
-    // Add kinematics to ensure max speed is actually obeyed
-    .setKinematics(dSubsystem.getKinematics())
-    .setEndVelocity(1)
-    // Apply the voltage constraint
-    .addConstraint(autoVoltageConstraint);
-
-    //a second trajectory config this one is reversed
-    TrajectoryConfig reverseConfig =
-    new TrajectoryConfig(Constants.KMAXSPEED,
-    Constants.KMAXACCELERATION)
-    // Add kinematics to ensure max speed is actually obeyed
-    .setKinematics(dSubsystem.getKinematics())
-    .setEndVelocity(1)
-    // Apply the voltage constraint
-    .addConstraint(autoVoltageConstraint)
-    .setReversed(true);
-
-    TrajectoryConfig slowConfig =
-    new TrajectoryConfig(Constants.KMAXSPEED,
-    2.0)
-    // Add kinematics to ensure max speed is actually obeyed
-    .setKinematics(dSubsystem.getKinematics())
-    // Apply the voltage constraint
-    .addConstraint(autoVoltageConstraint);
 
     // -------- RAMSETE Commands -------- \\
     // Creates a command that can be added to the command scheduler in the sequential command
@@ -206,33 +177,33 @@ public class SlalomCommand extends SequentialCommandGroup {
 
     // This is our first atuo command this will run the drivetrain using the first trajectory we made
 
-    SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getKinematics(), 
+    SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
         new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 
-    SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getKinematics(), 
+    SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
         new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 
-    SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getKinematics(), 
+    SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
         new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 
-    SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getKinematics(), 
+    SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
         new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 
-    SwerveControllerCommand command5 = new SwerveControllerCommand(trajectory5, dSubsystem::getPose, dSubsystem.getKinematics(), 
+    SwerveControllerCommand command5 = new SwerveControllerCommand(trajectory5, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
         new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 
-    SwerveControllerCommand command6 = new SwerveControllerCommand(trajectory6, dSubsystem::getPose, dSubsystem.getKinematics(), 
+    SwerveControllerCommand command6 = new SwerveControllerCommand(trajectory6, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
         new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 
-    SwerveControllerCommand command7 = new SwerveControllerCommand(trajectory7, dSubsystem::getPose, dSubsystem.getKinematics(), 
+    SwerveControllerCommand command7 = new SwerveControllerCommand(trajectory7, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
         new PIDController(kP, kI, kD), new PIDController(kP, kI, kD), new ProfiledPIDController(kP, kI, kD,
-        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::drive, dSubsystem);
+        new TrapezoidProfile.Constraints(maxV, maxA)), dSubsystem::swerveDrive, dSubsystem);
 
 
     /*

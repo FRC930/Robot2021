@@ -53,7 +53,7 @@ public class SaltAndPepperSkilletCommand extends SequentialCommandGroup {
             HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
             FlywheelPistonSubsystem fPistonSubsystem, TurretSubsystem turSubsystem) {
         // this is our config for how much power goes to the motors
-        //var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.swerveGetKinematics(), Constants.KMAXSPEED);
+        //var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.swervegetSwerveKinematics(), Constants.KMAXSPEED);
         //PID values
         double kP = 0;
         double kI = 0;
