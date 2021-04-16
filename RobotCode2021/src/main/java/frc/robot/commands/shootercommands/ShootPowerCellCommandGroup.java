@@ -6,9 +6,6 @@
 /*----------------------------------------------------------------------------*/
 //-------- IMPORTS --------\\
 package frc.robot.commands.shootercommands;
-
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -21,7 +18,6 @@ import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.TowerSubsystem;
-import frc.robot.triggers.TriggerCommand;
 import frc.robot.subsystems.FlywheelPistonSubsystem;
 //-------- COMMANDGROUP CLASS --------\\
 /**

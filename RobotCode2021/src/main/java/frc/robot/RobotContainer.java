@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.autocommands.paths.*;
 import frc.robot.commands.drivecommands.*;
 
-import frc.robot.commands.hoppercommands.*;
-
 import frc.robot.commands.intakecommands.intakemotorcommands.*;
 import frc.robot.commands.intakecommands.intakepistoncommands.*;
 import frc.robot.commands.kickercommands.*;
@@ -24,7 +22,10 @@ import frc.robot.commands.towercommands.*;
 import frc.robot.commands.turretcommads.*;
 //import frc.robot.commands.ultrasoniccommands.UltrasonicPingCommand;
 import frc.robot.commands.endgamecommands.*;
-
+import frc.robot.commands.hoppercommands.DefaultHopperCommand;
+import frc.robot.commands.hoppercommands.DefaultStopHopperCommand;
+import frc.robot.commands.hoppercommands.SetHopperCommand;
+import frc.robot.commands.hoppercommands.StopHopperStateCommand;
 // --Subsystem imports
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.DriveSubsystem.DRIVE_TYPE;
@@ -39,30 +40,18 @@ import java.util.logging.Logger;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import frc.robot.Constants;
 import java.util.logging.Level;
 
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Filesystem;
 // --Other imports
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.system.LinearSystem;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
@@ -74,7 +63,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpiutil.math.numbers.N2;
 
 // limelight
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 //-------- CLASS RobotContainer --------\\

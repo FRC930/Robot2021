@@ -16,7 +16,6 @@ import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 
 import frc.robot.utilities.AutonConfig;
 import frc.robot.utilities.SwerveModule;
-import edu.wpi.first.wpilibj.estimator.SwerveDrivePoseEstimator;
 
 import frc.robot.Constants;
 //import frc.robot.utilities.ShuffleboardUtility;
@@ -28,17 +27,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpiutil.math.VecBuilder;
-
 
 //TODO: Organize all of the importants including these new imports due to merging of SwerveDriveSubsystem and DriveSubsystem
-import edu.wpi.first.wpilibj.AnalogEncoder;
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 

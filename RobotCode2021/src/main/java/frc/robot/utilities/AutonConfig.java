@@ -21,7 +21,6 @@ import frc.robot.subsystems.DriveSubsystem;
 public class AutonConfig {
     
     //All measurements are in meters
-    private final double BALL_RADIUS = 0.0889;
 
     private SwerveDriveKinematicsConstraint autoVoltageConstraint;
 

@@ -1,8 +1,6 @@
 package frc.robot.utilities;
 
-import frc.robot.subsystems.LEDSubsystem;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 
 /*Manipulates buffer to change the LEDs. Buffer can access each LED on the strip and 
