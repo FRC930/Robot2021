@@ -4,6 +4,8 @@ package frc.robot;
 
 // --Library Commands
 import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.commands.autocommands.LakeshorePath.LeFishe;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening;
 // --Our Commands
 import frc.robot.commands.autocommands.paths.*;
 import frc.robot.commands.drivecommands.*;
@@ -132,9 +134,9 @@ public class RobotContainer {
 
   // TURRET POSITIONS
 
-  //private final double TURRET_SET_POSITION_P = 2.5;
-  //private final double TURRET_SET_POSITION_I = 0.0;
-  //private final double TURRET_SET_POSITION_D = 0.0;
+  // private final double TURRET_SET_POSITION_P = 2.5;
+  // private final double TURRET_SET_POSITION_I = 0.0;
+  // private final double TURRET_SET_POSITION_D = 0.0;
 
   // encoder positions for setting turret to one of four directions
   private final double TURRET_BACK_POSITION = 0.635;
@@ -173,7 +175,7 @@ public class RobotContainer {
 
   // --Drive subsystem
   private DriveSubsystem driveSubsystem;
-  //private SwerveDriveSubsystem swerveDriveSubsystem;
+  // private SwerveDriveSubsystem swerveDriveSubsystem;
 
   // --Shooter stuff subsystems
   private final FlywheelSubsystem flywheelSubsystem;
@@ -204,7 +206,7 @@ public class RobotContainer {
   private final TurretSubsystem turretSubsystem;
 
   // --Ultrasonic Subsystem
-  //private final UltrasonicSubsystem ultrasonicSubsystem;
+  // private final UltrasonicSubsystem ultrasonicSubsystem;
 
   // --LED subsystem
   LEDSubsystem ledSubsystem;
@@ -212,7 +214,7 @@ public class RobotContainer {
   // -------- COMMANDS --------\\
 
   // --Drive commands
-  //private final ClimberArmCommandGroup climberArmCommandGroup;
+  // private final ClimberArmCommandGroup climberArmCommandGroup;
   private SwerveDriveCommand swerveDriveCommand;
 
   // --Hopper commands
@@ -221,23 +223,22 @@ public class RobotContainer {
   private final StopHopperStateCommand stopHopperStateCommand;
   private final DefaultStopHopperCommand defaultStopHopperCommand;
 
-
   // --LED commands
   // TODO: Add LED commands here
 
   // --Shooter commands
   // --Flywheel commands
-   private final DefaultFlywheelCommand defaultFlywheelCommand;
-   private final AccuracyChallengeCommand accuracyChallengeCommand;
+  private final DefaultFlywheelCommand defaultFlywheelCommand;
+  private final AccuracyChallengeCommand accuracyChallengeCommand;
 
   // --Turret commands
   private final JoystickTurretCommand joystickTurretCommand; // For manual
 
   // --Ultrasonic commands
-  //private final UltrasonicPingCommand ultrasonicPingCommand;
+  // private final UltrasonicPingCommand ultrasonicPingCommand;
 
   // --Auto Simulation
-  
+
   private final LinearSystem<N2, N2, N2> m_drivetrainSystem;
   private final DifferentialDrivetrainSim m_drivetrainSimulator;
   private final RamseteController m_ramsete = new RamseteController();
@@ -250,9 +251,9 @@ public class RobotContainer {
 
   private static final Logger logger = Logger.getLogger(RobotContainer.class.getName());
   // --Auto commands
-  //TODO: PUT BACK
-  //private final SaltAndPepperSkilletCommand saltAndPepperSkilletCommand;
-  //private final FarmersBreakfastSkilletCommand farmersBreakfastSkilletCommand;
+  // TODO: PUT BACK
+  // private final SaltAndPepperSkilletCommand saltAndPepperSkilletCommand;
+  // private final FarmersBreakfastSkilletCommand farmersBreakfastSkilletCommand;
 
   // --Utilities
   private final ShuffleboardUtility shuffleboardUtility;
@@ -264,7 +265,7 @@ public class RobotContainer {
     // Setting Log level for entire robot code
     // TODO: Edit this in Shuffleboard...?
     frcRobotLogger.setLevel(Level.OFF);
-    
+
     // --Drive controllers
     driverController = new Joystick(DRIVER_CONTROLLER_ID);
     coDriverController = new Joystick(CODRIVER_CONTROLLER_ID);
@@ -278,27 +279,28 @@ public class RobotContainer {
     intakePistonSubsystem = new IntakePistonSubsystem(0);
 
     // GENERAL DRIVE ARRAYS
-    // due to the wiring of the gyro, both the intake and the gyro are tied together. because of this, we need to use the intake_id for this gyro.
-    // additionalDriveIDs [     gyroID,    shifterSolenoidID]
-    int[] additionalDriveIDs = {INTAKE_ID, SHIFTER_SOLENOID_ID};
+    // due to the wiring of the gyro, both the intake and the gyro are tied
+    // together. because of this, we need to use the intake_id for this gyro.
+    // additionalDriveIDs [ gyroID, shifterSolenoidID]
+    int[] additionalDriveIDs = { INTAKE_ID, SHIFTER_SOLENOID_ID };
     // SWERVE DRIVE ARRAYS
-    int[] drfid = {3, 7, 11};
-    int[] dlfid = {1, 5, 9};
-    int[] drbid = {4, 8, 12};
-    int[] dlbid = {2, 6, 10};
+    int[] drfid = { 3, 7, 11 };
+    int[] dlfid = { 1, 5, 9 };
+    int[] drbid = { 4, 8, 12 };
+    int[] dlbid = { 2, 6, 10 };
     // TANK DRIVE ARRAYS
     /*
-    int[] drfid = {3, null, null};
-    int[] dlfid = {1, null, null};
-    int[] drbid = {4, null, null};
-    int[] dlbid = {2, null, null};
-    */
+     * int[] drfid = {3, null, null}; int[] dlfid = {1, null, null}; int[] drbid =
+     * {4, null, null}; int[] dlbid = {2, null, null};
+     */
 
     // Must be initialized after intake
     // the first boolean determines to use field orientation if true
     // the second boolean if true halves the speed
-    driveSubsystem = new DriveSubsystem(additionalDriveIDs, drfid, dlfid, drbid, dlbid, DRIVE_TYPE.SWERVE_DRIVE, intakeMotorSubsystem, false, true);
-    //swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false, true);
+    driveSubsystem = new DriveSubsystem(additionalDriveIDs, drfid, dlfid, drbid, dlbid, DRIVE_TYPE.SWERVE_DRIVE,
+        intakeMotorSubsystem, false, true);
+    // swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false,
+    // true);
 
     // (HOPPER_ID)
     hopperSubsystem = new HopperSubsystem(13);
@@ -307,9 +309,9 @@ public class RobotContainer {
     kickerSubsystem = new KickerSubsystem(14, 1);
 
     // (CLIMBER_ARM_ID, CLIMBER_ENCODER_PORT_ID)
-    //climberArmSubsystem = new ClimberArmSubsystem(12, 2);
+    // climberArmSubsystem = new ClimberArmSubsystem(12, 2);
 
-    ledSubsystem = new LEDSubsystem(0,20);
+    ledSubsystem = new LEDSubsystem(0, 20);
 
     // (_limelightNetworkInstance)
     limelightSubsystem = new LimelightSubsystem(NetworkTableInstance.getDefault().getTable("limelight"));
@@ -317,7 +319,7 @@ public class RobotContainer {
     // (SHOOTER_LEAD_ID, SHOOTER_SLAVE_ID)
     flywheelSubsystem = new FlywheelSubsystem(19, 18);
     // (SHOOTER_SOLENOID_ID)
-    flywheelPistonSubsystem = new FlywheelPistonSubsystem(1,2);
+    flywheelPistonSubsystem = new FlywheelPistonSubsystem(1, 2);
 
     // (TOWER_ID)
     towerSubsystem = new TowerSubsystem(16);
@@ -326,16 +328,18 @@ public class RobotContainer {
     turretSubsystem = new TurretSubsystem(15, 0);
 
     // (ANALOG_PORT_ID)
-    //ultrasonicSubsystem = new UltrasonicSubsystem(1);
+    // ultrasonicSubsystem = new UltrasonicSubsystem(1);
 
     // --Commands
 
     // endgame
-    // climberArmCommandGroup = new ClimberArmCommandGroup(climberArmSubsystem, coDriverController, XB_AXIS_LEFT_Y,
-    //     new JoystickButton(coDriverController, XB_RB));
+    // climberArmCommandGroup = new ClimberArmCommandGroup(climberArmSubsystem,
+    // coDriverController, XB_AXIS_LEFT_Y,
+    // new JoystickButton(coDriverController, XB_RB));
 
     // drive (NOTE: This is where we bind the driver controls to the drivetrain)
-    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
+    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y,
+        XB_AXIS_RIGHT_X);
 
     // hopper
     defaultStopHopperCommand = new DefaultStopHopperCommand(hopperSubsystem);
@@ -346,8 +350,9 @@ public class RobotContainer {
     // TODO: Add LED commands here
 
     // Flywheel
-     defaultFlywheelCommand = new DefaultFlywheelCommand(flywheelSubsystem);
-     accuracyChallengeCommand = new AccuracyChallengeCommand(flywheelSubsystem, flywheelPistonSubsystem, limelightSubsystem);
+    defaultFlywheelCommand = new DefaultFlywheelCommand(flywheelSubsystem);
+    accuracyChallengeCommand = new AccuracyChallengeCommand(flywheelSubsystem, flywheelPistonSubsystem,
+        limelightSubsystem);
 
     // turret
     joystickTurretCommand = new JoystickTurretCommand(turretSubsystem, coDriverController, XB_AXIS_LEFT_X);
@@ -355,21 +360,28 @@ public class RobotContainer {
     shuffleboardUtility = ShuffleboardUtility.getInstance();
 
     // Ultrasonic
-    //ultrasonicPingCommand = new UltrasonicPingCommand(ultrasonicSubsystem);
+    // ultrasonicPingCommand = new UltrasonicPingCommand(ultrasonicSubsystem);
 
     // TODO: Edit this to work with Shuffleboard utility (ADD IT BACK TOO)
-    //saltAndPepperSkilletCommand = new SaltAndPepperSkilletCommand(swerveDriveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
-    //      towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem,
-    //      turretSubsystem);
-    //farmersBreakfastSkilletCommand = new FarmersBreakfastSkilletCommand(swerveDriveSubsystem, flywheelSubsystem, intakeMotorSubsystem,
-    //      intakePistonSubsystem, turretSubsystem, limelightSubsystem, towerSubsystem, hopperSubsystem,
-    //      kickerSubsystem);
+    // saltAndPepperSkilletCommand = new
+    // SaltAndPepperSkilletCommand(swerveDriveSubsystem, intakePistonSubsystem,
+    // intakeMotorSubsystem, flywheelSubsystem,
+    // towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem,
+    // flywheelPistonSubsystem,
+    // turretSubsystem);
+    // farmersBreakfastSkilletCommand = new
+    // FarmersBreakfastSkilletCommand(swerveDriveSubsystem, flywheelSubsystem,
+    // intakeMotorSubsystem,
+    // intakePistonSubsystem, turretSubsystem, limelightSubsystem, towerSubsystem,
+    // hopperSubsystem,
+    // kickerSubsystem);
 
-    //shuffleboardUtility.setDefaultAutonOptions("Farmers Breakfast", farmersBreakfastSkilletCommand);
-    
-    //shuffleboardUtility.addAutonOptions("Salt and Pepper", saltAndPepperSkilletCommand);
-    //shuffleboardUtility.addAutonOptions("None", null);
-    
+    // shuffleboardUtility.setDefaultAutonOptions("Farmers Breakfast",
+    // farmersBreakfastSkilletCommand);
+
+    // shuffleboardUtility.addAutonOptions("Salt and Pepper",
+    // saltAndPepperSkilletCommand);
+    // shuffleboardUtility.addAutonOptions("None", null);
 
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team
@@ -378,9 +390,8 @@ public class RobotContainer {
 
     // --AutoSim
     m_drivetrainSystem = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3);
-    m_drivetrainSimulator =
-      new DifferentialDrivetrainSim(
-          m_drivetrainSystem, DCMotor.getCIM(2), 8, Constants.KTRACKWIDTH, 3, null);
+    m_drivetrainSimulator = new DifferentialDrivetrainSim(m_drivetrainSystem, DCMotor.getCIM(2), 8,
+        Constants.KTRACKWIDTH, 3, null);
   } // end of constructor RobotContainer()
 
   // -------- METHODS --------\\
@@ -422,11 +433,11 @@ public class RobotContainer {
     // --Buttons and Triggers
 
     // A Button
-    //JoystickButton rotationalButton = new JoystickButton(driverController, GC_A);
+    // JoystickButton rotationalButton = new JoystickButton(driverController, GC_A);
     // B Button
-    //JoystickButton positionalButton = new JoystickButton(driverController, GC_B);
+    // JoystickButton positionalButton = new JoystickButton(driverController, GC_B);
     // L Button
-    //JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
+    // JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
     // ZR Button
     JoystickButton shootButton = new JoystickButton(driverController, XB_RB);
     JoystickButton resetSwerveButton = new JoystickButton(driverController, XB_Y);
@@ -458,20 +469,23 @@ public class RobotContainer {
 
     // Drive command binds
     swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
-    speedModifierButton.whenActive(new SpeedModifierCommand(driveSubsystem, 0.5)) // allows the switching of speedModifier between a and b
+    speedModifierButton.whenActive(new SpeedModifierCommand(driveSubsystem, 0.5)) // allows the switching of
+                                                                                  // speedModifier between a and b
         .whenInactive(new SpeedModifierCommand(driveSubsystem, 0.8));
 
     // Shooter command binds
-    shootButton.whenActive(new ShootPowerCellCommandGroup(flywheelSubsystem, towerSubsystem, hopperSubsystem,
-        kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem)).and(stopJamButton.negate())
-        .whenInactive(new StopTowerKickerCommandGroup(towerSubsystem, kickerSubsystem));
+    shootButton
+        .whenActive(new ShootPowerCellCommandGroup(flywheelSubsystem, towerSubsystem, hopperSubsystem, kickerSubsystem,
+            limelightSubsystem, flywheelPistonSubsystem))
+        .and(stopJamButton.negate()).whenInactive(new StopTowerKickerCommandGroup(towerSubsystem, kickerSubsystem));
     stopJamButton.whileActiveOnce(new StopJamCommandGroup(towerSubsystem, kickerSubsystem));
     stopJamButton.whenReleased(new StopTowerKickerCommandGroup(towerSubsystem, kickerSubsystem));
     // shootButton.whenPressed(new RunFlywheelCommand(flywheelSubsystem, 0.8));
-    
+
     resetSwerveButton.whenHeld(new ResetSwerveDriveCommand(driveSubsystem));
     // Endgame command binds
-    //toggleEndgame.toggleWhenActive(new EndgameCommandGroup(swerveDriveSubsystem, flywheelSubsystem, turretSubsystem));
+    // toggleEndgame.toggleWhenActive(new EndgameCommandGroup(swerveDriveSubsystem,
+    // flywheelSubsystem, turretSubsystem));
 
     // ---- BUTTONS AND TRIGGERS (MANUAL) ----\\
 
@@ -488,14 +502,13 @@ public class RobotContainer {
     JoystickButton reverseHopperButton = new JoystickButton(coDriverController, XB_B);
 
     JoystickButton stopHopperButton = new JoystickButton(coDriverController, XB_A);
-    
-    //JoystickButton toggleAngle = new JoystickButton(coDriverController, XB_Y);
+
+    // JoystickButton toggleAngle = new JoystickButton(coDriverController, XB_Y);
 
     Trigger manualFlywheelButton = new JoystickButton(driverController, XB_AXIS_RT).and(inManualModeTrigger);
-    
+
     // ZL Button
-    AxisTrigger manualFlywheelPistonButton = new AxisTrigger(driverController,
-    XB_AXIS_LT);// .and(inManualModeTrigger);
+    AxisTrigger manualFlywheelPistonButton = new AxisTrigger(driverController, XB_AXIS_LT);// .and(inManualModeTrigger);
 
     // --Command binds
 
@@ -515,9 +528,8 @@ public class RobotContainer {
         .whenInactive(new StopFlywheelCommand(flywheelSubsystem));
 
     // manual flywheel piston stuff
-    manualFlywheelPistonButton.whenActive(new
-    FullExtendFlywheelPistonCommand(flywheelPistonSubsystem)).whenInactive(new
-    FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    manualFlywheelPistonButton.whenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem))
+        .whenInactive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
 
     reverseHopperButton.whileActiveOnce(new SetHopperCommand(hopperSubsystem, Constants.HOPPER_REVERSE_SPEED, true));
     // manual
@@ -525,7 +537,6 @@ public class RobotContainer {
 
     startAccuracyChallengeButton.whileActiveContinuous(accuracyChallengeCommand);
   } // end of method configureDriverBindings()
-
 
   private void configureCodriverBindings() {
 
@@ -575,8 +586,8 @@ public class RobotContainer {
     CommandScheduler scheduler = CommandScheduler.getInstance();
 
     scheduler.unregisterSubsystem(limelightSubsystem, hopperSubsystem, turretSubsystem, flywheelSubsystem,
-        kickerSubsystem, towerSubsystem/*, ultrasonicSubsystem*/);
-    
+        kickerSubsystem, towerSubsystem/* , ultrasonicSubsystem */);
+
     if (inManualMode) {
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
     } else {
@@ -590,7 +601,8 @@ public class RobotContainer {
       scheduler.setDefaultCommand(flywheelSubsystem, defaultFlywheelCommand);
       scheduler.setDefaultCommand(limelightSubsystem,
           new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
-      //scheduler.setDefaultCommand(ultrasonicSubsystem, new UltrasonicPingCommand(ultrasonicSubsystem));
+      // scheduler.setDefaultCommand(ultrasonicSubsystem, new
+      // UltrasonicPingCommand(ultrasonicSubsystem));
     }
 
   }
@@ -608,8 +620,7 @@ public class RobotContainer {
                                                                         // coDriverController, XB_AXIS_LEFT_X));
     scheduler.setDefaultCommand(driveSubsystem, swerveDriveCommand);
     scheduler.setDefaultCommand(hopperSubsystem, defaultStopHopperCommand);
-    scheduler.setDefaultCommand(flywheelSubsystem,
-        new DefaultFlywheelCommand(flywheelSubsystem));
+    scheduler.setDefaultCommand(flywheelSubsystem, new DefaultFlywheelCommand(flywheelSubsystem));
     scheduler.setDefaultCommand(limelightSubsystem,
         new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
 
@@ -621,14 +632,34 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    //return new SaltAndPepperSkilletCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
-        //towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, turretSubsystem);
+    // return new SaltAndPepperSkilletCommand(driveSubsystem, intakePistonSubsystem,
+    // intakeMotorSubsystem, flywheelSubsystem,
+    // towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem,
+    // flywheelPistonSubsystem, turretSubsystem);
     // Run path following command, then stop at the end.
-    
-    //TODO remove when merge with conors branch
+
+    // TODO remove when merge with conors branch
     AutonConfig.initInstance(driveSubsystem);
-    
+    /*return new LeFishe(driveSubsystem,
+    intakePistonSubsystem,
+      intakeMotorSubsystem,
+        flywheelSubsystem,
+        towerSubsystem,
+          hopperSubsystem,
+          kickerSubsystem,
+            limelightSubsystem,
+            flywheelPistonSubsystem);*/
+            return new LeFisheTheFishening(driveSubsystem,
+            intakePistonSubsystem,
+              intakeMotorSubsystem,
+                flywheelSubsystem,
+                towerSubsystem,
+                  hopperSubsystem,
+                  kickerSubsystem,
+                    limelightSubsystem,
+                    flywheelPistonSubsystem);
     // Select the correct autonomous path with the galactic path enum we set
+    /*
     switch(GalacticPathUtil.getAutonomousPath(limelightSubsystem)) {
       case RED_PATH_A:
           return new GalacticSearch_A_RedCommand(driveSubsystem,
@@ -674,7 +705,7 @@ public class RobotContainer {
           System.out.println("No GalacticSearch path found!");
           throw new NullPointerException("No Path Selected");
     }
-    
+    */
     // return new GalacticSearch_B_BlueCommand(driveSubsystem,
     //                                             intakePistonSubsystem,
     //                                               intakeMotorSubsystem,
