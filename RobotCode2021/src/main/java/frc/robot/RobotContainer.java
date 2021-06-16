@@ -640,7 +640,7 @@ public class RobotContainer {
 
     // TODO remove when merge with conors branch
     AutonConfig.initInstance(driveSubsystem);
-    /*return new LeFishe(driveSubsystem,
+    return new LeFishe(driveSubsystem,
     intakePistonSubsystem,
       intakeMotorSubsystem,
         flywheelSubsystem,
@@ -648,16 +648,16 @@ public class RobotContainer {
           hopperSubsystem,
           kickerSubsystem,
             limelightSubsystem,
-            flywheelPistonSubsystem);*/
-            return new LeFisheTheFishening(driveSubsystem,
-            intakePistonSubsystem,
-              intakeMotorSubsystem,
-                flywheelSubsystem,
-                towerSubsystem,
-                  hopperSubsystem,
-                  kickerSubsystem,
-                    limelightSubsystem,
-                    flywheelPistonSubsystem);
+            flywheelPistonSubsystem);
+            // return new LeFisheTheFishening(driveSubsystem,
+            // intakePistonSubsystem,
+            //   intakeMotorSubsystem,
+            //     flywheelSubsystem,
+            //     towerSubsystem,
+            //       hopperSubsystem,
+            //       kickerSubsystem,
+            //         limelightSubsystem,
+            //         flywheelPistonSubsystem);
     // Select the correct autonomous path with the galactic path enum we set
     /*
     switch(GalacticPathUtil.getAutonomousPath(limelightSubsystem)) {

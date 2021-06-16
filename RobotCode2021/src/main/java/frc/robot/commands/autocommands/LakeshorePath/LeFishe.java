@@ -92,18 +92,57 @@ public class LeFishe extends SequentialCommandGroup {
       FlywheelPistonSubsystem fPistonSubsystem) {
 
     // -------- Trajectories -------- \\
+    //NOT FOLLOWING JSON
+    //HEADING IN TROJECTORY CHANGES ANGLE THAT DRAWS THE LINE THAT THE ROBOT FOLLOWS
+    //REVERSE KINDA FUNKY THINK MORE 
+
 
     // Generates a trajectory for a path to move towards furthest ball in trench run
     trajectory1 = TrajectoryGenerator.generateTrajectory(
             // Robot starts at X: 0 Y: 0 and a rotation of 0 
-             new Pose2d(3.092, -0.624, new Rotation2d(Math.toRadians(28))),
+             new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
              List.of( 
-                 new Translation2d(8.009 + xOffset, -0.692 + yOffset)
+                // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
              ),
-             new Pose2d(6.587 + xOffset, -2.097 - yOffset, new Rotation2d(Math.toRadians(-62))),
+             new Pose2d(inchesToMeters(190) + xOffset, 0 + yOffset, new Rotation2d(Math.toRadians(0))),
              // Pass config
-             AutonConfig.getInstance().getTrajectoryConfig()
+             AutonConfig.getInstance().getSlowConfig()
             );
+
+    trajectory2 = TrajectoryGenerator.generateTrajectory(
+            // Robot starts at X: 0 Y: 0 and a rotation of 0 
+             new Pose2d(inchesToMeters(0), 0, new Rotation2d(Math.toRadians(0))),
+             List.of( 
+                // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
+             ),
+             new Pose2d(inchesToMeters(-160) + xOffset, inchesToMeters(-80) + yOffset, new Rotation2d(Math.toRadians(0))),
+             // Pass config
+             AutonConfig.getInstance().getReverseConfig()
+            );
+
+    trajectory3 = TrajectoryGenerator.generateTrajectory(
+            // Robot starts at X: 0 Y: 0 and a rotation of 0 
+             new Pose2d(inchesToMeters(0), 0, new Rotation2d(Math.toRadians(-45))),
+             List.of( 
+                // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
+             ),
+             new Pose2d(inchesToMeters(20) + xOffset, inchesToMeters(-90) + yOffset, new Rotation2d(Math.toRadians(-45))),
+             // Pass config
+             AutonConfig.getInstance().getSlowConfig()
+            );
+
+    trajectory4 = TrajectoryGenerator.generateTrajectory(
+            // Robot starts at X: 0 Y: 0 and a rotation of 0 
+             new Pose2d(inchesToMeters(0), 0, new Rotation2d(Math.toRadians(135))),
+             List.of( 
+                // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
+             ),
+             new Pose2d(inchesToMeters(-40) + xOffset, inchesToMeters(40) + yOffset, new Rotation2d(Math.toRadians(135))),
+             // Pass config
+             AutonConfig.getInstance().getReverseConfig()
+            );
+
+    
     
 
 
@@ -132,6 +171,7 @@ double maxA = Math.PI;
 
 // This is our first atuo command this will run the drivetrain using the first trajectory we made
 
+// Rotation2d.fromDegrees changes the actual rotation of the robot!!!!!
 SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
     new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
@@ -142,7 +182,7 @@ SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSub
 
     SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(-60), dSubsystem::swerveDrive, dSubsystem);
 
     SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,

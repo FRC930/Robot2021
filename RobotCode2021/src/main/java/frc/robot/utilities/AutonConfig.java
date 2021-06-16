@@ -53,7 +53,7 @@ public class AutonConfig {
         reverseConfig = new TrajectoryConfig(2, 1)
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(dSubsystem.getSwerveKinematics())
-        .setEndVelocity(1)
+        .setEndVelocity(0)
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint)
         .setReversed(true);
