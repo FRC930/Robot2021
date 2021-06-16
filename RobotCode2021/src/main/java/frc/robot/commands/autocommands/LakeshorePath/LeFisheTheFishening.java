@@ -93,7 +93,11 @@ public class LeFisheTheFishening extends SequentialCommandGroup {
 
     // -------- Trajectories -------- \\
 
+    //ED LOOK HERE THIS IS IMPORTANT THE TRAJECTOR HEADING IS FOR THE LINE OF THE PATH AND THE DEGREES IN THE COMMAND IS ACTUAL ROTATION
     // Generates a trajectory for a path to move towards furthest ball in trench run
+    //MID POINT NEEDED FOR FIRST PATH TO AVOID PILLER :(
+    //USE INCHES TO METER METHOD TO BE CONSISTANT AND MAKE MORE SENSE TO US :)
+
     trajectory1 = TrajectoryGenerator.generateTrajectory(
             // Robot starts at X: 0 Y: 0 and a rotation of 0 
              new Pose2d(3.075, -4.119, new Rotation2d(Math.toRadians(28))),
@@ -104,6 +108,8 @@ public class LeFisheTheFishening extends SequentialCommandGroup {
              // Pass config
              AutonConfig.getInstance().getTrajectoryConfig()
             );
+
+            //INTAKE ALWAYS FACE POSITIVE DOWN FEILD
             trajectory2 = TrajectoryGenerator.generateTrajectory(
                 // Robot starts at X: 0 Y: 0 and a rotation of 0 
                  new Pose2d(5.627, -1.874, new Rotation2d(Math.toRadians(28))),
