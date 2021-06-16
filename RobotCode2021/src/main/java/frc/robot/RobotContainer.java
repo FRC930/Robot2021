@@ -376,8 +376,9 @@ public class RobotContainer {
     // hopperSubsystem,
     // kickerSubsystem);
 
-    // TODO: change default to LeFishe
-    shuffleboardUtility.setDefaultAutonOptions("Default Path", new LeFisheTheFishening(driveSubsystem,
+    shuffleboardUtility.setDefaultAutonOptions("Default (None)", null);
+
+    shuffleboardUtility.addAutonOptions("Primary", new LeFishe(driveSubsystem,
     intakePistonSubsystem,
       intakeMotorSubsystem,
         flywheelSubsystem,
@@ -387,7 +388,7 @@ public class RobotContainer {
             limelightSubsystem,
             flywheelPistonSubsystem));
 
-    shuffleboardUtility.addAutonOptions("Middle Path", new LeFisheTheFishening(driveSubsystem,
+    shuffleboardUtility.addAutonOptions("Secondary", new LeFisheTheFishening(driveSubsystem,
     intakePistonSubsystem,
       intakeMotorSubsystem,
         flywheelSubsystem,
@@ -396,7 +397,7 @@ public class RobotContainer {
           kickerSubsystem,
             limelightSubsystem,
             flywheelPistonSubsystem));
-    shuffleboardUtility.addAutonOptions("None", null);
+    
 
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team
