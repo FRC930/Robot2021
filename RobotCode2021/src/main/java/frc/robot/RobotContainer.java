@@ -376,12 +376,27 @@ public class RobotContainer {
     // hopperSubsystem,
     // kickerSubsystem);
 
-    // shuffleboardUtility.setDefaultAutonOptions("Farmers Breakfast",
-    // farmersBreakfastSkilletCommand);
+    // TODO: change default to LeFishe
+    shuffleboardUtility.setDefaultAutonOptions("Default Path", new LeFisheTheFishening(driveSubsystem,
+    intakePistonSubsystem,
+      intakeMotorSubsystem,
+        flywheelSubsystem,
+        towerSubsystem,
+          hopperSubsystem,
+          kickerSubsystem,
+            limelightSubsystem,
+            flywheelPistonSubsystem));
 
-    // shuffleboardUtility.addAutonOptions("Salt and Pepper",
-    // saltAndPepperSkilletCommand);
-    // shuffleboardUtility.addAutonOptions("None", null);
+    shuffleboardUtility.addAutonOptions("Middle Path", new LeFisheTheFishening(driveSubsystem,
+    intakePistonSubsystem,
+      intakeMotorSubsystem,
+        flywheelSubsystem,
+        towerSubsystem,
+          hopperSubsystem,
+          kickerSubsystem,
+            limelightSubsystem,
+            flywheelPistonSubsystem));
+    shuffleboardUtility.addAutonOptions("None", null);
 
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team
@@ -649,6 +664,7 @@ public class RobotContainer {
           kickerSubsystem,
             limelightSubsystem,
             flywheelPistonSubsystem);*/
+            /*
             return new LeFisheTheFishening(driveSubsystem,
             intakePistonSubsystem,
               intakeMotorSubsystem,
@@ -658,6 +674,8 @@ public class RobotContainer {
                   kickerSubsystem,
                     limelightSubsystem,
                     flywheelPistonSubsystem);
+                    */
+    return shuffleboardUtility.getSelectedAutonPath();
     // Select the correct autonomous path with the galactic path enum we set
     /*
     switch(GalacticPathUtil.getAutonomousPath(limelightSubsystem)) {

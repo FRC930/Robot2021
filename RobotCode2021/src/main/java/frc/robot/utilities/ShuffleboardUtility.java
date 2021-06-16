@@ -140,6 +140,9 @@ public class ShuffleboardUtility {
         encodAccEntry = driverStationTab.add("Encoder Accuracy", encodAcc).getEntry();
         dtSecondsEntry = driverStationTab.add("DT Seconds", dtSeconds).getEntry();
         sendableChooser = new SendableChooser<Command>();
+
+        driverStationTab.add("Auton Path Selector", sendableChooser);
+        
     }
 
     private static ShuffleboardUtility instance = null;
