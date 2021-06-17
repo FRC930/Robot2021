@@ -98,27 +98,58 @@ public class LeFisheTheFishening extends SequentialCommandGroup {
     //MID POINT NEEDED FOR FIRST PATH TO AVOID PILLER :(
     //USE INCHES TO METER METHOD TO BE CONSISTANT AND MAKE MORE SENSE TO US :)
 
-    trajectory1 = TrajectoryGenerator.generateTrajectory(
+    /*trajectory1 = TrajectoryGenerator.generateTrajectory(
             // Robot starts at X: 0 Y: 0 and a rotation of 0 
              new Pose2d(3.075, -4.119, new Rotation2d(Math.toRadians(28))),
              List.of( 
                  new Translation2d(6.93 + xOffset, -3.074 + yOffset)
-             ),
+                    ),
              new Pose2d(5.627 + xOffset, -1.874 - yOffset, new Rotation2d(Math.toRadians(-62))),
              // Pass config
              AutonConfig.getInstance().getTrajectoryConfig()
-            );
+            );*/
+            trajectory1 = TrajectoryGenerator.generateTrajectory(
+                // Robot starts at X: 0 Y: 0 and a rotation of 0 
+                 new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
+                 List.of( 
+                     //new Translation2d(inchesToMeters(95) + xOffset, 0 + yOffset)
+                 ),
+                 new Pose2d(inchesToMeters(95) + xOffset, inchesToMeters(12) + yOffset, new Rotation2d(Math.toRadians(0))),
+                 // Pass config
+                 AutonConfig.getInstance().getSlowConfig()
+                );
 
             //INTAKE ALWAYS FACE POSITIVE DOWN FEILD
+            
             trajectory2 = TrajectoryGenerator.generateTrajectory(
                 // Robot starts at X: 0 Y: 0 and a rotation of 0 
-                 new Pose2d(5.627, -1.874, new Rotation2d(Math.toRadians(28))),
+                 new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
                  List.of( 
-                     new Translation2d(3.983 + xOffset, -2.628 + yOffset)
+                   //  new Translation2d(3.983 + xOffset, -2.628 + yOffset)
                  ),
-                 new Pose2d(6.141 + xOffset, -4.376 - yOffset, new Rotation2d(Math.toRadians(-62))),
+                 new Pose2d(inchesToMeters(24) + xOffset, inchesToMeters(48) + yOffset, new Rotation2d(Math.toRadians(0))),
                  // Pass config
-                 AutonConfig.getInstance().getTrajectoryConfig()
+                 AutonConfig.getInstance().getSlowConfig()
+                );
+            trajectory3 = TrajectoryGenerator.generateTrajectory(
+                // Robot starts at X: 0 Y: 0 and a rotation of 0 
+                 new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
+                 List.of( 
+                   //  new Translation2d(3.983 + xOffset, -2.628 + yOffset)
+                  ),
+                 new Pose2d(inchesToMeters(-76) - xOffset, inchesToMeters(38) + yOffset, new Rotation2d(Math.toRadians(0))),
+                 // Pass config
+                 AutonConfig.getInstance().getSlowConfig()
+                );
+            trajectory4 = TrajectoryGenerator.generateTrajectory(
+                // Robot starts at X: 0 Y: 0 and a rotation of 0 
+                 new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
+                 List.of( 
+                   //  new Translation2d(3.983 + xOffset, -2.628 + yOffset)
+                 ),
+                 new Pose2d(inchesToMeters(60) + xOffset, inchesToMeters(-76) - yOffset, new Rotation2d(Math.toRadians(0))),
+                 // Pass config
+                 AutonConfig.getInstance().getSlowConfig()
                 );
     
 
@@ -154,16 +185,17 @@ SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSub
 
     SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
-/*
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(35), dSubsystem::swerveDrive, dSubsystem);
+
     SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
     new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
 
     SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
-*/
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(-45), dSubsystem::swerveDrive, dSubsystem);
+/*
+    */
     RunIntakeMotorsCommand rollerCommand = new RunIntakeMotorsCommand(iMotorSubsystem);
 
 
@@ -182,7 +214,7 @@ Path Description:
     //dSubsystem.resetPose(trajectory1.getInitialPose());
     System.out.println("*******Adjusted First Robot Pose: " + dSubsystem.getPose() + "********");
     System.out.println("*******Final Path Pose: "+ finalPose + " ********");
-    addCommands(rollerCommand, command1, command2/*, command3, command4*/);
+    addCommands(rollerCommand, command1, command2, command3, command4/**/);
     //returnIntakeCommand);
 }
 
