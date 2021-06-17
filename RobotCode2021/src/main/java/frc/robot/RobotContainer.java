@@ -6,6 +6,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.autocommands.LakeshorePath.LeFishe;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheAuChocolat;
 // --Our Commands
 import frc.robot.commands.autocommands.paths.*;
 import frc.robot.commands.drivecommands.*;
@@ -397,7 +398,15 @@ public class RobotContainer {
           kickerSubsystem,
             limelightSubsystem,
             flywheelPistonSubsystem));
-    
+    shuffleboardUtility.addAutonOptions("AltFishe", new LeFisheAuChocolat(driveSubsystem,
+    intakePistonSubsystem,
+      intakeMotorSubsystem,
+        flywheelSubsystem,
+        towerSubsystem,
+          hopperSubsystem,
+          kickerSubsystem,
+            limelightSubsystem,
+            flywheelPistonSubsystem));
 
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team
