@@ -259,6 +259,10 @@ public class RobotContainer {
   // --Utilities
   private final ShuffleboardUtility shuffleboardUtility;
 
+  // --Endgame
+  private final EndgameSubsystem endgameSubsystem;
+  private final EndgameCommand endgameCommand;
+
   // -------- CONSTRUCTOR ---------\\
 
   public RobotContainer() {
@@ -363,6 +367,11 @@ public class RobotContainer {
     // Ultrasonic
     // ultrasonicPingCommand = new UltrasonicPingCommand(ultrasonicSubsystem);
 
+    // endgame
+    // TODO: get motorID and encoderID
+    endgameSubsystem = new EndgameSubsystem(0, 0);
+    endgameCommand = new EndgameCommand(endgameSubsystem, 0);
+
     // TODO: Edit this to work with Shuffleboard utility (ADD IT BACK TOO)
     // saltAndPepperSkilletCommand = new
     // SaltAndPepperSkilletCommand(swerveDriveSubsystem, intakePistonSubsystem,
@@ -389,7 +398,8 @@ public class RobotContainer {
           hopperSubsystem,
           kickerSubsystem,
             limelightSubsystem,
-            flywheelPistonSubsystem));
+            flywheelPistonSubsystem,
+            turretSubsystem));
 
     shuffleboardUtility.addAutonOptions("Secondary", new LeFisheTheFishening(driveSubsystem,
     intakePistonSubsystem,
@@ -399,8 +409,10 @@ public class RobotContainer {
           hopperSubsystem,
           kickerSubsystem,
             limelightSubsystem,
-            flywheelPistonSubsystem));
-    shuffleboardUtility.addAutonOptions("AltFishe", new LeFishe(driveSubsystem,
+            flywheelPistonSubsystem,
+            turretSubsystem));
+            
+    shuffleboardUtility.addAutonOptions("AltFishe", new LeFisheAuChocolat(driveSubsystem,
     intakePistonSubsystem,
       intakeMotorSubsystem,
         flywheelSubsystem,
@@ -408,7 +420,8 @@ public class RobotContainer {
           hopperSubsystem,
           kickerSubsystem,
             limelightSubsystem,
-            flywheelPistonSubsystem));
+            flywheelPistonSubsystem,
+            turretSubsystem));
 
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team

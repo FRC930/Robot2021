@@ -24,6 +24,7 @@ import frc.robot.subsystems.FlywheelPistonSubsystem;
 
 import frc.robot.commands.intakecommands.*;
 import frc.robot.commands.intakecommands.intakemotorcommands.RunIntakeMotorsCommand;
+import frc.robot.commands.intakecommands.intakepistoncommands.ExtendIntakePistonCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
@@ -89,7 +90,7 @@ public class LeFishe extends SequentialCommandGroup {
   public LeFishe(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
       IntakeMotorSubsystem iMotorSubsystem, FlywheelSubsystem fSubsystem, TowerSubsystem tSubsystem,
       HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
-      FlywheelPistonSubsystem fPistonSubsystem) {
+      FlywheelPistonSubsystem fPistonSubsystem, TurretSubsystem turSubsystem) {
 
     // -------- Trajectories -------- \\
     //NOT FOLLOWING JSON
@@ -206,7 +207,23 @@ Path Description:
     //dSubsystem.resetPose(trajectory1.getInitialPose());
     System.out.println("*******Adjusted First Robot Pose: " + dSubsystem.getPose() + "********");
     System.out.println("*******Final Path Pose: "+ finalPose + " ********");
-    addCommands(rollerCommand, command1, command2, command3, command4);
+    //ADD PISTON RETRACT COMMAND AT END AND FLYWHEEL IS AT 50%! :)
+    //TWEAK POINTS AND SPEED
+    addCommands(rollerCommand,
+    new ExtendIntakePistonCommand(iPistonSubsystem), 
+    command1, 
+    command2,
+    new RunFlywheelAutoCommand(fSubsystem, 0.5),
+    new AutoTurretTurnCommand(turSubsystem),
+    new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
+    new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+    new StopTowerKickerCommandGroup(tSubsystem, kSubsystem), 
+    command3, 
+    command4,
+    new AutoTurretTurnCommand(turSubsystem),
+    new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
+    new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+    new StopTowerKickerCommandGroup(tSubsystem, kSubsystem));
     //returnIntakeCommand);
 }
 
