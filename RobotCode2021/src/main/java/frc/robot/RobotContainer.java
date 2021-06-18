@@ -6,6 +6,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.autocommands.LakeshorePath.LeFishe;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheAuChocolat;
 // --Our Commands
 import frc.robot.commands.autocommands.paths.*;
 import frc.robot.commands.drivecommands.*;
@@ -395,7 +396,8 @@ public class RobotContainer {
           hopperSubsystem,
           kickerSubsystem,
             limelightSubsystem,
-            flywheelPistonSubsystem));
+            flywheelPistonSubsystem,
+            turretSubsystem));
 
     shuffleboardUtility.addAutonOptions("Secondary", new LeFisheTheFishening(driveSubsystem,
     intakePistonSubsystem,
@@ -405,8 +407,19 @@ public class RobotContainer {
           hopperSubsystem,
           kickerSubsystem,
             limelightSubsystem,
-            flywheelPistonSubsystem));
-    
+            flywheelPistonSubsystem,
+            turretSubsystem));
+            
+    shuffleboardUtility.addAutonOptions("AltFishe", new LeFisheAuChocolat(driveSubsystem,
+    intakePistonSubsystem,
+      intakeMotorSubsystem,
+        flywheelSubsystem,
+        towerSubsystem,
+          hopperSubsystem,
+          kickerSubsystem,
+            limelightSubsystem,
+            flywheelPistonSubsystem,
+            turretSubsystem));
 
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team
@@ -469,9 +482,6 @@ public class RobotContainer {
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
 
-    //
-    JoystickButton speedModifierButton = new JoystickButton(driverController, XB_LB);
-
     // --Command binds
     JoystickButton startAccuracyChallengeButton = new JoystickButton(coDriverController, XB_START);
 
@@ -494,9 +504,6 @@ public class RobotContainer {
 
     // Drive command binds
     swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
-    speedModifierButton.whenActive(new SpeedModifierCommand(driveSubsystem, 0.5)) // allows the switching of
-                                                                                  // speedModifier between a and b
-        .whenInactive(new SpeedModifierCommand(driveSubsystem, 0.8));
 
     // Shooter command binds
     shootButton
