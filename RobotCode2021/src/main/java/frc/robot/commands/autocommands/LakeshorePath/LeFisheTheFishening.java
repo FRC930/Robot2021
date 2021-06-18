@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakePistonSubsystem;
 import frc.robot.subsystems.IntakeMotorSubsystem;
+import frc.robot.commands.intakecommands.intakepistoncommands.ExtendIntakePistonCommand;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.TowerSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
@@ -89,7 +90,7 @@ public class LeFisheTheFishening extends SequentialCommandGroup {
   public LeFisheTheFishening(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
       IntakeMotorSubsystem iMotorSubsystem, FlywheelSubsystem fSubsystem, TowerSubsystem tSubsystem,
       HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
-      FlywheelPistonSubsystem fPistonSubsystem) {
+      FlywheelPistonSubsystem fPistonSubsystem,TurretSubsystem turSubsystem) {
 
     // -------- Trajectories -------- \\
 
@@ -214,7 +215,20 @@ Path Description:
     //dSubsystem.resetPose(trajectory1.getInitialPose());
     System.out.println("*******Adjusted First Robot Pose: " + dSubsystem.getPose() + "********");
     System.out.println("*******Final Path Pose: "+ finalPose + " ********");
-    addCommands(rollerCommand, command1, command2, command3, command4/**/);
+    //ADD PISTON RETRACT COMMAND AT END AND FLYWHEEL IS AT 50%! :)
+    //TWEAK POINTS AND SPEED
+    addCommands(rollerCommand, 
+    new ExtendIntakePistonCommand(iPistonSubsystem),
+    command1, 
+    command2,
+    command3,
+    new StopDriveCommand(dSubsystem),
+    new RunFlywheelAutoCommand(fSubsystem, 0.5),
+    new AutoTurretTurnCommand(turSubsystem),
+    new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
+    new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+    new StopTowerKickerCommandGroup(tSubsystem, kSubsystem),  
+    command4/**/);
     //returnIntakeCommand);
 }
 

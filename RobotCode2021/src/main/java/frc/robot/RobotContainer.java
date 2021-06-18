@@ -387,7 +387,8 @@ public class RobotContainer {
           hopperSubsystem,
           kickerSubsystem,
             limelightSubsystem,
-            flywheelPistonSubsystem));
+            flywheelPistonSubsystem,
+            turretSubsystem));
 
     shuffleboardUtility.addAutonOptions("Secondary", new LeFisheTheFishening(driveSubsystem,
     intakePistonSubsystem,
@@ -397,7 +398,8 @@ public class RobotContainer {
           hopperSubsystem,
           kickerSubsystem,
             limelightSubsystem,
-            flywheelPistonSubsystem));
+            flywheelPistonSubsystem,
+            turretSubsystem));
     shuffleboardUtility.addAutonOptions("AltFishe", new LeFisheAuChocolat(driveSubsystem,
     intakePistonSubsystem,
       intakeMotorSubsystem,
@@ -406,7 +408,8 @@ public class RobotContainer {
           hopperSubsystem,
           kickerSubsystem,
             limelightSubsystem,
-            flywheelPistonSubsystem));
+            flywheelPistonSubsystem,
+            turretSubsystem));
 
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team
