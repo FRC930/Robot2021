@@ -400,6 +400,7 @@ public class RobotContainer {
             limelightSubsystem,
             flywheelPistonSubsystem,
             turretSubsystem));
+            
     shuffleboardUtility.addAutonOptions("AltFishe", new LeFisheAuChocolat(driveSubsystem,
     intakePistonSubsystem,
       intakeMotorSubsystem,
@@ -472,9 +473,6 @@ public class RobotContainer {
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
 
-    //
-    JoystickButton speedModifierButton = new JoystickButton(driverController, XB_LB);
-
     // --Command binds
     JoystickButton startAccuracyChallengeButton = new JoystickButton(coDriverController, XB_START);
 
@@ -497,9 +495,6 @@ public class RobotContainer {
 
     // Drive command binds
     swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
-    speedModifierButton.whenActive(new SpeedModifierCommand(driveSubsystem, 0.5)) // allows the switching of
-                                                                                  // speedModifier between a and b
-        .whenInactive(new SpeedModifierCommand(driveSubsystem, 0.8));
 
     // Shooter command binds
     shootButton
