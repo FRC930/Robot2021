@@ -377,8 +377,10 @@ public class RobotContainer {
     // hopperSubsystem,
     // kickerSubsystem);
 
-    shuffleboardUtility.setDefaultAutonOptions("Default (None)", null);
+    shuffleboardUtility.setDefaultMainRobotOptions("Default (930)", true);
+    shuffleboardUtility.addMainRobotOptions("9930", false);
 
+    shuffleboardUtility.setDefaultAutonOptions("Default (None)", null);
     shuffleboardUtility.addAutonOptions("Primary", new LeFishe(driveSubsystem,
     intakePistonSubsystem,
       intakeMotorSubsystem,

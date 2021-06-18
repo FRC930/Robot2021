@@ -26,6 +26,7 @@ public class ShuffleboardUtility {
     //-------- DECLARATIONS --------\\
     
     private SendableChooser<Command> sendableChooser;
+    private SendableChooser<Boolean> sendableChooserMainRobot;
     // private List<ShuffleboardComponent<?>> pidController;
     // private double kP;
     // private double kI;
@@ -140,8 +141,10 @@ public class ShuffleboardUtility {
         encodAccEntry = driverStationTab.add("Encoder Accuracy", encodAcc).getEntry();
         dtSecondsEntry = driverStationTab.add("DT Seconds", dtSeconds).getEntry();
         sendableChooser = new SendableChooser<Command>();
+        sendableChooserMainRobot = new SendableChooser<Boolean>();
 
         driverStationTab.add("Auton Path Selector", sendableChooser);
+       driverStationTab.add("Robot Selector", sendableChooserMainRobot);
         
     }
 
@@ -267,8 +270,18 @@ public class ShuffleboardUtility {
         return shooterSetEntry.getDouble(shootSpeed);
     }
 
-    public void addAutonOptions(String pathName,CommandBase autoCommand){
-        sendableChooser.addOption(pathName,autoCommand);
+    public void addMainRobotOptions(String pathName,Boolean mainRobot){
+        sendableChooserMainRobot.addOption(pathName,mainRobot);
+    }
+
+    public void setDefaultMainRobotOptions(String pathName,Boolean mainRobot){
+        sendableChooserMainRobot.setDefaultOption(pathName,mainRobot);
+    }
+    public Boolean getSelectedMainRobot(){
+        return sendableChooserMainRobot.getSelected();
+    }
+    public void addAutonOptions(String pathName,CommandBase mainRobot){
+        sendableChooser.addOption(pathName,mainRobot);
     }
 
     public void setDefaultAutonOptions(String pathName,CommandBase autoCommand){

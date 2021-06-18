@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.utilities.ShuffleboardUtility;
 
 
 /**
@@ -47,8 +48,14 @@ public class Robot extends TimedRobot {
 
         
 
-        commandScheduler = CommandScheduler.getInstance();  
-        limelightCamera = new HttpCamera("limelight", "http://10.9.30.11:5801/stream.mjpg");
+        commandScheduler = CommandScheduler.getInstance();
+        if(ShuffleboardUtility.getInstance().getSelectedMainRobot()){
+            limelightCamera = new HttpCamera("limelight", "http://10.9.30.11:5801/stream.mjpg");
+        }  
+        else{
+            limelightCamera = new HttpCamera("limelight", "http://10.99.30.11:5801/stream.mjpg");
+        }
+        
         
         ShuffleboardTab driveTab = Shuffleboard.getTab("Driver Station");
         driveTab.add("LL", limelightCamera);
