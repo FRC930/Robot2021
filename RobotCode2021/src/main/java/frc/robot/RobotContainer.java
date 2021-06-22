@@ -367,8 +367,8 @@ public class RobotContainer {
     // ultrasonicPingCommand = new UltrasonicPingCommand(ultrasonicSubsystem);
 
     // endgame
-    // TODO: get motorID and encoderID
-    endgameSubsystem = new EndgameSubsystem(0, 0);
+    // TODO: get motorID
+    endgameSubsystem = new EndgameSubsystem(20);
 
     // TODO: Edit this to work with Shuffleboard utility (ADD IT BACK TOO)
     // saltAndPepperSkilletCommand = new
