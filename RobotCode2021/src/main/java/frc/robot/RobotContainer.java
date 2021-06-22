@@ -261,7 +261,6 @@ public class RobotContainer {
 
   // --Endgame
   private final EndgameSubsystem endgameSubsystem;
-  private final EndgameCommand endgameCommand;
 
   // -------- CONSTRUCTOR ---------\\
 
@@ -370,7 +369,6 @@ public class RobotContainer {
     // endgame
     // TODO: get motorID and encoderID
     endgameSubsystem = new EndgameSubsystem(0, 0);
-    endgameCommand = new EndgameCommand(endgameSubsystem, 0);
 
     // TODO: Edit this to work with Shuffleboard utility (ADD IT BACK TOO)
     // saltAndPepperSkilletCommand = new
@@ -476,11 +474,10 @@ public class RobotContainer {
     // JoystickButton rotationalButton = new JoystickButton(driverController, GC_A);
     // B Button
     // JoystickButton positionalButton = new JoystickButton(driverController, GC_B);
-    // L Button
-    // JoystickButton toggleEndgame = new JoystickButton(driverController, XB_LB);
     // ZR Button
     JoystickButton shootButton = new JoystickButton(driverController, XB_RB);
     JoystickButton resetSwerveButton = new JoystickButton(driverController, XB_Y);
+    JoystickButton endgameButton = new JoystickButton(driverController, XB_BACK);
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
 
@@ -506,6 +503,7 @@ public class RobotContainer {
 
     // Drive command binds
     swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
+    endgameButton.whenHeld(new EndgameRunCommand(endgameSubsystem)).whenReleased(new EndgameCommandFlipState(endgameSubsystem));
 
     // Shooter command binds
     shootButton
