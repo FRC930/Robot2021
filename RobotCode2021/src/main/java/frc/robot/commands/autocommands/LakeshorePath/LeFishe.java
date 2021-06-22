@@ -105,7 +105,7 @@ public class LeFishe extends SequentialCommandGroup {
              List.of( 
                 // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
              ),
-             new Pose2d(inchesToMeters(190) + xOffset, 0 + yOffset, new Rotation2d(Math.toRadians(0))),
+             new Pose2d(inchesToMeters(180) + xOffset, 0 + yOffset, new Rotation2d(Math.toRadians(0))),
              // Pass config
              AutonConfig.getInstance().getSlowConfig()
             );
@@ -211,19 +211,20 @@ Path Description:
     //TWEAK POINTS AND SPEED
     addCommands(rollerCommand,
     new ExtendIntakePistonCommand(iPistonSubsystem), 
-    command1, 
-    command2,
-    new RunFlywheelAutoCommand(fSubsystem, 0.5),
+    command1,
+     command2,
+     new RunFlywheelAutoCommand(fSubsystem, 0.5),
     new AutoTurretTurnCommand(turSubsystem),
-    new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
-    new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
-    new StopTowerKickerCommandGroup(tSubsystem, kSubsystem), 
-    command3, 
-    command4,
-    new AutoTurretTurnCommand(turSubsystem),
-    new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
-    new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
-    new StopTowerKickerCommandGroup(tSubsystem, kSubsystem));
+     new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
+     new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+     new StopTowerKickerCommandGroup(tSubsystem, kSubsystem), 
+     command3
+//     command4,
+//     new AutoTurretTurnCommand(turSubsystem),
+//     new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
+//     new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+//     new StopTowerKickerCommandGroup(tSubsystem, kSubsystem)
+    );
     //returnIntakeCommand);
 }
 

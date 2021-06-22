@@ -260,8 +260,8 @@ public class RobotContainer {
   private final ShuffleboardUtility shuffleboardUtility;
 
   // --Endgame
-  private final EndgameSubsystem endgameSubsystem;
-  private final EndgameCommand endgameCommand;
+  //private final EndgameSubsystem endgameSubsystem;
+  //private final EndgameCommand endgameCommand;
 
   // -------- CONSTRUCTOR ---------\\
 
@@ -369,8 +369,8 @@ public class RobotContainer {
 
     // endgame
     // TODO: get motorID and encoderID
-    endgameSubsystem = new EndgameSubsystem(0, 0);
-    endgameCommand = new EndgameCommand(endgameSubsystem, 0);
+    //endgameSubsystem = new EndgameSubsystem(0, 0);
+    //endgameCommand = new EndgameCommand(endgameSubsystem, 0);
 
     // TODO: Edit this to work with Shuffleboard utility (ADD IT BACK TOO)
     // saltAndPepperSkilletCommand = new
