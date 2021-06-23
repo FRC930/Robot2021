@@ -26,6 +26,7 @@ import frc.robot.commands.turretcommads.*;
 //import frc.robot.commands.ultrasoniccommands.UltrasonicPingCommand;
 import frc.robot.commands.endgamecommands.*;
 import frc.robot.commands.hoppercommands.DefaultHopperCommand;
+import frc.robot.commands.hoppercommands.DefaultHopperCommandGroup;
 import frc.robot.commands.hoppercommands.DefaultStopHopperCommand;
 import frc.robot.commands.hoppercommands.SetHopperCommand;
 import frc.robot.commands.hoppercommands.StopHopperStateCommand;
@@ -220,7 +221,7 @@ public class RobotContainer {
 
   // --Hopper commands
   // private final StopHopperCommand stopHopperCommand;
-  private final DefaultHopperCommand defaultHopperCommand;
+  private final DefaultHopperCommandGroup defaultHopperCommand;
   private final StopHopperStateCommand stopHopperStateCommand;
   private final DefaultStopHopperCommand defaultStopHopperCommand;
 
@@ -348,7 +349,7 @@ public class RobotContainer {
     // hopper
     defaultStopHopperCommand = new DefaultStopHopperCommand(hopperSubsystem);
     stopHopperStateCommand = new StopHopperStateCommand();
-    defaultHopperCommand = new DefaultHopperCommand(hopperSubsystem, stopHopperStateCommand);
+    defaultHopperCommand = new DefaultHopperCommandGroup(hopperSubsystem);
 
     // leds
     // TODO: Add LED commands here
