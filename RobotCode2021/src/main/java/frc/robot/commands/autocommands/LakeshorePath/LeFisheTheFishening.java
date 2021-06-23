@@ -223,7 +223,7 @@ Path Description:
     command2,
     command3,
     new StopDriveCommand(dSubsystem),
-    new RunFlywheelAutoCommand(fSubsystem, 0.5),
+    //new RunFlywheelAutoCommand(fSubsystem, 0.5),
     new AutoTurretTurnCommand(turSubsystem),
     new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
     new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),

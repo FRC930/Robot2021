@@ -127,7 +127,7 @@ public class LeFishe extends SequentialCommandGroup {
              List.of( 
                 // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
              ),
-             new Pose2d(inchesToMeters(20) + xOffset, inchesToMeters(-90) + yOffset, new Rotation2d(Math.toRadians(-45))),
+             new Pose2d(inchesToMeters(40) + xOffset, inchesToMeters(-95) + yOffset, new Rotation2d(Math.toRadians(-45))),
              // Pass config
              AutonConfig.getInstance().getSlowConfig()
             );
@@ -138,7 +138,7 @@ public class LeFishe extends SequentialCommandGroup {
              List.of( 
                 // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
              ),
-             new Pose2d(inchesToMeters(-40) + xOffset, inchesToMeters(40) + yOffset, new Rotation2d(Math.toRadians(135))),
+             new Pose2d(inchesToMeters(-40) - xOffset, inchesToMeters(95) + yOffset, new Rotation2d(Math.toRadians(135))),
              // Pass config
              AutonConfig.getInstance().getReverseConfig()
             );
@@ -213,17 +213,17 @@ Path Description:
     new ExtendIntakePistonCommand(iPistonSubsystem), 
     command1,
      command2,
-     new RunFlywheelAutoCommand(fSubsystem, 0.5),
+    // new RunFlywheelAutoCommand(fSubsystem, 0.8),
     new AutoTurretTurnCommand(turSubsystem),
      new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
      new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
      new StopTowerKickerCommandGroup(tSubsystem, kSubsystem), 
-     command3
-//     command4,
-//     new AutoTurretTurnCommand(turSubsystem),
-//     new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
-//     new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
-//     new StopTowerKickerCommandGroup(tSubsystem, kSubsystem)
+     command3,
+     command4,
+     new AutoTurretTurnCommand(turSubsystem),
+     new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
+     new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+     new StopTowerKickerCommandGroup(tSubsystem, kSubsystem)
     );
     //returnIntakeCommand);
 }
