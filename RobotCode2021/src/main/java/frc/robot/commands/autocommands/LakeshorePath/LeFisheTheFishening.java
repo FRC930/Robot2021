@@ -110,11 +110,11 @@ public class LeFisheTheFishening extends SequentialCommandGroup {
             );*/
             trajectory1 = TrajectoryGenerator.generateTrajectory(
                 // Robot starts at X: 0 Y: 0 and a rotation of 0 
-                 new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
+                 new Pose2d(0, 0, new Rotation2d(Math.toRadians(35))),
                  List.of( 
                      //new Translation2d(inchesToMeters(95) + xOffset, 0 + yOffset)
                  ),
-                 new Pose2d(inchesToMeters(95) + xOffset, inchesToMeters(12) + yOffset, new Rotation2d(Math.toRadians(0))),
+                 new Pose2d(inchesToMeters(140) + xOffset, inchesToMeters(65) + yOffset, new Rotation2d(Math.toRadians(35))),
                  // Pass config
                  AutonConfig.getInstance().getSlowConfig()
                 );
@@ -123,11 +123,11 @@ public class LeFisheTheFishening extends SequentialCommandGroup {
             
             trajectory2 = TrajectoryGenerator.generateTrajectory(
                 // Robot starts at X: 0 Y: 0 and a rotation of 0 
-                 new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
+                 new Pose2d(0, 0, new Rotation2d(Math.toRadians(35))),
                  List.of( 
-                   //  new Translation2d(3.983 + xOffset, -2.628 + yOffset)
+                   new Translation2d(inchesToMeters(30) + xOffset, inchesToMeters(60) + yOffset)
                  ),
-                 new Pose2d(inchesToMeters(24) + xOffset, inchesToMeters(48) + yOffset, new Rotation2d(Math.toRadians(0))),
+                 new Pose2d(inchesToMeters(-5) + xOffset, inchesToMeters(120) + yOffset, new Rotation2d(Math.toRadians(145))),
                  // Pass config
                  AutonConfig.getInstance().getSlowConfig()
                 );
@@ -181,11 +181,11 @@ double maxA = Math.PI;
 
 SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(35), dSubsystem::swerveDrive, dSubsystem);
 
     SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(35), dSubsystem::swerveDrive, dSubsystem);
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(-32.5), dSubsystem::swerveDrive, dSubsystem);
 
     SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
@@ -218,16 +218,17 @@ Path Description:
     //TWEAK POINTS AND SPEED
     addCommands(rollerCommand, 
     new ExtendIntakePistonCommand(iPistonSubsystem),
-    command1, 
-    command2,
-    command3,
-    new StopDriveCommand(dSubsystem),
-    //new RunFlywheelAutoCommand(fSubsystem, 0.5),
-    new AutoTurretTurnCommand(turSubsystem),
-    new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
-    new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
-    new StopTowerKickerCommandGroup(tSubsystem, kSubsystem),  
-    command4/**/);
+    command1,
+    command2
+    // command3,
+    // new StopDriveCommand(dSubsystem),
+    // //new RunFlywheelAutoCommand(fSubsystem, 0.5),
+    // new AutoTurretTurnCommand(turSubsystem),
+    // new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
+    // new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+    // new StopTowerKickerCommandGroup(tSubsystem, kSubsystem),  
+    // command4/**/
+    );
     //returnIntakeCommand);
 }
 
