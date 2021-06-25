@@ -73,9 +73,9 @@ import java.util.logging.*;
 // -------- PATH DESCRIPTION -------- \\
 // Alliance Side - Initial 3 & Trench 3 & Rendezvous 2
 
-public class LeFisheAuChocolat extends SequentialCommandGroup {
+public class LeFisheTheBackening extends SequentialCommandGroup {
 
-    private static final Logger logger = Logger.getLogger(LeFishe.class.getName());
+    private static final Logger logger = Logger.getLogger(LeFisheTheBackening.class.getName());
     private Trajectory trajectory1;
     private    Trajectory trajectory2;
     private    Trajectory trajectory3;
@@ -86,72 +86,41 @@ public class LeFisheAuChocolat extends SequentialCommandGroup {
    * Path Description: ----------------- Shoot 3 from initiation line move through
    * trench to grab 3 balls Shoot 3 from trench position
    */
-  public LeFisheAuChocolat(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
+  public LeFisheTheBackening(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
       IntakeMotorSubsystem iMotorSubsystem, FlywheelSubsystem fSubsystem, TowerSubsystem tSubsystem,
       HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
       FlywheelPistonSubsystem fPistonSubsystem, TurretSubsystem turSubsystem) {
 
     // -------- Trajectories -------- \\
+    //NOT FOLLOWING JSON
+    //HEADING IN TROJECTORY CHANGES ANGLE THAT DRAWS THE LINE THAT THE ROBOT FOLLOWS
+    //REVERSE KINDA FUNKY THINK MORE 
 
-    //ED LOOK HERE THIS IS IMPORTANT THE TRAJECTOR HEADING IS FOR THE LINE OF THE PATH AND THE DEGREES IN THE COMMAND IS ACTUAL ROTATION
+
     // Generates a trajectory for a path to move towards furthest ball in trench run
-    //MID POINT NEEDED FOR FIRST PATH TO AVOID PILLER :(
-    //USE INCHES TO METER METHOD TO BE CONSISTANT AND MAKE MORE SENSE TO US :)
-
-    /*trajectory1 = TrajectoryGenerator.generateTrajectory(
+    trajectory1 = TrajectoryGenerator.generateTrajectory(
             // Robot starts at X: 0 Y: 0 and a rotation of 0 
-             new Pose2d(3.075, -4.119, new Rotation2d(Math.toRadians(28))),
+             new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
              List.of( 
-                 new Translation2d(6.93 + xOffset, -3.074 + yOffset)
-                    ),
-             new Pose2d(5.627 + xOffset, -1.874 - yOffset, new Rotation2d(Math.toRadians(-62))),
+                // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
+             ),
+             new Pose2d(inchesToMeters(180) + xOffset, 0 + yOffset, new Rotation2d(Math.toRadians(0))),
              // Pass config
-             AutonConfig.getInstance().getTrajectoryConfig()
-            );*/
-            trajectory1 = TrajectoryGenerator.generateTrajectory(
-                // Robot starts at X: 0 Y: 0 and a rotation of 0 
-                 new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
-                 List.of( 
-                     new Translation2d(inchesToMeters(75) + xOffset, 0 + yOffset),
-                     new Translation2d(inchesToMeters(95) + xOffset, inchesToMeters(-56)  + yOffset)
-                 ),
-                 new Pose2d(inchesToMeters(105) + xOffset, inchesToMeters(-80) + yOffset, new Rotation2d(Math.toRadians(-60))),
-                 // Pass config
-                 AutonConfig.getInstance().getSlowConfigStart()
-                );
+             AutonConfig.getInstance().getSlowConfigStart()
+            );
 
-            //INTAKE ALWAYS FACE POSITIVE DOWN FEILD
-            
-            trajectory2 = TrajectoryGenerator.generateTrajectory(
-                // Robot starts at X: 0 Y: 0 and a rotation of 0 
-                 new Pose2d(0, 0, new Rotation2d(Math.toRadians(110))),
-                 List.of( 
-                   new Translation2d(inchesToMeters(-30) - xOffset, inchesToMeters(50) + yOffset)
-                 ),
-                 new Pose2d(inchesToMeters(-50) - xOffset, inchesToMeters(60) + yOffset, new Rotation2d(Math.toRadians(180))),
-                 // Pass config
-                 AutonConfig.getInstance().getReverseConfig()
-                );
-            trajectory3 = TrajectoryGenerator.generateTrajectory(
-                // Robot starts at X: 0 Y: 0 and a rotation of 0 
-                 new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
-                 List.of( 
-                   //  new Translation2d(3.983 + xOffset, -2.628 + yOffset)
-                  ),
-                 new Pose2d(inchesToMeters(-76) - xOffset, inchesToMeters(38) + yOffset, new Rotation2d(Math.toRadians(0))),
-                 // Pass config
-                 AutonConfig.getInstance().getSlowConfigContinue()
-                );
-            trajectory4 = TrajectoryGenerator.generateTrajectory(
-                // Robot starts at X: 0 Y: 0 and a rotation of 0 
-                 new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
-                 List.of( 
-                   //  new Translation2d(3.983 + xOffset, -2.628 + yOffset)
-                 ),
-                 new Pose2d(inchesToMeters(60) + xOffset, inchesToMeters(-76) - yOffset, new Rotation2d(Math.toRadians(0))),
-                 // Pass config
-                 AutonConfig.getInstance().getSlowConfigEnd()
-                );
+    trajectory2 = TrajectoryGenerator.generateTrajectory(
+            // Robot starts at X: 0 Y: 0 and a rotation of 0 
+             new Pose2d(inchesToMeters(0), 0, new Rotation2d(Math.toRadians(0))),
+             List.of( 
+                // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
+             ),
+             new Pose2d(inchesToMeters(-160) + xOffset, inchesToMeters(-80) + yOffset, new Rotation2d(Math.toRadians(0))),
+             // Pass config
+             AutonConfig.getInstance().getReverseConfig()
+            );
+
+    
     
 
 
@@ -180,23 +149,15 @@ double maxA = Math.PI;
 
 // This is our first atuo command this will run the drivetrain using the first trajectory we made
 
+// Rotation2d.fromDegrees changes the actual rotation of the robot!!!!!
 SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(-60), dSubsystem::swerveDrive, dSubsystem);
+    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
 
     SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
     new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
 
-    SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-    new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
-
-    SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-    new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(-45), dSubsystem::swerveDrive, dSubsystem);
-/*
-    */
     RunIntakeMotorsCommand rollerCommand = new RunIntakeMotorsCommand(iMotorSubsystem);
 
 
@@ -217,16 +178,28 @@ Path Description:
     System.out.println("*******Final Path Pose: "+ finalPose + " ********");
     //ADD PISTON RETRACT COMMAND AT END AND FLYWHEEL IS AT 50%! :)
     //TWEAK POINTS AND SPEED
-    addCommands(rollerCommand, 
-    new ExtendIntakePistonCommand(iPistonSubsystem),
-    command1, 
-    command2,
-    new StopDriveCommand(dSubsystem),
-    new RunFlywheelAutoCommand(fSubsystem, 0.5),
-    new AutoTurretTurnCommand(turSubsystem),
-    new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
-    new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
-    new StopTowerKickerCommandGroup(tSubsystem, kSubsystem)/*, command3, command4*/);
+    addCommands(
+        rollerCommand,
+        new ExtendIntakePistonCommand(iPistonSubsystem), 
+
+        // giving turret time to speed up
+        new WaitCommand(6.0), 
+
+        // shooting
+        new AutoTurretTurnCommand(turSubsystem),
+        new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
+        new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+        new StopTowerKickerCommandGroup(tSubsystem, kSubsystem), 
+        
+        command1, // forward
+        command2, // backward
+        
+        // new RunFlywheelAutoCommand(fSubsystem, 0.8),
+        new AutoTurretTurnCommand(turSubsystem),
+        new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
+        new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+        new StopTowerKickerCommandGroup(tSubsystem, kSubsystem)
+    );
     //returnIntakeCommand);
 }
 
