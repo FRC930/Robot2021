@@ -106,7 +106,7 @@ public class LeFishe extends SequentialCommandGroup {
              ),
              new Pose2d(inchesToMeters(180) + xOffset, 0 + yOffset, new Rotation2d(Math.toRadians(0))),
              // Pass config
-             AutonConfig.getInstance().getSlowConfig()
+             AutonConfig.getInstance().getSlowConfigStart()
             );
 
     trajectory2 = TrajectoryGenerator.generateTrajectory(
@@ -128,7 +128,7 @@ public class LeFishe extends SequentialCommandGroup {
              ),
              new Pose2d(inchesToMeters(40) + xOffset, inchesToMeters(-95) + yOffset, new Rotation2d(Math.toRadians(-45))),
              // Pass config
-             AutonConfig.getInstance().getSlowConfig()
+             AutonConfig.getInstance().getSlowConfigStart()
             );
 
     trajectory4 = TrajectoryGenerator.generateTrajectory(
