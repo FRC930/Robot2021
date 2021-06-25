@@ -214,13 +214,13 @@ Path Description:
      command2,
     // new RunFlywheelAutoCommand(fSubsystem, 0.8),
     new AutoTurretTurnCommand(turSubsystem),
-     new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
+    new ParallelRaceGroup(new WaitCommand(2), new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D))),
      new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
      new StopTowerKickerCommandGroup(tSubsystem, kSubsystem), 
      command3,
      command4,
      new AutoTurretTurnCommand(turSubsystem),
-     new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D)),
+     new ParallelRaceGroup(new WaitCommand(2), new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D))),
      new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
      new StopTowerKickerCommandGroup(tSubsystem, kSubsystem)
     );
