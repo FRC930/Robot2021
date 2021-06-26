@@ -32,16 +32,16 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     //Choose end of each desired shooting area in given shooting zone (green/yellow/blue/red).
     //Allows for motor speed optimization aswell (in rpms).
 
-    private final int GREEN_END_ZONE = 75;
-    private final double GREEN_SPEED = 3150.0;
+    public final static int GREEN_END_ZONE = 75;
+    public final static double GREEN_SPEED = 3150.0;
 
-    private final int YELLOW_END_ZONE = 115;
-    private final double YELLOW_SPEED = 2270.0;
+    public final static int YELLOW_END_ZONE = 115;
+    public final static double YELLOW_SPEED = 2270.0;
 
-    private final int BLUE_END_ZONE = 160;
-    private final double BLUE_SPEED = 3150.0;
+    public final static int BLUE_END_ZONE = 160;
+    public final static double BLUE_SPEED = 3150.0;
 
-    private final double RED_SPEED = 3000.0;
+    public final static double RED_SPEED = 3000.0;
 
 
     //-------- DECLARATIONS --------\\
