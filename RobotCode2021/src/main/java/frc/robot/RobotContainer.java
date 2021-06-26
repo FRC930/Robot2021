@@ -32,6 +32,7 @@ import frc.robot.commands.hoppercommands.DefaultHopperCommand;
 import frc.robot.commands.hoppercommands.DefaultHopperCommandGroup;
 import frc.robot.commands.hoppercommands.DefaultStopHopperCommand;
 import frc.robot.commands.hoppercommands.SetHopperCommand;
+import frc.robot.commands.hoppercommands.SetHopperReverseCommand;
 import frc.robot.commands.hoppercommands.StopHopperStateCommand;
 // --Subsystem imports
 import frc.robot.subsystems.*;
@@ -640,7 +641,7 @@ public class RobotContainer {
     //manualFlywheelPistonButton.whenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem))
       //  .whenInactive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
 
-    reverseHopperButton.whileActiveOnce(new SetHopperCommand(hopperSubsystem, Constants.HOPPER_REVERSE_SPEED, true));
+    reverseHopperButton.whileActiveOnce(new SetHopperReverseCommand(hopperSubsystem, Constants.HOPPER_REVERSE_SPEED, true));
     // manual
     stopHopperButton.whileActiveOnce(stopHopperStateCommand);
 
