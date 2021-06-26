@@ -27,13 +27,14 @@ public class EndgameRunCommand extends CommandBase{
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {   
-        endgameSubsystem.setSpeed(0.8);
+        //endgameSubsystem.setSpeed(0.8);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() { 
-        if(!endgameSubsystem.getLimitState()){
+        endgameSubsystem.setSpeed(0.8);
+        /*if(!endgameSubsystem.getLimitState()){
             if(endgameSubsystem.getUpState()){
                 if(endgameSubsystem.getRawEncoderPosition() == highLimit){
                     endgameSubsystem.setSpeed(0);
@@ -46,12 +47,13 @@ public class EndgameRunCommand extends CommandBase{
                     endgameSubsystem.setLimitState(true);
                 }
             }
-        }
+        }*/
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        endgameSubsystem.setSpeed(0.0);
     }
 
     
@@ -59,7 +61,7 @@ public class EndgameRunCommand extends CommandBase{
     @Override
     public boolean isFinished() {
         // TODO: add code here
-        return true;
+        return false;
     }
 
 }
