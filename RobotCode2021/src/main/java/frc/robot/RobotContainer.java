@@ -356,6 +356,13 @@ public class RobotContainer {
     // TODO: Add LED commands here
 
     // Flywheel
+    // Note: Tune values for if(930 robot) and else(9930 robot) statements
+    if(RobotPreferences.getInstance().getTeamNumber() == 930) {
+      flywheelSubsystem.setSpeedRPMs(2000);
+    }
+    else{
+      flywheelSubsystem.setSpeedRPMs(2500);
+    }
     defaultFlywheelCommand = new DefaultFlywheelCommand(flywheelSubsystem);
     accuracyChallengeCommand = new AccuracyChallengeCommand(flywheelSubsystem, flywheelPistonSubsystem,
         limelightSubsystem);
@@ -683,7 +690,7 @@ public class RobotContainer {
                                                                         // coDriverController, XB_AXIS_LEFT_X));
     scheduler.setDefaultCommand(driveSubsystem, swerveDriveCommand);
     scheduler.setDefaultCommand(hopperSubsystem, defaultStopHopperCommand);
-    scheduler.setDefaultCommand(flywheelSubsystem, new DefaultFlywheelCommand(flywheelSubsystem));
+    scheduler.setDefaultCommand(flywheelSubsystem, defaultFlywheelCommand);
     scheduler.setDefaultCommand(limelightSubsystem,
         new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
 
