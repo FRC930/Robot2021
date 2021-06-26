@@ -56,6 +56,7 @@ public class ShuffleboardUtility {
     private double turretEncoderPosition;
     private double gyroYaw;
     private double shootSpeed;
+    private double endgameEncoderPosition;
     private ShuffleboardTab testDebugTab;
     private ShuffleboardTab driverStationTab;
     private NetworkTableEntry intakingEntry;
@@ -79,6 +80,7 @@ public class ShuffleboardUtility {
     private NetworkTableEntry encodAccEntry;
     private NetworkTableEntry maxVoltageEntry;
     private NetworkTableEntry dtSecondsEntry;
+    private NetworkTableEntry endgameEncoderPositionEntry;
 
 
     //-------- CONSTRUCTOR --------\\
@@ -110,6 +112,7 @@ public class ShuffleboardUtility {
         turretSpeed = 0.0;
         turretEncoderPosition = 0.0;
         gyroYaw = 0.0;
+        endgameEncoderPosition = 0.0;
         // kP = 0.0;
         // kI = 0.0;
         // kD = 0.0;
@@ -139,6 +142,7 @@ public class ShuffleboardUtility {
         modelAccEntry = driverStationTab.add("Model accuracy", modelAcc).getEntry();
         encodAccEntry = driverStationTab.add("Encoder Accuracy", encodAcc).getEntry();
         dtSecondsEntry = driverStationTab.add("DT Seconds", dtSeconds).getEntry();
+        endgameEncoderPositionEntry = driverStationTab.add("Endgame Encoder", endgameEncoderPosition).getEntry();
         sendableChooser = new SendableChooser<Command>();
 
         driverStationTab.add("Auton Path Selector", sendableChooser);
@@ -241,6 +245,11 @@ public class ShuffleboardUtility {
     public void putShooterAngle(boolean ShooterAngle){
         shooterAngle = ShooterAngle;
         shooterAngleEntry.setBoolean(shooterAngle);
+    }
+
+    public void putEndgameEncoderPosition(double encoderPosition){
+        endgameEncoderPosition = encoderPosition;
+        endgameEncoderPositionEntry.setDouble(endgameEncoderPosition);
     }
 
 	// public void getLogger(String logger){

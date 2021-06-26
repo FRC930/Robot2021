@@ -76,7 +76,7 @@ public class SwerveDriveCommand extends CommandBase{
     }
 
     // Cube values to create smoother movement
-    leftX = -Math.pow(leftX, 1);
+    leftX = Math.pow(leftX, 1); // switch x orientation
     leftY = Math.pow(leftY, 1); // reverse orientation of the forward and back because players sit opposite of robot
     rightX = -Math.pow(rightX, 1);
     

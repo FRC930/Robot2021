@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.EndgameSubsystem;
+import frc.robot.utilities.ShuffleboardUtility;
 
 public class EndgameRunCommand extends CommandBase{
     
@@ -17,8 +18,10 @@ public class EndgameRunCommand extends CommandBase{
     private final double highLimit = 1000;
     private final double lowLimit = 0;
     
+    ShuffleboardUtility shuffleboardUtility;
 
     public EndgameRunCommand(EndgameSubsystem _endgameSubsystem, String _moveType) {
+        shuffleboardUtility = ShuffleboardUtility.getInstance();
         endgameSubsystem = _endgameSubsystem;
         moveType = _moveType;
         addRequirements(endgameSubsystem);
@@ -37,6 +40,7 @@ public class EndgameRunCommand extends CommandBase{
     public void execute() { 
         
         if(moveType.equals("down")) { // EndgameRetractButton XB_BACK
+            shuffleboardUtility.putEndgameEncoderPosition(endgameSubsystem.getRawEncoderPosition());
             endgameSubsystem.setSpeed(0.8);
         } else if(moveType.equals("up")) { // EndgameExtendButton XB_START
             endgameSubsystem.setSpeed(-0.8);

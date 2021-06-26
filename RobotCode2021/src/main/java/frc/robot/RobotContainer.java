@@ -6,6 +6,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.autocommands.LakeshorePath.LeFishe;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheForwarding;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheAuChocolat;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening;
 // --Our Commands
@@ -449,6 +450,22 @@ public class RobotContainer {
     shuffleboardUtility.addAutonOptions(
       "The Forward and Back", 
       new LeFisheTheBackening(
+        driveSubsystem,
+        intakePistonSubsystem,
+        intakeMotorSubsystem,
+        flywheelSubsystem,
+        towerSubsystem,
+        hopperSubsystem,
+        kickerSubsystem,
+        limelightSubsystem,
+        flywheelPistonSubsystem,
+        turretSubsystem
+      )
+    );
+
+    shuffleboardUtility.addAutonOptions(
+      "The Basic Forward", 
+      new LeFisheTheForwarding(
         driveSubsystem,
         intakePistonSubsystem,
         intakeMotorSubsystem,
