@@ -85,6 +85,11 @@ public class TurretSubsystem extends SubsystemBase {
             if (speed > 0) {
                 speed = 0;
             }
+        } else if (encoderPosition == 0) {
+            // to resolve intermident 0 encoder readings
+            // TODO: look into the encoder hardware for problems
+
+            speed = 0;
         }
 
         this.turretMotor.set(ControlMode.PercentOutput, speed);
