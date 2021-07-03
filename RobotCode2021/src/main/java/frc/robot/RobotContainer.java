@@ -21,6 +21,8 @@ import frc.robot.commands.limelightcommands.*;
 import frc.robot.commands.shootercommands.*;
 import frc.robot.commands.shootercommands.flywheelcommands.*;
 import frc.robot.commands.shootercommands.pistoncommands.*;
+import frc.robot.commands.shuffleboardcommands.ShuffleboardCompetitionCommand;
+import frc.robot.commands.shuffleboardcommands.ShuffleboardDebugCommand;
 import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
 
 import frc.robot.commands.towercommands.*;
@@ -143,16 +145,6 @@ public class RobotContainer {
   // private final double TURRET_SET_POSITION_P = 2.5;
   // private final double TURRET_SET_POSITION_I = 0.0;
   // private final double TURRET_SET_POSITION_D = 0.0;
-
-  // encoder positions for setting turret to one of four directions
-  private final double TURRET_BACK_POSITION = 0.635;
-  private final double TURRET_FRONT_POSITION = 0.383;
-  private final double TURRET_RIGHT_POSITION = 0.51;
-  private final double TURRET_LEFT_POSITION = 0.256;
-
-  private final double FRONT_LEFT_POSITION = 0.3195;
-  private final double FRONT_RIGHT_POSITION = 0.4465;
-  private final double BACK_RIGHT_POSITION = 0.5725;
 
   // -------- DECLARATIONS --------\\
   private static final Logger frcRobotLogger = Logger.getLogger(RobotContainer.class.getPackageName());
@@ -482,6 +474,16 @@ public class RobotContainer {
     //   )
     // );
 
+    shuffleboardUtility.setDefaultShuffleboardOptions(
+      "Competition", 
+      new ShuffleboardCompetitionCommand()
+    );
+
+    shuffleboardUtility.addShuffleboardOptions(
+      "Debug", 
+      new ShuffleboardDebugCommand()
+    );
+
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team
 
@@ -658,14 +660,14 @@ public class RobotContainer {
         new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D), coDriverController,
         XB_AXIS_LEFT_X));
 
-    turretFront.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_FRONT_POSITION));
-    turretBack.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_BACK_POSITION));
-    turretLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_LEFT_POSITION));
-    turretRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_RIGHT_POSITION));
+    turretFront.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "front");
+    turretBack.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "right"));
+    turretLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "back"));
+    turretRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "left"));
 
-    turretFrontLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, FRONT_LEFT_POSITION));
-    turretFrontRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, FRONT_RIGHT_POSITION));
-    turretBackRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, BACK_RIGHT_POSITION));
+    turretFrontLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "frontLeft"));
+    turretFrontRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "frontRight"));
+    turretBackRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "backRight"));
 
     // endgameSafetyButton.whileActiveOnce(climberArmCommandGroup);
     intakePistonTrigger.toggleWhenActive(new ExtendIntakePistonCommand(intakePistonSubsystem))
@@ -722,6 +724,10 @@ public class RobotContainer {
         new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
 
     scheduler.setDefaultCommand(flywheelPistonSubsystem, defaultFullExtendFlywheelCommand);
+  }
+
+  public Command getShuffleboardCommand() {
+    return shuffleboardUtility.getSelectedShuffleboardOption();
   }
 
   /**

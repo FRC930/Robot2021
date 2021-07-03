@@ -83,130 +83,130 @@ public class LeFisheCantAim extends SequentialCommandGroup {
     private    Trajectory trajectory4;
     private double xOffset = inchesToMeters(35.25);
     private double yOffset = inchesToMeters(6.5);
-  /**
-   * Path Description: ----------------- Shoot 3 from initiation line move through
-   * trench to grab 3 balls Shoot 3 from trench position
-   */
-  public LeFisheCantAim(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
-      IntakeMotorSubsystem iMotorSubsystem, FlywheelSubsystem fSubsystem, TowerSubsystem tSubsystem,
-      HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
-      FlywheelPistonSubsystem fPistonSubsystem, TurretSubsystem turSubsystem) {
+    /**
+     * Path Description: ----------------- Shoot 3 from initiation line move through
+     * trench to grab 3 balls Shoot 3 from trench position
+     */
+    public LeFisheCantAim(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
+        IntakeMotorSubsystem iMotorSubsystem, FlywheelSubsystem fSubsystem, TowerSubsystem tSubsystem,
+        HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
+        FlywheelPistonSubsystem fPistonSubsystem, TurretSubsystem turSubsystem) {
 
-    // -------- Trajectories -------- \\
-    //NOT FOLLOWING JSON
-    //HEADING IN TROJECTORY CHANGES ANGLE THAT DRAWS THE LINE THAT THE ROBOT FOLLOWS
-    //REVERSE KINDA FUNKY THINK MORE 
-
-
-    // Generates a trajectory for a path to move towards furthest ball in trench run
-    trajectory1 = TrajectoryGenerator.generateTrajectory(
-            // Robot starts at X: 0 Y: 0 and a rotation of 0 
-             new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
-             List.of( 
-                // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
-             ),
-             new Pose2d(inchesToMeters(180) + xOffset, 0 + yOffset, new Rotation2d(Math.toRadians(0))),
-             // Pass config
-             AutonConfig.getInstance().getSlowConfigStart()
-            );
-
-    trajectory2 = TrajectoryGenerator.generateTrajectory(
-            // Robot starts at X: 0 Y: 0 and a rotation of 0 
-             new Pose2d(inchesToMeters(0), 0, new Rotation2d(Math.toRadians(0))),
-             List.of( 
-                // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
-             ),
-             new Pose2d(inchesToMeters(-160) + xOffset, inchesToMeters(-80) + yOffset, new Rotation2d(Math.toRadians(0))),
-             // Pass config
-             AutonConfig.getInstance().getReverseConfig()
-            );
-
-    
-    
+        // -------- Trajectories -------- \\
+        //NOT FOLLOWING JSON
+        //HEADING IN TROJECTORY CHANGES ANGLE THAT DRAWS THE LINE THAT THE ROBOT FOLLOWS
+        //REVERSE KINDA FUNKY THINK MORE 
 
 
+        // Generates a trajectory for a path to move towards furthest ball in trench run
+        trajectory1 = TrajectoryGenerator.generateTrajectory(
+                // Robot starts at X: 0 Y: 0 and a rotation of 0 
+                new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
+                List.of( 
+                    // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
+                ),
+                new Pose2d(inchesToMeters(180) + xOffset, 0 + yOffset, new Rotation2d(Math.toRadians(0))),
+                // Pass config
+                AutonConfig.getInstance().getSlowConfigStart()
+                );
 
+        trajectory2 = TrajectoryGenerator.generateTrajectory(
+                // Robot starts at X: 0 Y: 0 and a rotation of 0 
+                new Pose2d(inchesToMeters(0), 0, new Rotation2d(Math.toRadians(0))),
+                List.of( 
+                    // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
+                ),
+                new Pose2d(inchesToMeters(-160) + xOffset, inchesToMeters(-80) + yOffset, new Rotation2d(Math.toRadians(0))),
+                // Pass config
+                AutonConfig.getInstance().getReverseConfig()
+                );
 
-// this is our config for how much power goes to the motors
-//var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getSwerveKinematics(), Constants.KMAXSPEED);
-//PID values
-double kPX = /*1.1*/ 0;
-        double kIX = 0;
-        double kDX = 0;
-        double kPY = /*2*/ 0;
-        double kIY = 0;
-        double kDY = 0;
-        double kPRot = 3;
-        double kIRot = 0;
-        double kDRot = 0;
-double maxV = Math.PI * 2;
-double maxA = Math.PI;
-// Configurate the values of all trajectories for max velocity and acceleration
-
-// -------- RAMSETE Commands -------- \\
-// Creates a command that can be added to the command scheduler in the sequential command
-// The Ramsete Controller is a trajectory tracker that is built in to WPILib.
-// This tracker can be used to accurately track trajectories with correction for minor disturbances.
-
-// This is our first atuo command this will run the drivetrain using the first trajectory we made
-
-// Rotation2d.fromDegrees changes the actual rotation of the robot!!!!!
-SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-    new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
-
-    SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-    new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
-
-    RunIntakeMotorsCommand rollerCommand = new RunIntakeMotorsCommand(iMotorSubsystem);
+            
+            
 
 
 
-/*
-Path Description:
------------------
-- Drive off intiation line
-- Move to the side 2 Rendezvous Point balls
-- Pick up two rendezvous point balls
-- Shoot all 5 balls held
-*/
-    Pose2d finalPose = trajectory1.getStates().get(trajectory1.getStates().size()-1).poseMeters;
-    System.out.println("*******First Robot Pose: " + dSubsystem.getPose() + "********");
-    System.out.println("*******Initial Path Pose: "+ trajectory1.getInitialPose() + " ********");
-    //dSubsystem.resetPose(trajectory1.getInitialPose());
-    System.out.println("*******Adjusted First Robot Pose: " + dSubsystem.getPose() + "********");
-    System.out.println("*******Final Path Pose: "+ finalPose + " ********");
-    //ADD PISTON RETRACT COMMAND AT END AND FLYWHEEL IS AT 50%! :)
-    //TWEAK POINTS AND SPEED
-    addCommands(
-        rollerCommand,
-        new ExtendIntakePistonCommand(iPistonSubsystem), 
 
-        // giving turret time to speed up
-        new WaitCommand(6.0), 
+        // this is our config for how much power goes to the motors
+        //var autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getSwerveKinematics(), Constants.KMAXSPEED);
+        //PID values
+        double kPX = /*1.1*/ 0;
+                double kIX = 0;
+                double kDX = 0;
+                double kPY = /*2*/ 0;
+                double kIY = 0;
+                double kDY = 0;
+                double kPRot = 3;
+                double kIRot = 0;
+                double kDRot = 0;
+        double maxV = Math.PI * 2;
+        double maxA = Math.PI;
+        // Configurate the values of all trajectories for max velocity and acceleration
 
-        // shooting
-        //new AutoTurretTurnCommand(turSubsystem),
-        new ParallelRaceGroup(new WaitCommand(2), new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D))),
-        new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
-        new StopTowerKickerCommandGroup(tSubsystem, kSubsystem), 
-        
-        command1, // forward
-        command2, // backward
-        
-        // new RunFlywheelAutoCommand(fSubsystem, 0.8),
-        //new AutoTurretTurnCommand(turSubsystem),
-        new ParallelRaceGroup(new WaitCommand(2), new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D))),
-        new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
-        new StopTowerKickerCommandGroup(tSubsystem, kSubsystem)
-    );
-    //returnIntakeCommand);
-}
+        // -------- RAMSETE Commands -------- \\
+        // Creates a command that can be added to the command scheduler in the sequential command
+        // The Ramsete Controller is a trajectory tracker that is built in to WPILib.
+        // This tracker can be used to accurately track trajectories with correction for minor disturbances.
 
-//converts our inches into meters
-private double inchesToMeters(double inch){
-return inch/39.3701;
-}
+        // This is our first atuo command this will run the drivetrain using the first trajectory we made
+
+        // Rotation2d.fromDegrees changes the actual rotation of the robot!!!!!
+        SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
+            new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+            new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
+
+            SwerveControllerCommand command2 = new SwerveControllerCommand(trajectory2, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
+            new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
+            new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
+
+            RunIntakeMotorsCommand rollerCommand = new RunIntakeMotorsCommand(iMotorSubsystem);
+
+
+
+        /*
+        Path Description:
+        -----------------
+        - Drive off intiation line
+        - Move to the side 2 Rendezvous Point balls
+        - Pick up two rendezvous point balls
+        - Shoot all 5 balls held
+        */
+        Pose2d finalPose = trajectory1.getStates().get(trajectory1.getStates().size()-1).poseMeters;
+        System.out.println("*******First Robot Pose: " + dSubsystem.getPose() + "********");
+        System.out.println("*******Initial Path Pose: "+ trajectory1.getInitialPose() + " ********");
+        //dSubsystem.resetPose(trajectory1.getInitialPose());
+        System.out.println("*******Adjusted First Robot Pose: " + dSubsystem.getPose() + "********");
+        System.out.println("*******Final Path Pose: "+ finalPose + " ********");
+        //ADD PISTON RETRACT COMMAND AT END AND FLYWHEEL IS AT 50%! :)
+        //TWEAK POINTS AND SPEED
+        addCommands(
+            rollerCommand,
+            new ExtendIntakePistonCommand(iPistonSubsystem), 
+
+            // giving turret time to speed up
+            new WaitCommand(6.0), 
+
+            // shooting
+            //new AutoTurretTurnCommand(turSubsystem),
+            new ParallelRaceGroup(new WaitCommand(2), new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D))),
+            new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+            new StopTowerKickerCommandGroup(tSubsystem, kSubsystem), 
+            
+            command1, // forward
+            command2, // backward
+            
+            // new RunFlywheelAutoCommand(fSubsystem, 0.8),
+            //new AutoTurretTurnCommand(turSubsystem),
+            new ParallelRaceGroup(new WaitCommand(2), new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D))),
+            new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+            new StopTowerKickerCommandGroup(tSubsystem, kSubsystem)
+        );
+        //returnIntakeCommand);
+    }
+
+    //converts our inches into meters
+    private double inchesToMeters(double inch){
+        return inch/39.3701;
+    }
 
 } // End of class

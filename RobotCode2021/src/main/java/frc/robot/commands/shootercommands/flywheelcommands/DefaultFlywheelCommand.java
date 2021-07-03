@@ -63,7 +63,7 @@ public class DefaultFlywheelCommand extends CommandBase {
   private LinearQuadraticRegulator<N1, N1, N1> m_controller;
   private LinearSystemLoop<N1, N1, N1> m_loop;
 
-  private ShuffleboardUtility ModelConfig = ShuffleboardUtility.getInstance();
+  private ShuffleboardUtility shuffleboard = ShuffleboardUtility.getInstance();
   //private static final Logger logger = Logger.getLogger(DefaultFlywheelCommand.class.getName());
 
   // -------- CONSTRUCTOR --------\\
@@ -102,7 +102,7 @@ public class DefaultFlywheelCommand extends CommandBase {
     mDtSeconds = dtSeconds;
     m_FlywheelSubsystem = flywheelSubsystem;
 
-    //ModelConfig.putControlConfig(mVelError, mControlTol, mModelAcc, mEncodAcc, mMaxVoltage, mDtSeconds);
+    //shuffleboard.putControlConfig(mVelError, mControlTol, mModelAcc, mEncodAcc, mMaxVoltage, mDtSeconds);
     addRequirements(m_FlywheelSubsystem);
     m_flywheelPlant = LinearSystemId.createFlywheelSystem(DCMotor.getNEO(2), kFlywheelMomentOfInertia,
         kFlywheelGearing);
@@ -147,8 +147,8 @@ public class DefaultFlywheelCommand extends CommandBase {
     // voltage = duty cycle * battery voltage, so duty cycle = voltage / battery voltage
      double nextVoltage = m_loop.getU(0);
      m_FlywheelSubsystem.setVoltage(nextVoltage);
-    ModelConfig.putFlywheelVoltage(m_FlywheelSubsystem.getVoltage());
-    ModelConfig.putFlywheelSpeed(m_FlywheelSubsystem.getSpeed());
+    shuffleboard.putFlywheelVoltage(m_FlywheelSubsystem.getVoltage());
+    shuffleboard.putFlywheelSpeed(m_FlywheelSubsystem.getSpeed());
   }
 
   // Called once the command ends or is interrupted.
