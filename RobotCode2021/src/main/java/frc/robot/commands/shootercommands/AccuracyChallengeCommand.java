@@ -41,7 +41,7 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     public final static int BLUE_END_ZONE = 160;
     public final static double BLUE_SPEED = 3150.0;
 
-    public final static double RED_SPEED = 3250.0;
+    public final static double RED_SPEED = 3950.0;
 
 
     //-------- DECLARATIONS --------\\
