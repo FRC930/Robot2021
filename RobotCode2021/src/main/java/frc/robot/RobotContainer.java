@@ -402,7 +402,7 @@ public class RobotContainer {
     shuffleboardUtility.setDefaultAutonOptions("Default (None)", null);
     
     shuffleboardUtility.addAutonOptions(
-      "Primary", 
+      "Trench, Rendezvous and Shoot", 
       new LeFishe(
         driveSubsystem,
         intakePistonSubsystem,
@@ -418,24 +418,8 @@ public class RobotContainer {
     );
 
     shuffleboardUtility.addAutonOptions(
-      "Secondary", 
+      "Rendezvous and Shoot", 
       new LeFisheTheFishening(
-        driveSubsystem,
-        intakePistonSubsystem,
-        intakeMotorSubsystem,
-        flywheelSubsystem,
-        towerSubsystem,
-        hopperSubsystem,
-        kickerSubsystem,
-        limelightSubsystem,
-        flywheelPistonSubsystem,
-        turretSubsystem
-      )
-    );
-            
-    shuffleboardUtility.addAutonOptions(
-      "AltFishe", 
-      new LeFisheAuChocolat(
         driveSubsystem,
         intakePistonSubsystem,
         intakeMotorSubsystem,
@@ -450,7 +434,7 @@ public class RobotContainer {
     );
     
     shuffleboardUtility.addAutonOptions(
-      "The Forward and Back", 
+      "Trench and Shoot", 
       new LeFisheTheBackening(
         driveSubsystem,
         intakePistonSubsystem,
@@ -466,7 +450,7 @@ public class RobotContainer {
     );
 
     shuffleboardUtility.addAutonOptions(
-      "The Basic Forward", 
+      "Robot Forward", 
       new LeFisheTheForwarding(
         driveSubsystem,
         intakePistonSubsystem,
@@ -481,21 +465,22 @@ public class RobotContainer {
       )
     );
 
-    shuffleboardUtility.addAutonOptions(
-      "9930's Forward and Back", 
-      new LeFisheCantAim(
-        driveSubsystem,
-        intakePistonSubsystem,
-        intakeMotorSubsystem,
-        flywheelSubsystem,
-        towerSubsystem,
-        hopperSubsystem,
-        kickerSubsystem,
-        limelightSubsystem,
-        flywheelPistonSubsystem,
-        turretSubsystem
-      )
-    );
+    // Taken out unless explicity needed. Runs auton without AutoTurretTurnCommand.
+    // shuffleboardUtility.addAutonOptions(
+    //   "9930's No Auto Turret Turn", 
+    //   new LeFisheCantAim(
+    //     driveSubsystem,
+    //     intakePistonSubsystem,
+    //     intakeMotorSubsystem,
+    //     flywheelSubsystem,
+    //     towerSubsystem,
+    //     hopperSubsystem,
+    //     kickerSubsystem,
+    //     limelightSubsystem,
+    //     flywheelPistonSubsystem,
+    //     turretSubsystem
+    //   )
+    // );
 
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team

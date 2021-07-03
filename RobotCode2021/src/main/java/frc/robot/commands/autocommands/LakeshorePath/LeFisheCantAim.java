@@ -72,6 +72,7 @@ import java.util.logging.*;
 
 // -------- PATH DESCRIPTION -------- \\
 // Alliance Side - Initial 3 & Trench 3 & Rendezvous 2
+// NOTE: Created to avoid use of AutoTurretTurnCommand.
 
 public class LeFisheCantAim extends SequentialCommandGroup {
 
