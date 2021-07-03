@@ -24,15 +24,35 @@ public class SetTurretPositionCommand extends CommandBase {
     private static final Logger logger = Logger.getLogger(SetTurretPositionCommand.class.getName());
 
     private double turretPosition;
-    private double targetPosition;
     private double speed;
+    private double turretTarget;
 
     private TurretSubsystem turretSubsystem;    
     
-    public SetTurretPositionCommand(TurretSubsystem turretSubsystem, double targetPosition){
+    public SetTurretPositionCommand(TurretSubsystem turretSubsystem, String TurretPosition){
         this.turretSubsystem = turretSubsystem;
-        this.targetPosition = targetPosition;
         addRequirements(turretSubsystem);
+        if(TurretPosition.toLowerCase().equals("front")){
+        turretTarget=turretSubsystem.getFrontPosition();
+        }
+        else if(TurretPosition.toLowerCase().equals("right")){
+        turretTarget=turretSubsystem.getRightPosition();
+        }
+        else if(TurretPosition.toLowerCase().equals("back")){
+            turretTarget=turretSubsystem.getBackPosition();
+        }
+        else if(TurretPosition.toLowerCase().equals("left")){
+            turretTarget=turretSubsystem.getLeftPosition();
+        }
+        else if(TurretPosition.toLowerCase().equals("frontLeft")){
+        turretTarget=turretSubsystem.getFrontLeftPosition();
+        }
+        else if(TurretPosition.toLowerCase().equals("frontRight")){
+            turretTarget=turretSubsystem.getFrontRightPosition();
+        }
+        else if(TurretPosition.toLowerCase().equals("backRight")){
+            turretTarget=turretSubsystem.getBackRightPosition();
+        }
     }
 
     //-------- METHODS --------\\
@@ -47,15 +67,15 @@ public class SetTurretPositionCommand extends CommandBase {
     public void execute() {  
         turretPosition = turretSubsystem.getRawEncoderPosition();
 
-        logger.log(Level.INFO, "targetPosition = " + targetPosition);
+        logger.log(Level.INFO, "targetPosition = " + turretTarget);
         logger.log(Level.INFO, "turretPosition = " + turretPosition);
 
-        if(Math.abs(turretPosition - targetPosition) > Constants.TURRET_DEADBAND){
+        if(Math.abs(turretPosition - turretTarget) > Constants.TURRET_DEADBAND){
             logger.log(Level.INFO, "| turretPosition - targetPosition | >  Constants.TURRET_DEADBAND("+Constants.TURRET_DEADBAND+")");
-            if(turretPosition < targetPosition) {
+            if(turretPosition < turretTarget) {
                 logger.log(Level.INFO, "seting 'speed' to -Constants.TURRET_TURNING_SPEED("+-Constants.TURRET_TURNING_SPEED+")");
                 speed = -Constants.TURRET_TURNING_SPEED;
-            } else if(turretPosition > targetPosition) {
+            } else if(turretPosition > turretTarget) {
                 logger.log(Level.INFO, "seting 'speed' to Constants.TURRET_TURNING_SPEED("+Constants.TURRET_TURNING_SPEED+")");
                 speed = Constants.TURRET_TURNING_SPEED;
             }  
