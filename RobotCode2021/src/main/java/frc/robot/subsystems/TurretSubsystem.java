@@ -38,6 +38,14 @@ public class TurretSubsystem extends SubsystemBase {
     // reset to 180 degrees. These units are in raw values.
     private final double UPPER_LIMIT = 0.697;
     private final double LOWER_LIMIT = 0.335;
+    private final double TURRET_FRONT_POSITION = 0.383;
+    private final double TURRET_BACK_POSITION = 0.635;
+    private final double TURRET_RIGHT_POSITION = 0.51;
+    private final double TURRET_LEFT_POSITION = 0.256;
+      // encoder positions for setting turret to one of four directions
+    private final double FRONT_LEFT_POSITION = 0.3195;
+    private final double FRONT_RIGHT_POSITION = 0.4465;
+    private final double BACK_RIGHT_POSITION = 0.5725;
 
     private final double TURRET_MAX_SPEED = 0.6;
     private final double TURRET_MAX_SET_POSITION_SPEED = Constants.TURRET_MAX_SET_POSITION_SPEED;
@@ -128,6 +136,34 @@ public class TurretSubsystem extends SubsystemBase {
             speed = -TURRET_MAX_SPEED;
         }
         return speed;
+    }
+
+    public double getFrontPosition(){
+        return TURRET_FRONT_POSITION;
+    }
+
+    public double getRightPosition(){
+        return TURRET_RIGHT_POSITION;
+    }
+
+    public double getBackPosition(){
+        return TURRET_BACK_POSITION;
+    }
+
+    public double getLeftPosition(){
+        return TURRET_LEFT_POSITION;
+    }
+
+    public double getFrontLeftPosition(){
+        return FRONT_LEFT_POSITION;
+    }
+
+    public double getFrontRightPosition(){
+        return FRONT_RIGHT_POSITION;
+    }
+
+    public double getBackRightPosition(){
+        return BACK_RIGHT_POSITION;
     }
     // @Override
     // public void periodic() {
