@@ -73,9 +73,9 @@ import java.util.logging.*;
 // -------- PATH DESCRIPTION -------- \\
 // Alliance Side - Initial 3 & Trench 3 & Rendezvous 2
 
-public class LeFishe extends SequentialCommandGroup {
+public class LeFisheTheBackening extends SequentialCommandGroup {
 
-    private static final Logger logger = Logger.getLogger(LeFishe.class.getName());
+    private static final Logger logger = Logger.getLogger(LeFisheTheBackening.class.getName());
     private Trajectory trajectory1;
     private    Trajectory trajectory2;
     private    Trajectory trajectory3;
@@ -86,7 +86,7 @@ public class LeFishe extends SequentialCommandGroup {
    * Path Description: ----------------- Shoot 3 from initiation line move through
    * trench to grab 3 balls Shoot 3 from trench position
    */
-  public LeFishe(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
+  public LeFisheTheBackening(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
       IntakeMotorSubsystem iMotorSubsystem, FlywheelSubsystem fSubsystem, TowerSubsystem tSubsystem,
       HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
       FlywheelPistonSubsystem fPistonSubsystem, TurretSubsystem turSubsystem) {
@@ -116,28 +116,6 @@ public class LeFishe extends SequentialCommandGroup {
                 // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
              ),
              new Pose2d(inchesToMeters(-160) + xOffset, inchesToMeters(-80) + yOffset, new Rotation2d(Math.toRadians(0))),
-             // Pass config
-             AutonConfig.getInstance().getReverseConfig()
-            );
-
-    trajectory3 = TrajectoryGenerator.generateTrajectory(
-            // Robot starts at X: 0 Y: 0 and a rotation of 0 
-             new Pose2d(inchesToMeters(0), 0, new Rotation2d(Math.toRadians(-45))),
-             List.of( 
-                // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
-             ),
-             new Pose2d(inchesToMeters(40) + xOffset, inchesToMeters(-95) + yOffset, new Rotation2d(Math.toRadians(-45))),
-             // Pass config
-             AutonConfig.getInstance().getSlowConfigStart()
-            );
-
-    trajectory4 = TrajectoryGenerator.generateTrajectory(
-            // Robot starts at X: 0 Y: 0 and a rotation of 0 
-             new Pose2d(inchesToMeters(0), 0, new Rotation2d(Math.toRadians(135))),
-             List.of( 
-                // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
-             ),
-             new Pose2d(inchesToMeters(-40) - xOffset, inchesToMeters(95) + yOffset, new Rotation2d(Math.toRadians(135))),
              // Pass config
              AutonConfig.getInstance().getReverseConfig()
             );
@@ -180,14 +158,6 @@ SwerveControllerCommand command1 = new SwerveControllerCommand(trajectory1, dSub
     new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
     new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
 
-    SwerveControllerCommand command3 = new SwerveControllerCommand(trajectory3, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-    new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(-60), dSubsystem::swerveDrive, dSubsystem);
-
-    SwerveControllerCommand command4 = new SwerveControllerCommand(trajectory4, dSubsystem::getPose, dSubsystem.getSwerveKinematics(), 
-    new PIDController(kPX, kIX, kDX), new PIDController(kPY, kIY, kDY), new ProfiledPIDController(kPRot, kIRot, kDRot,
-    new TrapezoidProfile.Constraints(maxV, maxA)), () -> Rotation2d.fromDegrees(0), dSubsystem::swerveDrive, dSubsystem);
-
     RunIntakeMotorsCommand rollerCommand = new RunIntakeMotorsCommand(iMotorSubsystem);
 
 
@@ -208,21 +178,27 @@ Path Description:
     System.out.println("*******Final Path Pose: "+ finalPose + " ********");
     //ADD PISTON RETRACT COMMAND AT END AND FLYWHEEL IS AT 50%! :)
     //TWEAK POINTS AND SPEED
-    addCommands(rollerCommand,
-    new ExtendIntakePistonCommand(iPistonSubsystem), 
-    command1,
-     command2,
-    // new RunFlywheelAutoCommand(fSubsystem, 0.8),
-    new AutoTurretTurnCommand(turSubsystem),
-    new ParallelRaceGroup(new WaitCommand(2), new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D))),
-     new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
-     new StopTowerKickerCommandGroup(tSubsystem, kSubsystem), 
-     command3,
-     command4,
-     new AutoTurretTurnCommand(turSubsystem),
-     new ParallelRaceGroup(new WaitCommand(2), new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D))),
-     new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
-     new StopTowerKickerCommandGroup(tSubsystem, kSubsystem)
+    addCommands(
+        rollerCommand,
+        new ExtendIntakePistonCommand(iPistonSubsystem), 
+
+        // giving turret time to speed up
+        new WaitCommand(6.0), 
+
+        // shooting
+        new AutoTurretTurnCommand(turSubsystem),
+        new ParallelRaceGroup(new WaitCommand(2), new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D))),
+        new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+        new StopTowerKickerCommandGroup(tSubsystem, kSubsystem), 
+        
+        command1, // forward
+        command2, // backward
+        
+        // new RunFlywheelAutoCommand(fSubsystem, 0.8),
+        new AutoTurretTurnCommand(turSubsystem),
+        new ParallelRaceGroup(new WaitCommand(2), new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D))),
+        new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
+        new StopTowerKickerCommandGroup(tSubsystem, kSubsystem)
     );
     //returnIntakeCommand);
 }

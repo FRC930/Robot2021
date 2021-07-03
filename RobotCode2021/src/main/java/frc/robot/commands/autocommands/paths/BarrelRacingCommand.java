@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import frc.robot.utilities.AutonConfig;
 import frc.robot.commands.hoppercommands.SetAutonomousHopperCommand;
-import frc.robot.commands.hoppercommands.SetHopperCommand;
 import frc.robot.commands.turretcommads.AutoTurretTurnCommand;
 
 import frc.robot.commands.drivecommands.StopDriveCommand;

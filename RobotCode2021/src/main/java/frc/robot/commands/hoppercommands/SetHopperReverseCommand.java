@@ -14,7 +14,7 @@ import frc.robot.subsystems.HopperSubsystem;
 
 //-------- COMMAND CLASS --------\\
 
-public class SetHopperCommand extends CommandBase {
+public class SetHopperReverseCommand extends CommandBase {
 
     //-------- DECLARATIONS --------\\
 
@@ -25,7 +25,7 @@ public class SetHopperCommand extends CommandBase {
     //private 
     //-------- CONSTRUCTOR --------\\
 
-    public SetHopperCommand(HopperSubsystem HopperSubsystem, double speed, boolean isInverted) {
+    public SetHopperReverseCommand(HopperSubsystem HopperSubsystem, double speed, boolean isInverted) {
         m_HopperSubsystem = HopperSubsystem;
         this.speed = speed;
         this.isInverted = isInverted;
@@ -52,6 +52,6 @@ public class SetHopperCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 } //end of class DefaultHopperCommand

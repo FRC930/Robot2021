@@ -69,7 +69,7 @@ public class SaltAndPepperSkilletCommand extends SequentialCommandGroup {
         //a second trajectory config this one is reversed
         TrajectoryConfig reverseConfig = AutonConfig.getInstance().getReverseConfig();
 
-        TrajectoryConfig slowConfig = AutonConfig.getInstance().getSlowConfig();
+        TrajectoryConfig slowConfig = AutonConfig.getInstance().getSlowConfigStart();
         
         
 

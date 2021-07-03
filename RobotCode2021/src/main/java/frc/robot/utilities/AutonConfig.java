@@ -28,7 +28,13 @@ public class AutonConfig {
 
     private TrajectoryConfig reverseConfig;
 
-    private TrajectoryConfig slowConfig;
+    private TrajectoryConfig slowConfigStart;
+
+    private TrajectoryConfig slowConfigContinue;
+
+    private TrajectoryConfig slowConfigEnd;
+
+    private final int endVelocity_SlowConfig = 3;
 
     //Static flag for singleton
     private static AutonConfig lastInstance = null;
@@ -50,7 +56,7 @@ public class AutonConfig {
 
 
 
-        reverseConfig = new TrajectoryConfig(2, 1)
+        reverseConfig = new TrajectoryConfig(3, 1)
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(dSubsystem.getSwerveKinematics())
         .setEndVelocity(0)
@@ -58,9 +64,25 @@ public class AutonConfig {
         .addConstraint(autoVoltageConstraint)
         .setReversed(true);
 
-        slowConfig = new TrajectoryConfig(2, 1)
+        slowConfigStart = new TrajectoryConfig(3, 4)
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(dSubsystem.getSwerveKinematics())
+        .setEndVelocity(endVelocity_SlowConfig)
+        // Apply the voltage constraint
+        .addConstraint(autoVoltageConstraint);
+
+        slowConfigContinue = new TrajectoryConfig(3, 4)
+        // Add kinematics to ensure max speed is actually obeyed
+        .setKinematics(dSubsystem.getSwerveKinematics())
+        .setEndVelocity(endVelocity_SlowConfig)
+        .setStartVelocity(endVelocity_SlowConfig)
+        // Apply the voltage constraint
+        .addConstraint(autoVoltageConstraint);
+
+        slowConfigEnd = new TrajectoryConfig(3, 4)
+        // Add kinematics to ensure max speed is actually obeyed
+        .setKinematics(dSubsystem.getSwerveKinematics())
+        .setStartVelocity(endVelocity_SlowConfig)
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint);
     }
@@ -94,8 +116,16 @@ public class AutonConfig {
         return reverseConfig;
     }
 
-    public TrajectoryConfig getSlowConfig(){
-        return slowConfig;
+    public TrajectoryConfig getSlowConfigStart(){
+        return slowConfigStart;
+    }
+
+    public TrajectoryConfig getSlowConfigContinue(){
+        return slowConfigContinue;
+    }
+
+    public TrajectoryConfig getSlowConfigEnd(){
+        return slowConfigEnd;
     }
 
     // Custom transformBy from the trajectory class

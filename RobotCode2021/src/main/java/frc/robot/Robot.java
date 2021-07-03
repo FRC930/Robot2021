@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.ShuffleboardUtility;
 
 
@@ -49,7 +50,7 @@ public class Robot extends TimedRobot {
         
 
         commandScheduler = CommandScheduler.getInstance();
-        if(ShuffleboardUtility.getInstance().getSelectedMainRobot()){
+        if(RobotPreferences.getInstance().getTeamNumber() == 930){
             limelightCamera = new HttpCamera("limelight", "http://10.9.30.11:5801/stream.mjpg");
         }  
         else{

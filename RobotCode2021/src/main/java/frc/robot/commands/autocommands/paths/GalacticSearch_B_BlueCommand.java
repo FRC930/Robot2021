@@ -48,7 +48,6 @@ import frc.robot.commands.shootercommands.ShootPowerCellCommandGroup;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.utilities.AutonConfig;
 import frc.robot.commands.hoppercommands.SetAutonomousHopperCommand;
-import frc.robot.commands.hoppercommands.SetHopperCommand;
 import frc.robot.commands.turretcommads.AutoTurretTurnCommand;
 
 import frc.robot.commands.drivecommands.StopDriveCommand;

@@ -30,7 +30,7 @@ public class FullExtendFlywheelPistonCommand extends CommandBase {
     // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    flywheelAngleSubsystem.setTop(SolenoidValues.EXTEND);
+    //flywheelAngleSubsystem.setTop(SolenoidValues.EXTEND); disabled top piston for competition
     flywheelAngleSubsystem.setBottom(SolenoidValues.EXTEND);
     // True = far shot
     shuffleboardUtility.putShooterAngle(true);
@@ -51,7 +51,7 @@ public class FullExtendFlywheelPistonCommand extends CommandBase {
    // Returns true when the command should end.
    @Override
    public boolean isFinished() {
-     return true;
+     return false;
    }
 
 } // end of class ExtendFlywheelPistonCommand

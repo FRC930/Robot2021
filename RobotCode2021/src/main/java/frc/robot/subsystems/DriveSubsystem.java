@@ -115,7 +115,8 @@ public class DriveSubsystem extends SubsystemBase {
   // tank drive, auton config
   private final double MOTOR_RAMP_RATE = 0.75;//0.5;
 
-  private double speedModifier = 1.0;
+  private double speedModifierAuton = 1.0;
+  private double speedModifierTeleop = 0.7;
 
   /*
   private final SwerveDrivePoseEstimator m_poseEstimator =
@@ -318,7 +319,7 @@ public class DriveSubsystem extends SubsystemBase {
     logger.entering(DriveSubsystem.class.getName(), "swerveDrive()");
 
     Rotation2d heading = Rotation2d.fromDegrees(gyro.getFusedHeading());
-    double speedForward = targetY * Constants.KMAXSPEED;
+    double speedForward = (targetY * Constants.KMAXSPEED);
     double speedStrafe = targetX * Constants.KMAXSPEED;
     double speedRotation = rotation * Constants.KMAXANGULARSPEED;
 
@@ -331,10 +332,10 @@ public class DriveSubsystem extends SubsystemBase {
     //    This also will lower other wheel speeds if a speed goes over 1 on any wheel
     SwerveDriveKinematics.normalizeWheelSpeeds(states, Constants.KMAXSPEED);
 
-    swerveLeftFront.drive(states[0], speedModifier);
-    swerveRightFront.drive(states[1], speedModifier);
-    swerveLeftBack.drive(states[2], speedModifier);
-    swerveRightBack.drive(states[3], speedModifier);
+    swerveLeftFront.drive(states[0], speedModifierTeleop);
+    swerveRightFront.drive(states[1], speedModifierTeleop);
+    swerveLeftBack.drive(states[2], speedModifierTeleop);
+    swerveRightBack.drive(states[3], speedModifierTeleop);
 
     logger.exiting(DriveSubsystem.class.getName(), "swerveDrive()");
   } // end of method drive()
@@ -342,10 +343,10 @@ public class DriveSubsystem extends SubsystemBase {
   public void swerveDrive(SwerveModuleState[] states) {
     logger.entering(DriveSubsystem.class.getName(), "swerveDrive()");
 
-    swerveLeftFront.drive(states[0], speedModifier);
-    swerveRightFront.drive(states[1], speedModifier);
-    swerveLeftBack.drive(states[2], speedModifier);
-    swerveRightBack.drive(states[3], speedModifier);
+    swerveLeftFront.drive(states[0], speedModifierAuton);
+    swerveRightFront.drive(states[1], speedModifierAuton);
+    swerveLeftBack.drive(states[2], speedModifierAuton);
+    swerveRightBack.drive(states[3], speedModifierAuton);
     
     logger.exiting(DriveSubsystem.class.getName(), "swerveDrive()");
   } // end of method swerveDrive()
@@ -600,7 +601,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // SWERVE DRIVE
   public void setSpeedModifier(double newSpeedModifier) {
-    speedModifier = newSpeedModifier;
+    speedModifierTeleop = newSpeedModifier;
   }
 
   // SWERVE DRIVE

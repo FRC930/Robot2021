@@ -26,7 +26,6 @@ public class ShuffleboardUtility {
     //-------- DECLARATIONS --------\\
     
     private SendableChooser<Command> sendableChooser;
-    private SendableChooser<Boolean> sendableChooserMainRobot;
     // private List<ShuffleboardComponent<?>> pidController;
     // private double kP;
     // private double kI;
@@ -57,6 +56,7 @@ public class ShuffleboardUtility {
     private double turretEncoderPosition;
     private double gyroYaw;
     private double shootSpeed;
+    private double endgameEncoderPosition;
     private ShuffleboardTab testDebugTab;
     private ShuffleboardTab driverStationTab;
     private NetworkTableEntry intakingEntry;
@@ -80,6 +80,7 @@ public class ShuffleboardUtility {
     private NetworkTableEntry encodAccEntry;
     private NetworkTableEntry maxVoltageEntry;
     private NetworkTableEntry dtSecondsEntry;
+    private NetworkTableEntry endgameEncoderPositionEntry;
 
 
     //-------- CONSTRUCTOR --------\\
@@ -111,6 +112,7 @@ public class ShuffleboardUtility {
         turretSpeed = 0.0;
         turretEncoderPosition = 0.0;
         gyroYaw = 0.0;
+        endgameEncoderPosition = 0.0;
         // kP = 0.0;
         // kI = 0.0;
         // kD = 0.0;
@@ -140,11 +142,10 @@ public class ShuffleboardUtility {
         modelAccEntry = driverStationTab.add("Model accuracy", modelAcc).getEntry();
         encodAccEntry = driverStationTab.add("Encoder Accuracy", encodAcc).getEntry();
         dtSecondsEntry = driverStationTab.add("DT Seconds", dtSeconds).getEntry();
+        endgameEncoderPositionEntry = driverStationTab.add("Endgame Encoder", endgameEncoderPosition).getEntry();
         sendableChooser = new SendableChooser<Command>();
-        sendableChooserMainRobot = new SendableChooser<Boolean>();
 
         driverStationTab.add("Auton Path Selector", sendableChooser);
-       driverStationTab.add("Robot Selector", sendableChooserMainRobot);
         
     }
 
@@ -246,6 +247,11 @@ public class ShuffleboardUtility {
         shooterAngleEntry.setBoolean(shooterAngle);
     }
 
+    public void putEndgameEncoderPosition(double encoderPosition){
+        endgameEncoderPosition = encoderPosition;
+        endgameEncoderPositionEntry.setDouble(endgameEncoderPosition);
+    }
+
 	// public void getLogger(String logger){
 	// 	this.logger = logger;
 	// 	SmartDashboard.putString("Logger Level", logger);
@@ -270,18 +276,8 @@ public class ShuffleboardUtility {
         return shooterSetEntry.getDouble(shootSpeed);
     }
 
-    public void addMainRobotOptions(String pathName,Boolean mainRobot){
-        sendableChooserMainRobot.addOption(pathName,mainRobot);
-    }
-
-    public void setDefaultMainRobotOptions(String pathName,Boolean mainRobot){
-        sendableChooserMainRobot.setDefaultOption(pathName,mainRobot);
-    }
-    public Boolean getSelectedMainRobot(){
-        return sendableChooserMainRobot.getSelected();
-    }
-    public void addAutonOptions(String pathName,CommandBase mainRobot){
-        sendableChooser.addOption(pathName,mainRobot);
+    public void addAutonOptions(String pathName,CommandBase autoCommand){
+        sendableChooser.addOption(pathName, autoCommand);
     }
 
     public void setDefaultAutonOptions(String pathName,CommandBase autoCommand){

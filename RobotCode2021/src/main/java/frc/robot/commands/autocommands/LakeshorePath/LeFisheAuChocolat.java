@@ -50,7 +50,6 @@ import frc.robot.commands.shootercommands.ShootPowerCellCommandGroup;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.utilities.AutonConfig;
 import frc.robot.commands.hoppercommands.SetAutonomousHopperCommand;
-import frc.robot.commands.hoppercommands.SetHopperCommand;
 import frc.robot.commands.turretcommads.AutoTurretTurnCommand;
 
 import frc.robot.commands.drivecommands.StopDriveCommand;
@@ -118,7 +117,7 @@ public class LeFisheAuChocolat extends SequentialCommandGroup {
                  ),
                  new Pose2d(inchesToMeters(105) + xOffset, inchesToMeters(-80) + yOffset, new Rotation2d(Math.toRadians(-60))),
                  // Pass config
-                 AutonConfig.getInstance().getSlowConfig()
+                 AutonConfig.getInstance().getSlowConfigStart()
                 );
 
             //INTAKE ALWAYS FACE POSITIVE DOWN FEILD
@@ -141,7 +140,7 @@ public class LeFisheAuChocolat extends SequentialCommandGroup {
                   ),
                  new Pose2d(inchesToMeters(-76) - xOffset, inchesToMeters(38) + yOffset, new Rotation2d(Math.toRadians(0))),
                  // Pass config
-                 AutonConfig.getInstance().getSlowConfig()
+                 AutonConfig.getInstance().getSlowConfigContinue()
                 );
             trajectory4 = TrajectoryGenerator.generateTrajectory(
                 // Robot starts at X: 0 Y: 0 and a rotation of 0 
@@ -151,7 +150,7 @@ public class LeFisheAuChocolat extends SequentialCommandGroup {
                  ),
                  new Pose2d(inchesToMeters(60) + xOffset, inchesToMeters(-76) - yOffset, new Rotation2d(Math.toRadians(0))),
                  // Pass config
-                 AutonConfig.getInstance().getSlowConfig()
+                 AutonConfig.getInstance().getSlowConfigEnd()
                 );
     
 
