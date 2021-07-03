@@ -544,6 +544,7 @@ public class RobotContainer {
     JoystickButton endgameExtendButton = new JoystickButton(driverController, XB_START);
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
+    JoystickButton retractHoodButton = new JoystickButton(coDriverController, XB_RB);
 
     // --Command binds
     //JoystickButton startAccuracyChallengeButton = new JoystickButton(coDriverController, XB_START);
@@ -557,6 +558,7 @@ public class RobotContainer {
     fullRetractButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
     halfExtendTopButton.toggleWhenActive(new HalfExtendTopFlywheelPistonCommand(flywheelPistonSubsystem));
     halfExtendBottomButton.toggleWhenActive(new HalfExtendBottomFlywheelPistonCommand(flywheelPistonSubsystem));
+    retractHoodButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
     // Rotational control command bind
     // rotationalButton.whileActiveOnce(new
     // RotationalControlCommandGroup(colorSensorSubsystem,
@@ -660,7 +662,7 @@ public class RobotContainer {
         new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D), coDriverController,
         XB_AXIS_LEFT_X));
 
-    turretFront.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "front");
+    turretFront.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "front"));
     turretBack.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "right"));
     turretLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "back"));
     turretRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "left"));
