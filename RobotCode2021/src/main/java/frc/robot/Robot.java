@@ -26,6 +26,7 @@ import frc.robot.utilities.ShuffleboardUtility;
  */
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
+    private Command m_shuffleboardCommand;
 
     private RobotContainer m_robotContainer;
 
@@ -104,6 +105,13 @@ public class Robot extends TimedRobot {
             m_robotContainer.robotSimPeriodic();
         }
 
+        m_shuffleboardCommand = m_robotContainer.getShuffleboardCommand();
+            
+        // schedule the shuffleboard command
+        if(m_shuffleboardCommand != null) {
+            m_shuffleboardCommand.schedule();
+        }
+
         //shuffleboard.run();
     }
 
@@ -128,7 +136,7 @@ public class Robot extends TimedRobot {
         if(RobotBase.isReal()){
             m_robotContainer.beginAutoRunCommands();
             m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-            
+
             // schedule the autonomous command (example)
             if (m_autonomousCommand != null) {
                 m_autonomousCommand.schedule();
@@ -148,6 +156,13 @@ public class Robot extends TimedRobot {
         //Runs sim method if robot is simulated
         if(RobotBase.isSimulation()){
             m_robotContainer.autoSimPeriodic();
+        }
+
+        m_shuffleboardCommand = m_robotContainer.getShuffleboardCommand();
+            
+        // schedule the shuffleboard command
+        if(m_shuffleboardCommand != null) {
+            m_shuffleboardCommand.schedule();
         }
     }
 

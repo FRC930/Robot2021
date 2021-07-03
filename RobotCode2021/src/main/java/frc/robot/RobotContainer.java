@@ -21,6 +21,8 @@ import frc.robot.commands.limelightcommands.*;
 import frc.robot.commands.shootercommands.*;
 import frc.robot.commands.shootercommands.flywheelcommands.*;
 import frc.robot.commands.shootercommands.pistoncommands.*;
+import frc.robot.commands.shuffleboardcommands.ShuffleboardCompetitionCommand;
+import frc.robot.commands.shuffleboardcommands.ShuffleboardDebugCommand;
 import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
 
 import frc.robot.commands.towercommands.*;
@@ -497,6 +499,16 @@ public class RobotContainer {
       )
     );
 
+    shuffleboardUtility.setDefaultShuffleboardOptions(
+      "Competition", 
+      new ShuffleboardCompetitionCommand()
+    );
+
+    shuffleboardUtility.addShuffleboardOptions(
+      "Debug", 
+      new ShuffleboardDebugCommand()
+    );
+
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team
 
@@ -737,6 +749,10 @@ public class RobotContainer {
         new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
 
     scheduler.setDefaultCommand(flywheelPistonSubsystem, defaultFullExtendFlywheelCommand);
+  }
+
+  public Command getShuffleboardCommand() {
+    return shuffleboardUtility.getSelectedShuffleboardOption();
   }
 
   /**

@@ -17,7 +17,7 @@ import frc.robot.subsystems.FlywheelSubsystem;
 
 public class StopFlywheelCommand extends CommandBase {
 
-    //-------- DELCARATIONS --------\\
+    //-------- DECLARATIONS --------\\
 
     private FlywheelSubsystem flyWheelSubsystem;
 
