@@ -25,7 +25,8 @@ public class ShuffleboardUtility {
 
     //-------- DECLARATIONS --------\\
     
-    private SendableChooser<Command> sendableChooser;
+    private SendableChooser<Command> autonChooser;
+    private SendableChooser<Command> shuffleboardChooser;
     // private List<ShuffleboardComponent<?>> pidController;
     // private double kP;
     // private double kI;
@@ -56,6 +57,7 @@ public class ShuffleboardUtility {
     private double turretEncoderPosition;
     private double gyroYaw;
     private double shootSpeed;
+    private double endgameEncoderPosition;
     private ShuffleboardTab testDebugTab;
     private ShuffleboardTab driverStationTab;
     private NetworkTableEntry intakingEntry;
@@ -79,11 +81,21 @@ public class ShuffleboardUtility {
     private NetworkTableEntry encodAccEntry;
     private NetworkTableEntry maxVoltageEntry;
     private NetworkTableEntry dtSecondsEntry;
+    private NetworkTableEntry endgameEncoderPositionEntry;
+
+    private boolean intakeAccess;
+    private boolean hopperAccess;
+    private boolean limelightAccess;
+    private boolean flywheelAccess;
+    private boolean turretAccess;
+    private boolean endgameAccess;
+    private boolean miscellaneousAccess;
 
 
     //-------- CONSTRUCTOR --------\\
 
     private ShuffleboardUtility() {
+        // Singleton class
 
         //pidController = testDebugTab.getComponents();
         intakeIndicator = false;
@@ -110,6 +122,7 @@ public class ShuffleboardUtility {
         turretSpeed = 0.0;
         turretEncoderPosition = 0.0;
         gyroYaw = 0.0;
+        endgameEncoderPosition = 0.0;
         // kP = 0.0;
         // kI = 0.0;
         // kD = 0.0;
@@ -139,10 +152,20 @@ public class ShuffleboardUtility {
         modelAccEntry = driverStationTab.add("Model accuracy", modelAcc).getEntry();
         encodAccEntry = driverStationTab.add("Encoder Accuracy", encodAcc).getEntry();
         dtSecondsEntry = driverStationTab.add("DT Seconds", dtSeconds).getEntry();
-        sendableChooser = new SendableChooser<Command>();
+        endgameEncoderPositionEntry = driverStationTab.add("Endgame Encoder", endgameEncoderPosition).getEntry();
+        autonChooser = new SendableChooser<Command>();
+        shuffleboardChooser = new SendableChooser<Command>();
 
-        driverStationTab.add("Auton Path Selector", sendableChooser);
+        driverStationTab.add("Auton Path Selector", autonChooser);
         
+        intakeAccess = false;
+        hopperAccess = false;
+        limelightAccess = false;
+        flywheelAccess = false;
+        turretAccess = false;
+        endgameAccess = false;
+        miscellaneousAccess = false;
+
     }
 
     private static ShuffleboardUtility instance = null;
@@ -155,33 +178,89 @@ public class ShuffleboardUtility {
         return instance;
     }
 
+    //------ Data Access ------\\
+
+    public void setDataAccess(boolean _intakeAccess, boolean _hopperAccess, boolean _limelightAccess, boolean _flywheelAccess, boolean _turretAccess, boolean _endgameAccess, boolean _miscellaneousAccess) {
+        intakeAccess = _intakeAccess;
+        hopperAccess = _hopperAccess;
+        limelightAccess = _limelightAccess;
+        flywheelAccess = _flywheelAccess;
+        turretAccess = _turretAccess;
+        endgameAccess = _endgameAccess;
+        miscellaneousAccess = _miscellaneousAccess;
+    }
+
+    public void allAccessFalse() {
+        intakeAccess = false;
+        hopperAccess = false;
+        limelightAccess = false;
+        flywheelAccess = false;
+        turretAccess = false;
+        endgameAccess = false;
+        miscellaneousAccess = false;
+    }
+
+    public void toggleIntakeAccess() {
+        intakeAccess = !intakeAccess;
+    }
+
+    public void toggleHopperAccess() {
+        hopperAccess = !hopperAccess;
+    }
+    
+    public void toggleLimelightAccess() {
+        limelightAccess = !limelightAccess;
+    }
+
+    public void toggleFlywheelAccess() {
+        flywheelAccess = !flywheelAccess;
+    }
+
+    public void toggleEndgameAccess() {
+        endgameAccess = !endgameAccess;
+    }
+
+    public void toggleMiscellaneousAccess() {
+        miscellaneousAccess = !miscellaneousAccess;
+    }
+
     //------- Drive Tab -------\\
 
     // TODO: set methods to respective commands
 	public void putIntakeIndicator(boolean IntakeIndicator){
-		intakeIndicator = IntakeIndicator;
-        intakingEntry.setBoolean(intakeIndicator);
+        intakeIndicator = IntakeIndicator;
+        if(intakeAccess) {
+            intakingEntry.setBoolean(intakeIndicator);
+        }
     }
     
 	public void putShootIndicator(boolean ShootIndicator){
-		shootIndicator = ShootIndicator;
-		shootingEntry.setBoolean(shootIndicator);
+        shootIndicator = ShootIndicator;
+        if(flywheelAccess) {
+            shootingEntry.setBoolean(shootIndicator);
+        }
     }
 
     public void putManualMode(boolean ManualMode){
         manualMode = ManualMode;
-        manualModeEntry.setBoolean(manualMode);
+        if(miscellaneousAccess) {
+            manualModeEntry.setBoolean(manualMode);
+        }
     }
 
 	public void putDistanceFromTarget(double DistanceFromTarget){
-		distanceFromTarget = DistanceFromTarget;
-        distanceFromTargetEntry.setNumber(distanceFromTarget);
+        distanceFromTarget = DistanceFromTarget;
+        if(limelightAccess) {
+            distanceFromTargetEntry.setNumber(distanceFromTarget);
+        }
     }
 
     // TODO: find method for shot types
 	public void putShotType(String ShotType){
 		shotType = ShotType;
-		shotTypeEntry.setString(shotType);
+        if(miscellaneousAccess) {
+            shotTypeEntry.setString(shotType);
+        }
     }
 
     public void putHopperFeed(){
@@ -190,17 +269,23 @@ public class ShuffleboardUtility {
 
     public void putShooterUpToSpeed(boolean ShooterUpToSpeed){
         shooterUpToSpeed = ShooterUpToSpeed;
-        shooterUpToSpeedEntry.setBoolean(shooterUpToSpeed);
+        if(flywheelAccess) {
+            shooterUpToSpeedEntry.setBoolean(shooterUpToSpeed);
+        }
     }
 
     public void putFlywheelSpeed(double FlywheelSpeed){
 		flywheelSpeed = FlywheelSpeed;
-        flywheelSpeedEntry.setNumber(flywheelSpeed);
+        if(flywheelAccess) {
+            flywheelSpeedEntry.setNumber(flywheelSpeed);
+        }
     }
  
     public void putFlywheelVoltage(double FlywheelVoltage){
 		flywheelVoltage = FlywheelVoltage;
-        flywheelVoltageEntry.setNumber(flywheelVoltage);
+        if(flywheelAccess) {
+            flywheelVoltageEntry.setNumber(flywheelVoltage);
+        }
     }
 
     public void putControlConfig(double mVelError, double mControlTol , double mModelAcc, double mEncodAcc , double mMaxVoltage ,
@@ -211,12 +296,15 @@ public class ShuffleboardUtility {
         encodAcc = mEncodAcc;
         maxVoltage = mMaxVoltage;
         dtSeconds = mDtSeconds;
-        velErrorEntry.setNumber(velError);
-        controlTolEntry.setNumber(controlTol);
-        modelAccEntry.setNumber(modelAcc);
-        encodAccEntry.setNumber(encodAcc);
-        maxVoltageEntry.setNumber(maxVoltage);
-        dtSecondsEntry.setNumber(dtSeconds);
+        if(flywheelAccess) {
+            velErrorEntry.setNumber(velError);
+            controlTolEntry.setNumber(controlTol);
+            modelAccEntry.setNumber(modelAcc);
+            encodAccEntry.setNumber(encodAcc);
+            maxVoltageEntry.setNumber(maxVoltage);
+            dtSecondsEntry.setNumber(dtSeconds);
+        }
+        
         
     }
  
@@ -230,17 +318,30 @@ public class ShuffleboardUtility {
 
     public void putTurretSpeed(double TurretSpeed){
         turretSpeed = TurretSpeed;
-        turretSpeedEntry.setNumber(turretSpeed);
+        if(turretAccess) {
+            turretSpeedEntry.setNumber(turretSpeed);
+        }
     }
 
     public void putHopperSpeed(double HopperSpeed){
         hopperSpeed = HopperSpeed;
-        hopperSpeedEntry.setNumber(hopperSpeed);
+        if(hopperAccess) {
+            hopperSpeedEntry.setNumber(hopperSpeed);
+        }
     }
 
     public void putShooterAngle(boolean ShooterAngle){
         shooterAngle = ShooterAngle;
-        shooterAngleEntry.setBoolean(shooterAngle);
+        if(flywheelAccess) {
+            shooterAngleEntry.setBoolean(shooterAngle);
+        }
+    }
+
+    public void putEndgameEncoderPosition(double encoderPosition){
+        endgameEncoderPosition = encoderPosition;
+        if(endgameAccess) {
+            endgameEncoderPositionEntry.setDouble(endgameEncoderPosition);
+        }
     }
 
 	// public void getLogger(String logger){
@@ -250,32 +351,53 @@ public class ShuffleboardUtility {
     
 	public void putShooterRPM(double ShooterRPM){
 		shooterRPM = ShooterRPM;
-		shooterRPMEntry.setNumber(shooterRPM);
+        if(flywheelAccess) {
+            shooterRPMEntry.setNumber(shooterRPM);
+        }
     }
     
 	public void putTurretEncoderPosition(double TurretEncoderPosition){
 		turretEncoderPosition = TurretEncoderPosition;
-		turretEncoderPositionEntry.setNumber(turretEncoderPosition);
+        if(turretAccess) {
+            turretEncoderPositionEntry.setNumber(turretEncoderPosition);
+        }
     }
 
     public void putGyroYaw(double GyroYaw){
         gyroYaw = GyroYaw;
-        gyroYawEntry.setNumber(gyroYaw);
+        if(miscellaneousAccess) {
+            gyroYawEntry.setNumber(gyroYaw);
+        }
     }
+
+    //----- Miscellaneous -----\\
 
     public double getShooterSpeed(){
         return shooterSetEntry.getDouble(shootSpeed);
     }
 
     public void addAutonOptions(String pathName,CommandBase autoCommand){
-        sendableChooser.addOption(pathName, autoCommand);
+        autonChooser.addOption(pathName, autoCommand);
     }
 
     public void setDefaultAutonOptions(String pathName,CommandBase autoCommand){
-        sendableChooser.setDefaultOption(pathName,autoCommand);
+        autonChooser.setDefaultOption(pathName, autoCommand);
     }
+
     public Command getSelectedAutonPath(){
-        return sendableChooser.getSelected();
+        return autonChooser.getSelected();
+    }
+
+    public void addShuffleboardOptions(String settingName, CommandBase settingCommand) {
+        shuffleboardChooser.addOption(settingName, settingCommand);
+    }
+
+    public void setDefaultShuffleboardOptions(String settingName, CommandBase settingCommand) {
+        shuffleboardChooser.setDefaultOption(settingName, settingCommand);
+    }
+
+    public Command getSelectedShuffleboardOption() {
+        return shuffleboardChooser.getSelected();
     }
     
 } //end of class Shuffleboard

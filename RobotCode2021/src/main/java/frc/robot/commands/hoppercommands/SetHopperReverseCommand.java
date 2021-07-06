@@ -1,46 +1,48 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019-2020 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2020 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-//DELETE
+
 //-------- IMPORTS --------\\
 
-package frc.robot.commands.shootercommands.flywheelcommands;
+package frc.robot.commands.hoppercommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
-import frc.robot.subsystems.FlywheelSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
 
 //-------- COMMAND CLASS --------\\
 
-public class StopFlywheelCommand extends CommandBase {
+public class SetHopperReverseCommand extends CommandBase {
 
     //-------- DECLARATIONS --------\\
 
-    private FlywheelSubsystem flyWheelSubsystem;
+    private HopperSubsystem m_HopperSubsystem;
+    private double speed;
+    private boolean isInverted;
 
+    //private 
     //-------- CONSTRUCTOR --------\\
 
-    public StopFlywheelCommand(FlywheelSubsystem flyWheelSubsystem) {
-        this.flyWheelSubsystem = flyWheelSubsystem;
-        addRequirements(this.flyWheelSubsystem);
+    public SetHopperReverseCommand(HopperSubsystem HopperSubsystem, double speed, boolean isInverted) {
+        m_HopperSubsystem = HopperSubsystem;
+        this.speed = speed;
+        this.isInverted = isInverted;
+        addRequirements(m_HopperSubsystem);
     }
 
-    //-------- COMMANDBASE METHODS --------\\
-    
+    //-------- METHODS --------\\    
+
     // Called when the command is initially scheduled.
     @Override
-
     public void initialize() {
-        //Stop the flywheel, automatically returning to default.
-        //flyWheelSubsystem.stop();
-    }
-
-    // Called every time the scheduler runs while the command is scheduled.
-    @Override
-    public void execute() {
+        if(isInverted){
+            m_HopperSubsystem.setSpeed(-speed);
+        }
+        else{
+            m_HopperSubsystem.setSpeed(speed);
+        }
     }
 
     // Called once the command ends or is interrupted.
@@ -48,12 +50,8 @@ public class StopFlywheelCommand extends CommandBase {
     public void end(boolean interrupted) {
     }
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
-  
-} // end of class StopFlywheelCommand
-
-
+} //end of class DefaultHopperCommand

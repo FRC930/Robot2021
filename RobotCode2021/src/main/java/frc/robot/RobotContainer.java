@@ -6,7 +6,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.autocommands.LakeshorePath.LeFishe;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheForwarding;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheAuChocolat;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheCantAim;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening;
 // --Our Commands
 import frc.robot.commands.autocommands.paths.*;
@@ -19,6 +21,8 @@ import frc.robot.commands.limelightcommands.*;
 import frc.robot.commands.shootercommands.*;
 import frc.robot.commands.shootercommands.flywheelcommands.*;
 import frc.robot.commands.shootercommands.pistoncommands.*;
+import frc.robot.commands.shuffleboardcommands.ShuffleboardCompetitionCommand;
+import frc.robot.commands.shuffleboardcommands.ShuffleboardDebugCommand;
 import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
 
 import frc.robot.commands.towercommands.*;
@@ -30,6 +34,7 @@ import frc.robot.commands.hoppercommands.DefaultHopperCommand;
 import frc.robot.commands.hoppercommands.DefaultHopperCommandGroup;
 import frc.robot.commands.hoppercommands.DefaultStopHopperCommand;
 import frc.robot.commands.hoppercommands.SetHopperCommand;
+import frc.robot.commands.hoppercommands.SetHopperReverseCommand;
 import frc.robot.commands.hoppercommands.StopHopperStateCommand;
 // --Subsystem imports
 import frc.robot.subsystems.*;
@@ -141,16 +146,6 @@ public class RobotContainer {
   // private final double TURRET_SET_POSITION_I = 0.0;
   // private final double TURRET_SET_POSITION_D = 0.0;
 
-  // encoder positions for setting turret to one of four directions
-  private final double TURRET_BACK_POSITION = 0.635;
-  private final double TURRET_FRONT_POSITION = 0.383;
-  private final double TURRET_RIGHT_POSITION = 0.51;
-  private final double TURRET_LEFT_POSITION = 0.256;
-
-  private final double FRONT_LEFT_POSITION = 0.3195;
-  private final double FRONT_RIGHT_POSITION = 0.4465;
-  private final double BACK_RIGHT_POSITION = 0.5725;
-
   // -------- DECLARATIONS --------\\
   private static final Logger frcRobotLogger = Logger.getLogger(RobotContainer.class.getPackageName());
 
@@ -235,6 +230,7 @@ public class RobotContainer {
   private final DefaultFlywheelCommand defaultFlywheelCommand;
   private final DefaultKillFlywheelCommand defaultKillFlywheelCommand;
   private final AccuracyChallengeCommand accuracyChallengeCommand;
+  private final FullExtendFlywheelPistonCommand defaultFullExtendFlywheelCommand;
 
   // --Turret commands
   private final JoystickTurretCommand joystickTurretCommand; // For manual
@@ -361,15 +357,17 @@ public class RobotContainer {
     // Flywheel
     // Note: Tune values for if(930 robot) and else(9930 robot) statements
     if(RobotPreferences.getInstance().getTeamNumber() == 930) {
-      flywheelSubsystem.setSpeedRPMs(2000);
+      flywheelSubsystem.setSpeedRPMs(AccuracyChallengeCommand.RED_SPEED); // originally 2000 rpm
     }
     else{
-      flywheelSubsystem.setSpeedRPMs(2500);
+      flywheelSubsystem.setSpeedRPMs(AccuracyChallengeCommand.RED_SPEED); // originally 2500 rpm
     }
     defaultFlywheelCommand = new DefaultFlywheelCommand(flywheelSubsystem);
     defaultKillFlywheelCommand = new DefaultKillFlywheelCommand(flywheelSubsystem);
     accuracyChallengeCommand = new AccuracyChallengeCommand(flywheelSubsystem, flywheelPistonSubsystem,
         limelightSubsystem);
+    
+    defaultFullExtendFlywheelCommand = new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem);
 
     // turret
     joystickTurretCommand = new JoystickTurretCommand(turretSubsystem, coDriverController, XB_AXIS_LEFT_X);
@@ -400,7 +398,7 @@ public class RobotContainer {
     shuffleboardUtility.setDefaultAutonOptions("Default (None)", null);
     
     shuffleboardUtility.addAutonOptions(
-      "Primary", 
+      "Trench, Rendezvous and Shoot", 
       new LeFishe(
         driveSubsystem,
         intakePistonSubsystem,
@@ -416,24 +414,8 @@ public class RobotContainer {
     );
 
     shuffleboardUtility.addAutonOptions(
-      "Secondary", 
+      "Rendezvous and Shoot", 
       new LeFisheTheFishening(
-        driveSubsystem,
-        intakePistonSubsystem,
-        intakeMotorSubsystem,
-        flywheelSubsystem,
-        towerSubsystem,
-        hopperSubsystem,
-        kickerSubsystem,
-        limelightSubsystem,
-        flywheelPistonSubsystem,
-        turretSubsystem
-      )
-    );
-            
-    shuffleboardUtility.addAutonOptions(
-      "AltFishe", 
-      new LeFisheAuChocolat(
         driveSubsystem,
         intakePistonSubsystem,
         intakeMotorSubsystem,
@@ -448,7 +430,7 @@ public class RobotContainer {
     );
     
     shuffleboardUtility.addAutonOptions(
-      "The Forward and Back", 
+      "Trench and Shoot", 
       new LeFisheTheBackening(
         driveSubsystem,
         intakePistonSubsystem,
@@ -461,6 +443,49 @@ public class RobotContainer {
         flywheelPistonSubsystem,
         turretSubsystem
       )
+    );
+
+    shuffleboardUtility.addAutonOptions(
+      "Robot Forward", 
+      new LeFisheTheForwarding(
+        driveSubsystem,
+        intakePistonSubsystem,
+        intakeMotorSubsystem,
+        flywheelSubsystem,
+        towerSubsystem,
+        hopperSubsystem,
+        kickerSubsystem,
+        limelightSubsystem,
+        flywheelPistonSubsystem,
+        turretSubsystem
+      )
+    );
+
+    // Taken out unless explicity needed. Runs auton without AutoTurretTurnCommand.
+    // shuffleboardUtility.addAutonOptions(
+    //   "9930's No Auto Turret Turn", 
+    //   new LeFisheCantAim(
+    //     driveSubsystem,
+    //     intakePistonSubsystem,
+    //     intakeMotorSubsystem,
+    //     flywheelSubsystem,
+    //     towerSubsystem,
+    //     hopperSubsystem,
+    //     kickerSubsystem,
+    //     limelightSubsystem,
+    //     flywheelPistonSubsystem,
+    //     turretSubsystem
+    //   )
+    // );
+
+    shuffleboardUtility.setDefaultShuffleboardOptions(
+      "Competition", 
+      new ShuffleboardCompetitionCommand()
+    );
+
+    shuffleboardUtility.addShuffleboardOptions(
+      "Debug", 
+      new ShuffleboardDebugCommand()
     );
 
     // --Bindings
@@ -519,12 +544,14 @@ public class RobotContainer {
     // ZR Button
     JoystickButton shootButton = new JoystickButton(driverController, XB_RB);
     JoystickButton resetSwerveButton = new JoystickButton(driverController, XB_Y);
-    JoystickButton endgameButton = new JoystickButton(driverController, XB_BACK);
+    JoystickButton endgameRetractButton = new JoystickButton(driverController, XB_BACK);
+    JoystickButton endgameExtendButton = new JoystickButton(driverController, XB_START);
     // codriver stop jam button
     JoystickButton stopJamButton = new JoystickButton(coDriverController, XB_X);
+    JoystickButton retractHoodButton = new JoystickButton(coDriverController, XB_RB);
 
     // --Command binds
-    JoystickButton startAccuracyChallengeButton = new JoystickButton(coDriverController, XB_START);
+    //JoystickButton startAccuracyChallengeButton = new JoystickButton(coDriverController, XB_START);
 
     POVTrigger fullExtendButton = new POVTrigger(driverController, 0, XB_POV_UP);
     POVTrigger fullRetractButton = new POVTrigger(driverController, 0, XB_POV_DOWN);
@@ -535,6 +562,7 @@ public class RobotContainer {
     fullRetractButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
     halfExtendTopButton.toggleWhenActive(new HalfExtendTopFlywheelPistonCommand(flywheelPistonSubsystem));
     halfExtendBottomButton.toggleWhenActive(new HalfExtendBottomFlywheelPistonCommand(flywheelPistonSubsystem));
+    retractHoodButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
     // Rotational control command bind
     // rotationalButton.whileActiveOnce(new
     // RotationalControlCommandGroup(colorSensorSubsystem,
@@ -545,7 +573,8 @@ public class RobotContainer {
 
     // Drive command binds
     swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
-    endgameButton.whenHeld(new EndgameRunCommand(endgameSubsystem)).whenReleased(new EndgameCommandFlipState(endgameSubsystem));
+    endgameRetractButton.whenHeld(new EndgameRunCommand(endgameSubsystem, "down"));//.whenReleased(new EndgameCommandFlipState(endgameSubsystem));
+    endgameExtendButton.whenHeld(new EndgameRunCommand(endgameSubsystem, "up"));
 
     // Shooter command binds
     shootButton
@@ -582,7 +611,7 @@ public class RobotContainer {
     Trigger manualFlywheelButton = new JoystickButton(driverController, XB_AXIS_RT).and(inManualModeTrigger);
 
     // ZL Button
-    AxisTrigger manualFlywheelPistonButton = new AxisTrigger(driverController, XB_AXIS_LT);// .and(inManualModeTrigger);
+    //AxisTrigger manualFlywheelPistonButton = new AxisTrigger(driverController, XB_AXIS_LT);// .and(inManualModeTrigger);
 
     // --Command binds
 
@@ -602,14 +631,14 @@ public class RobotContainer {
         .whenInactive(new StopFlywheelCommand(flywheelSubsystem));
 
     // manual flywheel piston stuff
-    manualFlywheelPistonButton.whenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem))
-        .whenInactive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    //manualFlywheelPistonButton.whenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem))
+      //  .whenInactive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
 
-    reverseHopperButton.whileActiveOnce(new SetHopperCommand(hopperSubsystem, Constants.HOPPER_REVERSE_SPEED, true));
+    reverseHopperButton.whileActiveOnce(new SetHopperReverseCommand(hopperSubsystem, Constants.HOPPER_REVERSE_SPEED, true));
     // manual
     stopHopperButton.whileActiveOnce(stopHopperStateCommand);
 
-    startAccuracyChallengeButton.whileActiveContinuous(accuracyChallengeCommand);
+    //startAccuracyChallengeButton.whileActiveContinuous(accuracyChallengeCommand);
   } // end of method configureDriverBindings()
 
   private void configureCodriverBindings() {
@@ -637,14 +666,14 @@ public class RobotContainer {
         new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D), coDriverController,
         XB_AXIS_LEFT_X));
 
-    turretFront.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_FRONT_POSITION));
-    turretBack.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_BACK_POSITION));
-    turretLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_LEFT_POSITION));
-    turretRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, TURRET_RIGHT_POSITION));
+    turretFront.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "front"));
+    turretBack.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "right"));
+    turretLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "back"));
+    turretRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "left"));
 
-    turretFrontLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, FRONT_LEFT_POSITION));
-    turretFrontRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, FRONT_RIGHT_POSITION));
-    turretBackRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, BACK_RIGHT_POSITION));
+    turretFrontLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "frontLeft"));
+    turretFrontRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "frontRight"));
+    turretBackRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "backRight"));
 
     // endgameSafetyButton.whileActiveOnce(climberArmCommandGroup);
     intakePistonTrigger.toggleWhenActive(new ExtendIntakePistonCommand(intakePistonSubsystem))
@@ -660,7 +689,7 @@ public class RobotContainer {
     CommandScheduler scheduler = CommandScheduler.getInstance();
 
     scheduler.unregisterSubsystem(limelightSubsystem, hopperSubsystem, turretSubsystem, flywheelSubsystem,
-        kickerSubsystem, towerSubsystem/* , ultrasonicSubsystem */);
+        kickerSubsystem, towerSubsystem, flywheelPistonSubsystem/* , ultrasonicSubsystem */);
 
     if (inManualMode) {
       scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);
@@ -677,6 +706,8 @@ public class RobotContainer {
           new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
       // scheduler.setDefaultCommand(ultrasonicSubsystem, new
       // UltrasonicPingCommand(ultrasonicSubsystem));
+
+      scheduler.setDefaultCommand(flywheelPistonSubsystem, defaultFullExtendFlywheelCommand);
     }
 
   }
@@ -686,7 +717,7 @@ public class RobotContainer {
     // --The instance of the scheduler
     CommandScheduler scheduler = CommandScheduler.getInstance();
 
-    scheduler.unregisterSubsystem(hopperSubsystem, turretSubsystem, flywheelSubsystem, kickerSubsystem, towerSubsystem);
+    scheduler.unregisterSubsystem(hopperSubsystem, turretSubsystem, flywheelSubsystem, kickerSubsystem, towerSubsystem, flywheelPistonSubsystem);
     scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);// new AutoAimTurretCommand(limelightSubsystem,
                                                                         // turretSubsystem, new
                                                                         // PIDController(Constants.TURRET_P,
@@ -698,6 +729,11 @@ public class RobotContainer {
     scheduler.setDefaultCommand(limelightSubsystem,
         new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
 
+    scheduler.setDefaultCommand(flywheelPistonSubsystem, defaultFullExtendFlywheelCommand);
+  }
+
+  public Command getShuffleboardCommand() {
+    return shuffleboardUtility.getSelectedShuffleboardOption();
   }
 
   /**

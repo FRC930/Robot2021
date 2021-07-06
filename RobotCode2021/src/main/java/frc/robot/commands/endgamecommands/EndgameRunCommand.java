@@ -6,19 +6,24 @@ import java.util.logging.Logger;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.EndgameSubsystem;
+import frc.robot.utilities.ShuffleboardUtility;
 
 public class EndgameRunCommand extends CommandBase{
     
     private EndgameSubsystem endgameSubsystem;
     private double speed;
+    private String moveType;
 
     //LIMITS CHANGE
     private final double highLimit = 1000;
     private final double lowLimit = 0;
     
+    ShuffleboardUtility shuffleboardUtility;
 
-    public EndgameRunCommand(EndgameSubsystem _endgameSubsystem) {
+    public EndgameRunCommand(EndgameSubsystem _endgameSubsystem, String _moveType) {
+        shuffleboardUtility = ShuffleboardUtility.getInstance();
         endgameSubsystem = _endgameSubsystem;
+        moveType = _moveType;
         addRequirements(endgameSubsystem);
     }
 
@@ -27,13 +32,23 @@ public class EndgameRunCommand extends CommandBase{
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {   
-        endgameSubsystem.setSpeed(0.8);
+        //endgameSubsystem.setSpeed(0.8);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() { 
-        if(!endgameSubsystem.getLimitState()){
+        
+        if(moveType.equals("down")) { // EndgameRetractButton XB_BACK
+            shuffleboardUtility.putEndgameEncoderPosition(endgameSubsystem.getRawEncoderPosition());
+            endgameSubsystem.setSpeed(0.8);
+        } else if(moveType.equals("up")) { // EndgameExtendButton XB_START
+            endgameSubsystem.setSpeed(-0.8);
+        } else {
+            endgameSubsystem.setSpeed(0.0);
+        }
+        //endgameSubsystem.setSpeed(0.8);
+        /*if(!endgameSubsystem.getLimitState()){
             if(endgameSubsystem.getUpState()){
                 if(endgameSubsystem.getRawEncoderPosition() == highLimit){
                     endgameSubsystem.setSpeed(0);
@@ -46,12 +61,13 @@ public class EndgameRunCommand extends CommandBase{
                     endgameSubsystem.setLimitState(true);
                 }
             }
-        }
+        }*/
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        endgameSubsystem.setSpeed(0.0);
     }
 
     
@@ -59,7 +75,7 @@ public class EndgameRunCommand extends CommandBase{
     @Override
     public boolean isFinished() {
         // TODO: add code here
-        return true;
+        return false;
     }
 
 }

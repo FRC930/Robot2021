@@ -319,7 +319,7 @@ public class DriveSubsystem extends SubsystemBase {
     logger.entering(DriveSubsystem.class.getName(), "swerveDrive()");
 
     Rotation2d heading = Rotation2d.fromDegrees(gyro.getFusedHeading());
-    double speedForward = targetY * Constants.KMAXSPEED;
+    double speedForward = (targetY * Constants.KMAXSPEED);
     double speedStrafe = targetX * Constants.KMAXSPEED;
     double speedRotation = rotation * Constants.KMAXANGULARSPEED;
 

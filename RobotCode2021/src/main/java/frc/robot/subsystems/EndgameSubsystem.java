@@ -41,7 +41,7 @@ public class EndgameSubsystem extends SubsystemBase {
 
         //encoderPosition = 0.0;
 
-        speed = clamp(speed); // speed cannot be negative due to the robot breaking if it goes in reverse
+        //speed = clamp(speed); // speed cannot be negative due to the robot breaking if it goes in reverse
 
         endGameMotor.set(ControlMode.PercentOutput, speed);
         
