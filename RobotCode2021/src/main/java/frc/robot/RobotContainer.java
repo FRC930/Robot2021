@@ -6,10 +6,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.autocommands.LakeshorePath.LeFishe;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening_Long;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheForwarding;
+import frc.robot.commands.autocommands.LakeshorePath.LeFishe_Long;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheAuChocolat;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheCantAim;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening_Long;
 // --Our Commands
 import frc.robot.commands.autocommands.paths.*;
 import frc.robot.commands.drivecommands.*;
