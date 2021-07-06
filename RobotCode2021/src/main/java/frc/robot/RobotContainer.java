@@ -549,16 +549,17 @@ public class RobotContainer {
     // --Command binds
     //JoystickButton startAccuracyChallengeButton = new JoystickButton(coDriverController, XB_START);
 
-    POVTrigger fullExtendButton = new POVTrigger(driverController, 0, XB_POV_UP);
-    POVTrigger fullRetractButton = new POVTrigger(driverController, 0, XB_POV_DOWN);
-    POVTrigger halfExtendTopButton = new POVTrigger(driverController, 0, XB_POV_LEFT);
-    POVTrigger halfExtendBottomButton = new POVTrigger(driverController, 0, XB_POV_RIGHT);
+    // D-pad controls for two-piston hood
+    // POVTrigger fullExtendButton = new POVTrigger(driverController, 0, XB_POV_UP);
+    // POVTrigger fullRetractButton = new POVTrigger(driverController, 0, XB_POV_DOWN);
+    // POVTrigger halfExtendTopButton = new POVTrigger(driverController, 0, XB_POV_LEFT);
+    // POVTrigger halfExtendBottomButton = new POVTrigger(driverController, 0, XB_POV_RIGHT);
 
-    fullExtendButton.toggleWhenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem));
-    fullRetractButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
-    halfExtendTopButton.toggleWhenActive(new HalfExtendTopFlywheelPistonCommand(flywheelPistonSubsystem));
-    halfExtendBottomButton.toggleWhenActive(new HalfExtendBottomFlywheelPistonCommand(flywheelPistonSubsystem));
-    retractHoodButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    // fullExtendButton.toggleWhenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem));
+    // fullRetractButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    // halfExtendTopButton.toggleWhenActive(new HalfExtendTopFlywheelPistonCommand(flywheelPistonSubsystem));
+    // halfExtendBottomButton.toggleWhenActive(new HalfExtendBottomFlywheelPistonCommand(flywheelPistonSubsystem));
+    retractHoodButton.whenHeld(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
     // Rotational control command bind
     // rotationalButton.whileActiveOnce(new
     // RotationalControlCommandGroup(colorSensorSubsystem,
