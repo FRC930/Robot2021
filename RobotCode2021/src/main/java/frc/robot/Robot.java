@@ -168,4 +168,10 @@ public class Robot extends TimedRobot {
         public void simulationPeriodic() {
         m_robotContainer.simPeriodic();
     }
+     //Needed for robot test mode
+     @Override
+     public void testInit() {
+     m_robotContainer.testInit();
+ }
+
   }

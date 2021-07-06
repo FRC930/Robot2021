@@ -219,6 +219,7 @@ public class RobotContainer {
   // --Drive commands
   // private final ClimberArmCommandGroup climberArmCommandGroup;
   private SwerveDriveCommand swerveDriveCommand;
+  private final DefaultStopDriveCommand defaultStopDriveCommand;
 
   // --Hopper commands
   // private final StopHopperCommand stopHopperCommand;
@@ -232,6 +233,7 @@ public class RobotContainer {
   // --Shooter commands
   // --Flywheel commands
   private final DefaultFlywheelCommand defaultFlywheelCommand;
+  private final DefaultKillFlywheelCommand defaultKillFlywheelCommand;
   private final AccuracyChallengeCommand accuracyChallengeCommand;
 
   // --Turret commands
@@ -346,6 +348,7 @@ public class RobotContainer {
     // drive (NOTE: This is where we bind the driver controls to the drivetrain)
     swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y,
         XB_AXIS_RIGHT_X);
+    defaultStopDriveCommand = new DefaultStopDriveCommand(driveSubsystem);
 
     // hopper
     defaultStopHopperCommand = new DefaultStopHopperCommand(hopperSubsystem);
@@ -364,6 +367,7 @@ public class RobotContainer {
       flywheelSubsystem.setSpeedRPMs(2500);
     }
     defaultFlywheelCommand = new DefaultFlywheelCommand(flywheelSubsystem);
+    defaultKillFlywheelCommand = new DefaultKillFlywheelCommand(flywheelSubsystem);
     accuracyChallengeCommand = new AccuracyChallengeCommand(flywheelSubsystem, flywheelPistonSubsystem,
         limelightSubsystem);
 
@@ -842,6 +846,27 @@ public class RobotContainer {
   //Updates simulation
   public void simPeriodic() {
     m_simDrive.simulationPeriodic();
+  }
+  //
+  public void testInit() {
+      // --The instance of the scheduler
+      CommandScheduler scheduler = CommandScheduler.getInstance();
+
+      scheduler.unregisterSubsystem(limelightSubsystem, hopperSubsystem, turretSubsystem, flywheelSubsystem,
+          kickerSubsystem, towerSubsystem, driveSubsystem/* , ultrasonicSubsystem */);
+  
+  
+        // CHANGE ISFINISHED TO FALSE BEFORE UNCOMMENTING
+        // scheduler.setDefaultCommand(intakeMotorSubsystem, new
+        // ManualIntakeCommand(intakeMotorSubsystem, coDriverController,
+        // XB_AXIS_RIGHT_Y));
+        scheduler.setDefaultCommand(flywheelSubsystem, defaultKillFlywheelCommand);
+        // scheduler.setDefaultCommand(ultrasonicSubsystem, new
+        // UltrasonicPingCommand(ultrasonicSubsystem));
+        scheduler.setDefaultCommand(driveSubsystem, defaultStopDriveCommand);
+
+        defaultKillFlywheelCommand.schedule();
+        defaultStopDriveCommand.schedule();
   }
 
 } // end of class RobotContainer
