@@ -106,7 +106,7 @@ public class Robot extends TimedRobot {
         }
 
         m_shuffleboardCommand = m_robotContainer.getShuffleboardCommand();
-            
+        
         // schedule the shuffleboard command
         if(m_shuffleboardCommand != null) {
             m_shuffleboardCommand.schedule();
