@@ -73,6 +73,8 @@ public class Robot extends TimedRobot {
         // SmartDashboard.putNumber("TP", 0.03);
         // SmartDashboard.putNumber("TI", 0.0);
         // SmartDashboard.putNumber("TD", 0.001);
+
+        m_robotContainer.getShuffleboardCommand().schedule();
     }
 
     /**
