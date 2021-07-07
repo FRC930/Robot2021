@@ -217,6 +217,7 @@ public class RobotContainer {
   // --Drive commands
   // private final ClimberArmCommandGroup climberArmCommandGroup;
   private SwerveDriveCommand swerveDriveCommand;
+ 
 
   // --Hopper commands
   // private final StopHopperCommand stopHopperCommand;
@@ -945,6 +946,17 @@ public class RobotContainer {
   //Updates simulation
   public void simPeriodic() {
     m_simDrive.simulationPeriodic();
+  }
+  //
+  public void testInit() {
+    // stop subsystem during test mode\
+    safetystopSubsystems();
+         
+  }
+  public void safetystopSubsystems(){
+         flywheelSubsystem.setVoltage(0.0);
+         driveSubsystem.swerveStop();
+         hopperSubsystem.setSpeed(0.0);
   }
 
 } // end of class RobotContainer
