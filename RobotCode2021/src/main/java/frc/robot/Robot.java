@@ -186,7 +186,8 @@ public class Robot extends TimedRobot {
      //Needed for robot test mode
      @Override
      public void testInit() {
-     m_robotContainer.testInit();
- }
+         m_robotContainer.testInit();
+    }
+
 
   }
