@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
 
     private HttpCamera limelightCamera;
 
-    //private ShuffleboardUtility shuffleboardUtility;
+    private ShuffleboardUtility shuffleboardUtility;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -46,8 +46,7 @@ public class Robot extends TimedRobot {
         // and put our
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
-        //shuffleboardUtility = ShuffleboardUtility.getInstance();
-
+        shuffleboardUtility = ShuffleboardUtility.getInstance();
         
 
         commandScheduler = CommandScheduler.getInstance();
@@ -58,9 +57,10 @@ public class Robot extends TimedRobot {
             limelightCamera = new HttpCamera("limelight", "http://10.99.30.11:5801/stream.mjpg");
         }
         
-        
-        ShuffleboardTab driveTab = Shuffleboard.getTab("Driver Station");
-        driveTab.add("LL", limelightCamera);
+        //ShuffleboardTab driveTab = Shuffleboard.getTab("Driver Station");
+        //driveTab.add("LL", limelightCamera);
+        //shuffleboardUtility.setLimelightCameraStream(limelightCamera);
+
 
         //Runs sim method if robot is simulated
         if(RobotBase.isSimulation()){
@@ -73,6 +73,8 @@ public class Robot extends TimedRobot {
         // SmartDashboard.putNumber("TP", 0.03);
         // SmartDashboard.putNumber("TI", 0.0);
         // SmartDashboard.putNumber("TD", 0.001);
+
+        m_robotContainer.getShuffleboardCommand().schedule();
     }
 
     /**
@@ -180,7 +182,7 @@ public class Robot extends TimedRobot {
 
     //Needed for robot simulation
     @Override
-        public void simulationPeriodic() {
+    public void simulationPeriodic() {
         m_robotContainer.simPeriodic();
     }
   }

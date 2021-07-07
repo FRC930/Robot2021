@@ -15,6 +15,7 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.cscore.HttpCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
 
 //-------- CLASS --------\\
@@ -90,6 +91,8 @@ public class ShuffleboardUtility {
     private boolean turretAccess;
     private boolean endgameAccess;
     private boolean miscellaneousAccess;
+
+    private HttpCamera limelightCamera;
 
 
     //-------- CONSTRUCTOR --------\\
@@ -309,7 +312,6 @@ public class ShuffleboardUtility {
         
     }
  
- 
     // public String getFMSColor(){
 	// 	fmsColor = SmartDashboard.getString("FMS Color", "No Color Available");
 	// 	return fmsColor;
@@ -399,6 +401,10 @@ public class ShuffleboardUtility {
 
     public Command getSelectedShuffleboardOption() {
         return shuffleboardChooser.getSelected();
+    }
+
+    public void setLimelightCameraStream(HttpCamera _limelightCamera) {
+        limelightCamera = _limelightCamera;
     }
     
 } //end of class Shuffleboard
