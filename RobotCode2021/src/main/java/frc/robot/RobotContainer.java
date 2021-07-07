@@ -6,10 +6,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.autocommands.LakeshorePath.LeFishe;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening_Long;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheForwarding;
+import frc.robot.commands.autocommands.LakeshorePath.LeFishe_Long;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheAuChocolat;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheCantAim;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening_Long;
 // --Our Commands
 import frc.robot.commands.autocommands.paths.*;
 import frc.robot.commands.drivecommands.*;
@@ -257,6 +260,7 @@ public class RobotContainer {
 
   // --Utilities
   private final ShuffleboardUtility shuffleboardUtility;
+  private Command previousShuffleboardCommand;
 
   // --Endgame
   private final EndgameSubsystem endgameSubsystem;
@@ -394,8 +398,10 @@ public class RobotContainer {
 
     shuffleboardUtility.setDefaultAutonOptions("Default (None)", null);
     
+    // SHORT
+
     shuffleboardUtility.addAutonOptions(
-      "Trench, Rendezvous and Shoot", 
+      "Trench, Rendezvous and Shoot - Short", 
       new LeFishe(
         driveSubsystem,
         intakePistonSubsystem,
@@ -411,7 +417,7 @@ public class RobotContainer {
     );
 
     shuffleboardUtility.addAutonOptions(
-      "Rendezvous and Shoot", 
+      "Rendezvous and Shoot - Short", 
       new LeFisheTheFishening(
         driveSubsystem,
         intakePistonSubsystem,
@@ -427,7 +433,7 @@ public class RobotContainer {
     );
     
     shuffleboardUtility.addAutonOptions(
-      "Trench and Shoot", 
+      "Trench and Shoot - Short", 
       new LeFisheTheBackening(
         driveSubsystem,
         intakePistonSubsystem,
@@ -441,6 +447,8 @@ public class RobotContainer {
         turretSubsystem
       )
     );
+
+    // MISCELLANEOUS
 
     shuffleboardUtility.addAutonOptions(
       "Robot Forward", 
@@ -458,6 +466,56 @@ public class RobotContainer {
       )
     );
 
+    // LONG
+    
+    shuffleboardUtility.addAutonOptions(
+      "Trench, Rendezvous and Shoot - Long", 
+      new LeFishe_Long(
+        driveSubsystem,
+        intakePistonSubsystem,
+        intakeMotorSubsystem,
+        flywheelSubsystem,
+        towerSubsystem,
+        hopperSubsystem,
+        kickerSubsystem,
+        limelightSubsystem,
+        flywheelPistonSubsystem,
+        turretSubsystem
+      )
+    );
+
+    shuffleboardUtility.addAutonOptions(
+      "Rendezvous and Shoot - Long", 
+      new LeFisheTheFishening_Long(
+        driveSubsystem,
+        intakePistonSubsystem,
+        intakeMotorSubsystem,
+        flywheelSubsystem,
+        towerSubsystem,
+        hopperSubsystem,
+        kickerSubsystem,
+        limelightSubsystem,
+        flywheelPistonSubsystem,
+        turretSubsystem
+      )
+    );
+    
+    shuffleboardUtility.addAutonOptions(
+      "Trench and Shoot - Long", 
+      new LeFisheTheBackening_Long(
+        driveSubsystem,
+        intakePistonSubsystem,
+        intakeMotorSubsystem,
+        flywheelSubsystem,
+        towerSubsystem,
+        hopperSubsystem,
+        kickerSubsystem,
+        limelightSubsystem,
+        flywheelPistonSubsystem,
+        turretSubsystem
+      )
+    );
+    
     // Taken out unless explicity needed. Runs auton without AutoTurretTurnCommand.
     // shuffleboardUtility.addAutonOptions(
     //   "9930's No Auto Turret Turn", 
@@ -484,6 +542,8 @@ public class RobotContainer {
       "Debug", 
       new ShuffleboardDebugCommand()
     );
+    
+    previousShuffleboardCommand = null;
 
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team
@@ -550,16 +610,17 @@ public class RobotContainer {
     // --Command binds
     //JoystickButton startAccuracyChallengeButton = new JoystickButton(coDriverController, XB_START);
 
-    POVTrigger fullExtendButton = new POVTrigger(driverController, 0, XB_POV_UP);
-    POVTrigger fullRetractButton = new POVTrigger(driverController, 0, XB_POV_DOWN);
-    POVTrigger halfExtendTopButton = new POVTrigger(driverController, 0, XB_POV_LEFT);
-    POVTrigger halfExtendBottomButton = new POVTrigger(driverController, 0, XB_POV_RIGHT);
+    // D-pad controls for two-piston hood
+    // POVTrigger fullExtendButton = new POVTrigger(driverController, 0, XB_POV_UP);
+    // POVTrigger fullRetractButton = new POVTrigger(driverController, 0, XB_POV_DOWN);
+    // POVTrigger halfExtendTopButton = new POVTrigger(driverController, 0, XB_POV_LEFT);
+    // POVTrigger halfExtendBottomButton = new POVTrigger(driverController, 0, XB_POV_RIGHT);
 
-    fullExtendButton.toggleWhenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem));
-    fullRetractButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
-    halfExtendTopButton.toggleWhenActive(new HalfExtendTopFlywheelPistonCommand(flywheelPistonSubsystem));
-    halfExtendBottomButton.toggleWhenActive(new HalfExtendBottomFlywheelPistonCommand(flywheelPistonSubsystem));
-    retractHoodButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    // fullExtendButton.toggleWhenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem));
+    // fullRetractButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    // halfExtendTopButton.toggleWhenActive(new HalfExtendTopFlywheelPistonCommand(flywheelPistonSubsystem));
+    // halfExtendBottomButton.toggleWhenActive(new HalfExtendBottomFlywheelPistonCommand(flywheelPistonSubsystem));
+    retractHoodButton.whenHeld(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
     // Rotational control command bind
     // rotationalButton.whileActiveOnce(new
     // RotationalControlCommandGroup(colorSensorSubsystem,
@@ -730,7 +791,13 @@ public class RobotContainer {
   }
 
   public Command getShuffleboardCommand() {
-    return shuffleboardUtility.getSelectedShuffleboardOption();
+    Command currentShuffleboardCommand = shuffleboardUtility.getSelectedShuffleboardOption();;
+    if(currentShuffleboardCommand != previousShuffleboardCommand) {
+      previousShuffleboardCommand = currentShuffleboardCommand;
+    } else {
+      currentShuffleboardCommand = null;
+    }
+    return currentShuffleboardCommand;
   }
 
   /**

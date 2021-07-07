@@ -157,6 +157,7 @@ public class ShuffleboardUtility {
         shuffleboardChooser = new SendableChooser<Command>();
 
         driverStationTab.add("Auton Path Selector", autonChooser);
+        testDebugTab.add("Shuffleboard Detail Selector", shuffleboardChooser);
         
         intakeAccess = false;
         hopperAccess = false;
