@@ -33,7 +33,7 @@ public class ShuffleboardCompetitionCommand extends CommandBase{
 
         shuffleboard.toggleEndgameAccess();
         shuffleboard.toggleFlywheelAccess();
-        shuffleboard.toggleLimelightAccess();
+        shuffleboard.toggleIntakeAccess();
     }
 
     // Called once the command ends or is interrupted.
