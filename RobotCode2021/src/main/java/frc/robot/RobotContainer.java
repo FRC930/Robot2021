@@ -542,6 +542,8 @@ public class RobotContainer {
       "Debug", 
       new ShuffleboardDebugCommand()
     );
+
+    
     
     previousShuffleboardCommand = null;
 

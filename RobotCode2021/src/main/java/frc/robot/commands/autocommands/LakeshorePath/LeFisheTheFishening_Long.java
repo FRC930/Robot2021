@@ -114,7 +114,7 @@ public class LeFisheTheFishening_Long extends SequentialCommandGroup {
                  List.of( 
                      //new Translation2d(inchesToMeters(95) + xOffset, 0 + yOffset)
                  ),
-                 new Pose2d(inchesToMeters(140) + xOffset, inchesToMeters(65) + yOffset, new Rotation2d(Math.toRadians(35))),
+                 new Pose2d(inchesToMeters(140) + xOffset, inchesToMeters(60) + yOffset, new Rotation2d(Math.toRadians(35))),
                  // Pass config
                  AutonConfig.getInstance().getSlowConfigStart()
                 );
@@ -125,7 +125,7 @@ public class LeFisheTheFishening_Long extends SequentialCommandGroup {
                 // Robot starts at X: 0 Y: 0 and a rotation of 0 
                  new Pose2d(0, 0, new Rotation2d(Math.toRadians(35))),
                  List.of( 
-                    new Translation2d(inchesToMeters(36) + xOffset, inchesToMeters(60) + yOffset),
+                    new Translation2d(inchesToMeters(26) + xOffset, inchesToMeters(60) + yOffset),
                     new Translation2d(inchesToMeters(-10) + xOffset, inchesToMeters(120) + yOffset)
                  ),
                  new Pose2d(inchesToMeters(-100) + xOffset, inchesToMeters(110) + yOffset, new Rotation2d(Math.toRadians(145))),
