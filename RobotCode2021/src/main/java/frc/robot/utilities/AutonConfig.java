@@ -34,7 +34,7 @@ public class AutonConfig {
 
     private TrajectoryConfig slowConfigEnd;
 
-    private final int endVelocity_SlowConfig = 3;
+    private final int endVelocity_SlowConfig = 2;
 
     //Static flag for singleton
     private static AutonConfig lastInstance = null;

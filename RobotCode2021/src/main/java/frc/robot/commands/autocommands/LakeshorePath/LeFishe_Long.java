@@ -115,7 +115,7 @@ public class LeFishe_Long extends SequentialCommandGroup {
              List.of( 
                 // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
              ),
-             new Pose2d(inchesToMeters(-100) + xOffset, inchesToMeters(-80) + yOffset, new Rotation2d(Math.toRadians(0))),
+             new Pose2d(inchesToMeters(-105) + xOffset, inchesToMeters(-80) + yOffset, new Rotation2d(Math.toRadians(0))),
              // Pass config
              AutonConfig.getInstance().getReverseConfig()
             );
@@ -126,7 +126,7 @@ public class LeFishe_Long extends SequentialCommandGroup {
              List.of( 
                 // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
              ),
-             new Pose2d(inchesToMeters(5) + xOffset, inchesToMeters(-95) + yOffset, new Rotation2d(Math.toRadians(-45))),
+             new Pose2d(inchesToMeters(-15) + xOffset, inchesToMeters(-95) + yOffset, new Rotation2d(Math.toRadians(-45))),
              // Pass config
              AutonConfig.getInstance().getSlowConfigStart()
             );
@@ -137,7 +137,7 @@ public class LeFishe_Long extends SequentialCommandGroup {
              List.of( 
                 // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
              ),
-             new Pose2d(inchesToMeters(-20) - xOffset, inchesToMeters(95) + yOffset, new Rotation2d(Math.toRadians(135))),
+             new Pose2d(inchesToMeters(-25) - xOffset, inchesToMeters(95) + yOffset, new Rotation2d(Math.toRadians(135))),
              // Pass config
              AutonConfig.getInstance().getReverseConfig()
             );
