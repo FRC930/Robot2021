@@ -115,7 +115,7 @@ public class LeFisheTheBackening_Long extends SequentialCommandGroup {
              List.of( 
                 // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
              ),
-             new Pose2d(inchesToMeters(-160) + xOffset, inchesToMeters(-80) + yOffset, new Rotation2d(Math.toRadians(0))),
+             new Pose2d(inchesToMeters(-175) + xOffset, inchesToMeters(-80) + yOffset, new Rotation2d(Math.toRadians(0))),
              // Pass config
              AutonConfig.getInstance().getReverseConfig()
             );

@@ -126,7 +126,7 @@ public class LeFishe_Long extends SequentialCommandGroup {
              List.of( 
                 // new Translation2d(inchesToMeters(190) + xOffset, 0 + yOffset)
              ),
-             new Pose2d(inchesToMeters(-15) + xOffset, inchesToMeters(-95) + yOffset, new Rotation2d(Math.toRadians(-45))),
+             new Pose2d(inchesToMeters(-5) + xOffset, inchesToMeters(-110) + yOffset, new Rotation2d(Math.toRadians(-45))),
              // Pass config
              AutonConfig.getInstance().getSlowConfigStart()
             );
