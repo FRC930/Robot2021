@@ -451,7 +451,7 @@ public class RobotContainer {
     // MISCELLANEOUS
 
     shuffleboardUtility.addAutonOptions(
-      "Robot Forward", 
+      "Robot Forward and NO shoot", 
       new LeFisheTheForwarding(
         driveSubsystem,
         intakePistonSubsystem,
@@ -542,6 +542,8 @@ public class RobotContainer {
       "Debug", 
       new ShuffleboardDebugCommand()
     );
+
+    
     
     previousShuffleboardCommand = null;
 

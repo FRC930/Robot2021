@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.cscore.HttpCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import frc.robot.utilities.RobotPreferences;
 
 //-------- CLASS --------\\
 
@@ -214,6 +215,17 @@ public class ShuffleboardUtility {
     
     public void toggleLimelightAccess() {
         limelightAccess = !limelightAccess;
+
+        if(limelightAccess) {
+            if(RobotPreferences.getInstance().getTeamNumber() == 930){
+                limelightCamera = new HttpCamera("limelight", "http://10.9.30.11:5801/stream.mjpg");
+            } else {
+                limelightCamera = new HttpCamera("limelight", "http://10.99.30.11:5801/stream.mjpg");
+            }
+            driverStationTab.add("LL", limelightCamera);
+        } else {
+            limelightCamera = null;
+        }
     }
 
     public void toggleFlywheelAccess() {
@@ -403,8 +415,8 @@ public class ShuffleboardUtility {
         return shuffleboardChooser.getSelected();
     }
 
-    public void setLimelightCameraStream(HttpCamera _limelightCamera) {
-        limelightCamera = _limelightCamera;
+    public void disableLimelightStream() {
+        limelightCamera = null;
     }
     
 } //end of class Shuffleboard
