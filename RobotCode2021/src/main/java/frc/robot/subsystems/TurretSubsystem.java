@@ -38,8 +38,8 @@ public class TurretSubsystem extends SubsystemBase {
     // reset to 180 degrees. These units are in raw values.
     private final double UPPER_LIMIT = 0.697;
     private final double LOWER_LIMIT = 0.335;
-    private final double TURRET_FRONT_POSITION = 0.383;
-    private final double TURRET_BACK_POSITION = 0.635;
+    private final double TURRET_FRONT_POSITION = 0.383; // back of r0bot
+    private final double TURRET_BACK_POSITION = 0.635;  // front robot intake
     private final double TURRET_RIGHT_POSITION = 0.51;
     private final double TURRET_LEFT_POSITION = 0.256;
       // encoder positions for setting turret to one of four directions
