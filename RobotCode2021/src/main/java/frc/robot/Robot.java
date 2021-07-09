@@ -50,12 +50,7 @@ public class Robot extends TimedRobot {
         
 
         commandScheduler = CommandScheduler.getInstance();
-        if(RobotPreferences.getInstance().getTeamNumber() == 930){
-            limelightCamera = new HttpCamera("limelight", "http://10.9.30.11:5801/stream.mjpg");
-        }  
-        else{
-            limelightCamera = new HttpCamera("limelight", "http://10.99.30.11:5801/stream.mjpg");
-        }
+        
         
         //ShuffleboardTab driveTab = Shuffleboard.getTab("Driver Station");
         //driveTab.add("LL", limelightCamera);
@@ -74,7 +69,7 @@ public class Robot extends TimedRobot {
         // SmartDashboard.putNumber("TI", 0.0);
         // SmartDashboard.putNumber("TD", 0.001);
 
-        m_robotContainer.getShuffleboardCommand().schedule();
+        m_robotContainer.getShuffleboardCommand().execute();
     }
 
     /**
@@ -111,7 +106,7 @@ public class Robot extends TimedRobot {
         
         // schedule the shuffleboard command
         if(m_shuffleboardCommand != null) {
-            m_shuffleboardCommand.schedule();
+            m_shuffleboardCommand.execute();
         }
 
         //shuffleboard.run();
