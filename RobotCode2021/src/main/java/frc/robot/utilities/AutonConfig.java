@@ -64,7 +64,9 @@ public class AutonConfig {
         .addConstraint(autoVoltageConstraint)
         .setReversed(true);
 
-        slowConfigStart = new TrajectoryConfig(3, 4)
+        //Used to be maxVel=3, maxAcc=4
+        //Need to fix mechanically
+        slowConfigStart = new TrajectoryConfig(3, 2)
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(dSubsystem.getSwerveKinematics())
         .setEndVelocity(endVelocity_SlowConfig)
