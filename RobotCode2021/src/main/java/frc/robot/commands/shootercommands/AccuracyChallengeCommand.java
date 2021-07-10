@@ -41,7 +41,8 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     public final static int BLUE_END_ZONE = 160;
     public final static double BLUE_SPEED = 3150.0;
 
-    public final static double RED_SPEED = 3950.0;
+    //3950 RPM(long long shot) before Lakeshore champs
+    public final static double RED_SPEED = 3500.0;
 
 
     //-------- DECLARATIONS --------\\
