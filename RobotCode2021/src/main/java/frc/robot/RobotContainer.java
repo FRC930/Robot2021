@@ -727,9 +727,9 @@ public class RobotContainer {
         XB_AXIS_LEFT_X));
 
     turretFront.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "front"));
-    turretBack.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "right"));
-    turretLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "back"));
-    turretRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "left"));
+    turretBack.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "back"));
+    turretLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "left"));
+    turretRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "right"));
 
     turretFrontLeft.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "frontLeft"));
     turretFrontRight.toggleWhenActive(new SetTurretPositionCommand(turretSubsystem, "frontRight"));
