@@ -261,6 +261,8 @@ public class RobotContainer {
   // --Utilities
   private final ShuffleboardUtility shuffleboardUtility;
   private Command previousShuffleboardCommand;
+  private Command previousEndGameResetCommand;
+
 
   // --Endgame
   private final EndgameSubsystem endgameSubsystem;
@@ -563,6 +565,22 @@ public class RobotContainer {
     
     previousShuffleboardCommand = null;
 
+    shuffleboardUtility.setDefaultEndGameResetOptions(
+      "Stop", 
+      new EndgameTestCommand(endgameSubsystem, 0.0)
+    );
+
+    shuffleboardUtility.addEndGameResetOptions(
+      "Retract", 
+      new EndgameTestCommand(endgameSubsystem, 0.8)
+    );
+    shuffleboardUtility.addEndGameResetOptions(
+      "Extend", 
+      new EndgameTestCommand(endgameSubsystem, -0.8)
+    );
+    
+    previousEndGameResetCommand = null;
+
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team
 
@@ -818,6 +836,16 @@ public class RobotContainer {
     return currentShuffleboardCommand;
   }
 
+  public Command getEndGameResetCommand() {
+    Command currentEndGameResetCommand = shuffleboardUtility.getSelectedEndGameResetOption();;
+    if(currentEndGameResetCommand != previousEndGameResetCommand) {
+      previousEndGameResetCommand = currentEndGameResetCommand;
+    } else {
+      currentEndGameResetCommand = null;
+    }
+    return currentEndGameResetCommand;
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -968,9 +996,17 @@ public class RobotContainer {
   //
   public void testInit() {
     // stop subsystem during test mode\
-    safetystopSubsystems();
-         
+    safetystopSubsystems();         
   }
+
+  public void testPeriodic() {
+    //watch shuffle board button to see if we need to move endgame
+    Command endGameResetCommand = getEndGameResetCommand();
+    if (endGameResetCommand != null){
+      endGameResetCommand.execute();
+    }
+  }
+  
   public void safetystopSubsystems(){
          flywheelSubsystem.setVoltage(0.0);
          driveSubsystem.swerveStop();
