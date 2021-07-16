@@ -9,8 +9,8 @@ import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening_Long;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheForwarding;
 import frc.robot.commands.autocommands.LakeshorePath.LeFishe_Long;
-import frc.robot.commands.autocommands.LakeshorePath.LeFisheAuChocolat;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheCantAim;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheThe2nd;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening_Long;
 // --Our Commands
@@ -401,7 +401,7 @@ public class RobotContainer {
     // SHORT
 
     shuffleboardUtility.addAutonOptions(
-      "Trench, Rendezvous and Shoot - Short", 
+      "Trench, Rendezvous and Shoot - Secondary", 
       new LeFishe(
         driveSubsystem,
         intakePistonSubsystem,
@@ -417,7 +417,7 @@ public class RobotContainer {
     );
 
     shuffleboardUtility.addAutonOptions(
-      "Rendezvous and Shoot - Short", 
+      "Rendezvous and Shoot - Secondary", 
       new LeFisheTheFishening(
         driveSubsystem,
         intakePistonSubsystem,
@@ -433,7 +433,7 @@ public class RobotContainer {
     );
     
     shuffleboardUtility.addAutonOptions(
-      "Trench and Shoot - Short", 
+      "Trench and Shoot - Secondary", 
       new LeFisheTheBackening(
         driveSubsystem,
         intakePistonSubsystem,
@@ -451,7 +451,23 @@ public class RobotContainer {
     // MISCELLANEOUS
 
     shuffleboardUtility.addAutonOptions(
-      "Robot Forward and NO shoot", 
+      "Robot Forward and Shoot", 
+      new LeFisheThe2nd(
+        driveSubsystem,
+        intakePistonSubsystem,
+        intakeMotorSubsystem,
+        flywheelSubsystem,
+        towerSubsystem,
+        hopperSubsystem,
+        kickerSubsystem,
+        limelightSubsystem,
+            flywheelPistonSubsystem,
+            turretSubsystem
+      )
+    );
+
+    shuffleboardUtility.addAutonOptions(
+      "Robot Forward and NO Shoot", 
       new LeFisheTheForwarding(
         driveSubsystem,
         intakePistonSubsystem,
@@ -469,7 +485,7 @@ public class RobotContainer {
     // LONG
     
     shuffleboardUtility.addAutonOptions(
-      "Trench, Rendezvous and Shoot - Long", 
+      "Trench, Rendezvous and Shoot - Primary", 
       new LeFishe_Long(
         driveSubsystem,
         intakePistonSubsystem,
@@ -485,7 +501,7 @@ public class RobotContainer {
     );
 
     shuffleboardUtility.addAutonOptions(
-      "Rendezvous and Shoot - Long", 
+      "Rendezvous and Shoot - Primary", 
       new LeFisheTheFishening_Long(
         driveSubsystem,
         intakePistonSubsystem,
@@ -501,7 +517,7 @@ public class RobotContainer {
     );
     
     shuffleboardUtility.addAutonOptions(
-      "Trench and Shoot - Long", 
+      "Trench and Shoot - Primary", 
       new LeFisheTheBackening_Long(
         driveSubsystem,
         intakePistonSubsystem,
