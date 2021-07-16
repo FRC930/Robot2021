@@ -11,19 +11,12 @@ import frc.robot.utilities.ShuffleboardUtility;
 public class EndgameRunCommand extends CommandBase{
     
     private EndgameSubsystem endgameSubsystem;
-    private double speed;
-    private String moveType;
-
-    //LIMITS CHANGE
-    private final double highLimit = 1000;
-    private final double lowLimit = 0;
-    
     ShuffleboardUtility shuffleboardUtility;
-
-    public EndgameRunCommand(EndgameSubsystem _endgameSubsystem, String _moveType) {
+    
+    //Constructor
+    public EndgameRunCommand(EndgameSubsystem _endgameSubsystem) {
         shuffleboardUtility = ShuffleboardUtility.getInstance();
         endgameSubsystem = _endgameSubsystem;
-        moveType = _moveType;
         addRequirements(endgameSubsystem);
     }
 
@@ -38,30 +31,8 @@ public class EndgameRunCommand extends CommandBase{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() { 
-        
-        if(moveType.equals("down")) { // EndgameRetractButton XB_BACK
-            shuffleboardUtility.putEndgameEncoderPosition(endgameSubsystem.getRawEncoderPosition());
-            endgameSubsystem.setSpeed(0.8);
-        } else if(moveType.equals("up")) { // EndgameExtendButton XB_START
-            endgameSubsystem.setSpeed(-0.8);
-        } else {
-            endgameSubsystem.setSpeed(0.0);
-        }
-        //endgameSubsystem.setSpeed(0.8);
-        /*if(!endgameSubsystem.getLimitState()){
-            if(endgameSubsystem.getUpState()){
-                if(endgameSubsystem.getRawEncoderPosition() == highLimit){
-                    endgameSubsystem.setSpeed(0);
-                    endgameSubsystem.setLimitState(true);
-                }
-            }
-            else{
-                if(endgameSubsystem.getRawEncoderPosition() == lowLimit){
-                    endgameSubsystem.setSpeed(0);
-                    endgameSubsystem.setLimitState(true);
-                }
-            }
-        }*/
+       //set speed of motor
+        endgameSubsystem.setSpeed(-0.8);
     }
 
     // Called once the command ends or is interrupted.

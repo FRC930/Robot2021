@@ -633,8 +633,8 @@ public class RobotContainer {
 
     // Drive command binds
     swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
-    endgameRetractButton.whenHeld(new EndgameRunCommand(endgameSubsystem, "down"));//.whenReleased(new EndgameCommandFlipState(endgameSubsystem));
-    endgameExtendButton.whenHeld(new EndgameRunCommand(endgameSubsystem, "up"));
+    //endgameRetractButton.whenHeld(new EndgameRunCommand(endgameSubsystem, "down"));//.whenReleased(new EndgameCommandFlipState(endgameSubsystem));
+    endgameExtendButton.whenHeld(new EndgameRunCommand(endgameSubsystem));
 
     // Shooter command binds
     shootButton
