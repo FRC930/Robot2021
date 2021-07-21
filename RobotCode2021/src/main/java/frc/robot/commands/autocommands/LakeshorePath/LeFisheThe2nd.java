@@ -96,7 +96,7 @@ public class LeFisheThe2nd extends SequentialCommandGroup {
              new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
              List.of( 
              ),
-             new Pose2d(inchesToMeters(12) + xOffset, 0 - yOffset, new Rotation2d(Math.toRadians(0))),
+             new Pose2d(inchesToMeters(24) + xOffset, 0 - yOffset, new Rotation2d(Math.toRadians(0))),
              // Pass config
              AutonConfig.getInstance().getSlowConfigEnd()
             );
@@ -150,6 +150,7 @@ Path Description:
     addCommands(
     command1,
     // new RunFlywheelAutoCommand(fSubsystem, 0.8),
+    new WaitCommand(4),
     new AutoTurretTurnCommand(turSubsystem),
     new ParallelRaceGroup(new WaitCommand(2), new AutoAimAutonomousCommand(lLightSubsystem, turSubsystem, new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D))),
      new ParallelRaceGroup(new WaitCommand(2), new ShootPowerCellCommandGroup(tSubsystem, hSubsystem, kSubsystem)),
