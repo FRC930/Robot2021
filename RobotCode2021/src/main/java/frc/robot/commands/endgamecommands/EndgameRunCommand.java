@@ -32,7 +32,7 @@ public class EndgameRunCommand extends CommandBase{
     @Override
     public void execute() { 
        //set speed of motor
-        endgameSubsystem.setSpeed(-0.8);
+        endgameSubsystem.setSpeed(0.8);
     }
 
     // Called once the command ends or is interrupted.

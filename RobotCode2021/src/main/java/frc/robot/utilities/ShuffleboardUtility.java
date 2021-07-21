@@ -29,7 +29,6 @@ public class ShuffleboardUtility {
     
     private SendableChooser<Command> autonChooser;
     private SendableChooser<Command> shuffleboardChooser;
-    public SendableChooser<Command> endGameResetChooser;
     // private List<ShuffleboardComponent<?>> pidController;
     // private double kP;
     // private double kI;
@@ -160,12 +159,10 @@ public class ShuffleboardUtility {
         endgameEncoderPositionEntry = driverStationTab.add("Endgame Encoder", endgameEncoderPosition).getEntry();
         autonChooser = new SendableChooser<Command>();
         shuffleboardChooser = new SendableChooser<Command>();
-        endGameResetChooser = new SendableChooser<Command>();
-
+      
         driverStationTab.add("Auton Path Selector", autonChooser);
         testDebugTab.add("Shuffleboard Detail Selector", shuffleboardChooser);
-        testDebugTab.add("EndGame Reset", endGameResetChooser);
-        
+       
         intakeAccess = false;
         hopperAccess = false;
         limelightAccess = false;
@@ -420,16 +417,5 @@ public class ShuffleboardUtility {
 
     public void disableLimelightStream() {
         limelightCamera = null;
-    }
-    public void addEndGameResetOptions(String settingName, CommandBase settingCommand) {
-        endGameResetChooser.addOption(settingName, settingCommand);
-    }
-
-    public void setDefaultEndGameResetOptions(String settingName, CommandBase settingCommand) {
-        endGameResetChooser.setDefaultOption(settingName, settingCommand);
-    }
-
-    public Command getSelectedEndGameResetOption() {
-        return endGameResetChooser.getSelected();
     }
 } //end of class Shuffleboard
