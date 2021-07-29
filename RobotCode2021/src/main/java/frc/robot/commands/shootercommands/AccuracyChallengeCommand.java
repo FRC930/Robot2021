@@ -42,7 +42,8 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
 
     // original blue speed: 3150
     // 930's lakeshore speed
-    public final static double BLUE_SPEED = 2900.0;
+    //Blue speed was 2900 before Lego Camp demo
+    public final static double BLUE_SPEED = 1500.0;
 
     //3950 RPM(long long shot) before Lakeshore champs
     //3500 went too far
