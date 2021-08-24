@@ -18,40 +18,47 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 
 //-------- COMMAND CLASS --------\\
-
+/**
+ * <h4>ExtendIntakePistonCommand</h4> 
+ * Retracts pistons on the intake.
+ */
 public class RetractIntakePistonCommand extends CommandBase {
 
-  //-------- CONSTANTS --------\\
+  // -------- CONSTANTS --------\\
 
   private static final Logger logger = Logger.getLogger(RetractIntakePistonCommand.class.getName());
 
-  //-------- DECLARATIONS --------\\
+  // -------- DECLARATIONS --------\\
 
-  private final IntakePistonSubsystem intakePistonsSubsystem;
+  private final IntakePistonSubsystem intakePistonSubsystem;
   private ShuffleboardUtility shuffleboardUtility;
 
-  //-------- CONSTRUCTOR --------\\
-
-  public RetractIntakePistonCommand(IntakePistonSubsystem iPistons) {
-    intakePistonsSubsystem = iPistons;
+  // -------- CONSTRUCTOR --------\\
+  /**
+   * 
+   * @param iPistons instantiated {@link IntakePistonSubsystem} object.
+   */
+  public RetractIntakePistonCommand(IntakePistonSubsystem iPiston) {
+    intakePistonSubsystem = iPiston;
     shuffleboardUtility = ShuffleboardUtility.getInstance();
 
-    addRequirements(iPistons);  // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(iPiston); // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  //-------- COMMANDBASE METHODS --------\\
+  // -------- COMMANDBASE METHODS --------\\
 
-  @Override   // Called when the command is initially scheduled.
+  @Override // Called when the command is initially scheduled.
   public void initialize() {
-    intakePistonsSubsystem.setIntakePistonState(Constants.INTAKE_PISTONS_UP);
-    
-    shuffleboardUtility.putIntakeIndicator(intakePistonsSubsystem.getIntakePistonState());
-    logger.log(Constants.LOG_LEVEL_FINE, "Retracting the intake pistons (command)..."); 
+    // Sets pistons to up state
+    intakePistonSubsystem.setIntakePistonState(intakePistonSubsystem.getIntakePistonUpState());
+
+    shuffleboardUtility.putIntakeIndicator(intakePistonSubsystem.getIntakePistonState());
+    logger.log(Constants.LOG_LEVEL_FINE, "Retracting the intake pistons (command)...");
   }
-  
-  @Override   // Returns true when the command should end.
+
+  @Override // Returns true when the command should end.
   public boolean isFinished() {
     return true;
   }
 
-} //End of class RetractIntakePistonCommand
+} // End of class RetractIntakePistonCommand

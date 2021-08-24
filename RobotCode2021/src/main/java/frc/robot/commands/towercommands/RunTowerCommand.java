@@ -12,10 +12,11 @@ package frc.robot.commands.towercommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.TowerSubsystem;
-import frc.robot.Constants;
 
 //-------- COMMAND CLASS --------\\
-
+/**
+ * <h4>RunTowerCommand</h4> Runs the tower to move balls to the shooter.
+ */
 public class RunTowerCommand extends CommandBase {
 
     // -------- DECLARATIONS --------\\
@@ -23,7 +24,11 @@ public class RunTowerCommand extends CommandBase {
     private TowerSubsystem towerSubsystem;
 
     // -------- CONSTRUCTOR --------\\
-
+    /**
+     * Creates instance of the command.
+     * 
+     * @param towerSubsystem instance of the TowerSubsystem
+     */
     public RunTowerCommand(TowerSubsystem towerSubsystem) {
         this.towerSubsystem = towerSubsystem;
         addRequirements(towerSubsystem);
@@ -34,7 +39,8 @@ public class RunTowerCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        towerSubsystem.setSpeed(Constants.TOWER_SPEED);
+        // Runs the motor
+        towerSubsystem.setSpeed(towerSubsystem.getTowerSpeed());
     }
 
     // Returns true when the command should end.

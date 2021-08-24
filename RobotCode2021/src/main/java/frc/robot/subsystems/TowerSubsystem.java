@@ -24,7 +24,9 @@ public class TowerSubsystem extends SubsystemBase {
     //-------- CONSTANTS --------\\
 
     private static final Logger logger = Logger.getLogger(TowerSubsystem.class.getName());
-
+    private final double TOWER_SPEED = 1.0;
+    private final double TOWER_REVERSE_SPEED = -0.5;
+    
     //-------- DECLARATIONS --------\\
 
     // VictorSPX is a motor controller that makes the conveor belt  Take's the power cell up to the shooter
@@ -62,4 +64,14 @@ public class TowerSubsystem extends SubsystemBase {
         towerMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
+    /** @return {@link #TOWER_SPEED} constant */
+    public double getTowerSpeed(){
+        return TOWER_SPEED;
+    }
+
+    /** @return {@link #TOWER_REVERSE_SPEED} constant */
+    public double getTowerReverseSpeed(){
+        return TOWER_REVERSE_SPEED;
+    }
+    
 } //end of class TowerSubsystem

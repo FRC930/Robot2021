@@ -3,23 +3,24 @@ package frc.robot.commands.shuffleboardcommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.utilities.ShuffleboardUtility;
 
-public class ShuffleboardCompetitionCommand extends CommandBase{
-    
-    //-------- DELCARATIONS --------\\
+/**
+ * <h4>ShuffleboardCompetitionCommand</h4> Turns off most access groups to
+ * reduce bandwith usage during competitions.
+ */
+public class ShuffleboardCompetitionCommand extends CommandBase {
 
+    // -------- DELCARATIONS --------\\
+    // Gets instance from singleton
     private ShuffleboardUtility shuffleboard = ShuffleboardUtility.getInstance();
 
-    //-------- CONSTRUCTOR --------\\
+    // -------- CONSTRUCTOR --------\\
 
     public ShuffleboardCompetitionCommand() {
 
-        // hehe, funny code line :))
-
-        //addRequirements();
     }
 
-    //-------- COMMANDBASE METHODS --------\\
-    
+    // -------- COMMANDBASE METHODS --------\\
+
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
@@ -28,9 +29,10 @@ public class ShuffleboardCompetitionCommand extends CommandBase{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        // turn all access off to ensure that only the following are toggled on
+        // turns access off for all groups
         shuffleboard.allAccessFalse();
 
+        // turns on access for the only groups needed
         shuffleboard.toggleEndgameAccess();
         shuffleboard.toggleFlywheelAccess();
         shuffleboard.toggleIntakeAccess();

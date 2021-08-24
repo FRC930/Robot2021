@@ -19,31 +19,36 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
  */
 public class IntakeMotorSubsystem extends SubsystemBase {
 
-    //-------- CONSTANTS --------\\
+    // -------- CONSTANTS --------\\
 
     /**
      * This is the logger we will use to communicate with the user
      */
     private static final Logger logger = Logger.getLogger(IntakeMotorSubsystem.class.getName());
+    // Constant for our intake speed
+    private final double INTAKE_SPEED = 0.6;
 
-    //-------- DECLARATIONS --------\\
+    // -------- DECLARATIONS --------\\
 
     /**
      * The motor controller that controls the intake motor
      */
-    private WPI_TalonSRX intakeMotorController; 
+    private WPI_TalonSRX intakeMotorController;
 
-    //-------- CONSTRUCTOR --------\
+    // -------- CONSTRUCTOR --------\
 
     /**
-     * This constructor initializes the {@link #intakeMotorController} to the proper hardware
+     * This constructor initializes the {@link #intakeMotorController} to the proper
+     * hardware
+     * 
+     * @param intakeID TalonSRX ID on the CAN Bus
      */
-    public IntakeMotorSubsystem(int INTAKE_ID) {
-        intakeMotorController = new WPI_TalonSRX(INTAKE_ID);
+    public IntakeMotorSubsystem(int intakeID) {
+        intakeMotorController = new WPI_TalonSRX(intakeID);
     }
 
-    //-------- METHODS --------\\
-    
+    // -------- METHODS --------\\
+
     /**
      * <h3>setMotorSpeed</h3>
      * 
@@ -53,21 +58,32 @@ public class IntakeMotorSubsystem extends SubsystemBase {
      */
     public void setMotorSpeed(double speed) {
         intakeMotorController.set(ControlMode.PercentOutput, -speed);
-        logger.log(Constants.LOG_LEVEL_FINE,"sets motor speed");
+        logger.log(Constants.LOG_LEVEL_FINE, "sets motor speed");
     }
 
+    /**
+     * <h3>getIntakeMotor</h3>
+     * 
+     * @return the motor controller object
+     */
     public WPI_TalonSRX getIntakeMotor() {
         return intakeMotorController;
     }
 
     /**
-     * <h3>getMotorSpeed</h3>
-     * This method returns the intake motor speed
+     * <h3>getMotorSpeed</h3> This method returns the intake motor speed
      * 
      * @return the current motor speed
      */
     public double getMotorSpeed() {
-        return intakeMotorController.getMotorOutputPercent();  
+        return intakeMotorController.getMotorOutputPercent();
+    }
+
+    /**
+     * @return INTAKE_SPEED constant
+     */
+    public double getIntakeSpeed() {
+        return INTAKE_SPEED;
     }
 
 } // end of class IntakeMotorSubsystem

@@ -17,36 +17,41 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 
 //-------- COMMAND CLASS --------\\
-
+/**
+ * <h4>StopIntakeMotorsCommand</h4> Stops intake motors.
+ */
 public class StopIntakeMotorsCommand extends CommandBase {
 
-  //-------- CONSTANTS --------\\
+  // -------- CONSTANTS --------\\
 
   private static final Logger logger = Logger.getLogger(StopIntakeMotorsCommand.class.getName());
 
-  //-------- DECLARATIONS --------\\
+  // -------- DECLARATIONS --------\\
 
   private final IntakeMotorSubsystem intakeMotors;
 
-  //-------- CONSTRUCTOR --------\\
-
+  // -------- CONSTRUCTOR --------\\
+  /**
+   * 
+   * @param iMotors instantiated {@link IntakeMotorSubsystem} object.
+   */
   public StopIntakeMotorsCommand(IntakeMotorSubsystem iMotors) {
     intakeMotors = iMotors;
     logger.log(Constants.LOG_LEVEL_FINE, "Initializing the StopIntakeMotorsCommand...");
-    addRequirements(iMotors);  // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(iMotors); // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  //-------- COMMANDBASE METHODS --------\\
+  // -------- COMMANDBASE METHODS --------\\
 
-  @Override   // Called when the command is initially scheduled.
+  @Override // Called when the command is initially scheduled.
   public void initialize() {
-     intakeMotors.setMotorSpeed(0.0);
-     logger.log(Constants.LOG_LEVEL_FINE, "Stopping the intake wheels (command)..."); 
+    intakeMotors.setMotorSpeed(0.0);
+    logger.log(Constants.LOG_LEVEL_FINE, "Stopping the intake wheels (command)...");
   }
 
-  @Override   // Returns true when the command should end.
+  @Override // Returns true when the command should end.
   public boolean isFinished() {
     return true;
   }
 
-} //End of class StopIntakeMotorsCommand
+} // End of class StopIntakeMotorsCommand

@@ -14,7 +14,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TowerSubsystem;
 
 //-------- COMMAND CLASS --------\\
-
+/**
+ * <h4> StopTowerCommand </h4>
+ * Stops the tower motors.
+ */
 public class StopTowerCommand extends CommandBase {
 
     //-------- DECLARATIONS --------\\
@@ -22,7 +25,10 @@ public class StopTowerCommand extends CommandBase {
     private TowerSubsystem towerSubsystem;
 
     //-------- CONSTRUCTOR --------\\
-
+    /**
+     * Creates instance of the command.
+     * @param towerSubsystem instance of the TowerSubsystem
+     */
     public StopTowerCommand(TowerSubsystem towerSubsystem) {
         this.towerSubsystem = towerSubsystem;
         addRequirements(towerSubsystem);
@@ -33,6 +39,7 @@ public class StopTowerCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        // Stops the motor
         towerSubsystem.stopMotor();
     }
 

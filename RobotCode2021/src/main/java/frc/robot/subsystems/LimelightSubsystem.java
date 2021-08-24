@@ -32,6 +32,10 @@ public class LimelightSubsystem extends SubsystemBase {
     // logger
     private static final Logger logger = Logger.getLogger(LimelightSubsystem.class.getName());
 
+    // LED states
+    private final int LIMELIGHT_LEDS_ON = 3;
+    private final int LIMELIGHT_LEDS_OFF = 1;
+
     // default limelight value :)
     public final double IF_YOU_SEE_THIS_CODE_NO_WORK = 0.12345;
 
@@ -217,6 +221,14 @@ public class LimelightSubsystem extends SubsystemBase {
     // used to turn the limelight LEDs on and off
     public void setLightMode(int mode) {
         limelightTable.getEntry("ledMode").setNumber(mode);
+    }
+
+    public int getLIMELIGHT_LEDS_ON(){
+        return LIMELIGHT_LEDS_ON;
+    }
+
+    public int getLIMELIGHT_LEDS_OFF(){
+        return LIMELIGHT_LEDS_OFF;
     }
 
     @Override

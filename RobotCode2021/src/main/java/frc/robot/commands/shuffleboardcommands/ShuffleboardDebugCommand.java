@@ -3,23 +3,23 @@ package frc.robot.commands.shuffleboardcommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.utilities.ShuffleboardUtility;
 
-public class ShuffleboardDebugCommand extends CommandBase{
-    
-    //-------- DELCARATIONS --------\\
+/**
+ * <h4>ShufflboardDebugCommand</h4> Sets the access state for all data to true
+ * for debugging purposes.
+ */
+public class ShuffleboardDebugCommand extends CommandBase {
 
+    // -------- DELCARATIONS --------\\
+    // Gets utility instance from singleton
     private ShuffleboardUtility shuffleboard = ShuffleboardUtility.getInstance();
 
-    //-------- CONSTRUCTOR --------\\
+    // -------- CONSTRUCTOR --------\\
 
     public ShuffleboardDebugCommand() {
-
-        // hehe, funny code line :))
-
-        //addRequirements();
     }
 
-    //-------- COMMANDBASE METHODS --------\\
-    
+    // -------- COMMANDBASE METHODS --------\\
+
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
@@ -28,9 +28,9 @@ public class ShuffleboardDebugCommand extends CommandBase{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        // turn all access off to ensure that only the following are toggled on
+        // Sets all groups to false to align them
         shuffleboard.allAccessFalse();
-
+        // Sets all groups to true
         shuffleboard.toggleEndgameAccess();
         shuffleboard.toggleFlywheelAccess();
         shuffleboard.toggleHopperAccess();

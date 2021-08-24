@@ -17,39 +17,45 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 
 //-------- COMMAND CLASS --------\\
-
+/**
+ * <h4>RunIntakeMotorsCommand</h4> Starts running intake motors at a constant
+ * speed.
+ */
 public class RunIntakeMotorsCommand extends CommandBase {
 
-  //-------- CONSTANTS --------\\
+  // -------- CONSTANTS --------\\
 
   private static final Logger logger = Logger.getLogger(RunIntakeMotorsCommand.class.getName());
 
-  //-------- DECLARATIONS --------\\
+  // -------- DECLARATIONS --------\\
 
   private final IntakeMotorSubsystem intakeMotors;
-  
 
-  //-------- CONSTRUCTOR --------\\
-
+  // -------- CONSTRUCTOR --------\\
+  /**
+   * 
+   * @param iMotors instantiated {@link IntakeMotorSubsystem} object.
+   */
   public RunIntakeMotorsCommand(IntakeMotorSubsystem iMotors) {
     intakeMotors = iMotors;
     logger.log(Constants.LOG_LEVEL_FINE, "Initializing the RunIntakeMotorsCommand...");
 
-    addRequirements(iMotors);  // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(iMotors); // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  //-------- COMMANDBASE METHODS --------\\
+  // -------- COMMANDBASE METHODS --------\\
 
-  @Override   // Called when the command is initially scheduled.
+  @Override // Called when the command is initially scheduled.
   public void initialize() {
-     intakeMotors.setMotorSpeed(Constants.INTAKE_SPEED);
-     
-     logger.log(Constants.LOG_LEVEL_FINE, "Running the intake wheels (command)..."); 
+    // Sets intake motors
+    intakeMotors.setMotorSpeed(intakeMotors.getIntakeSpeed());
+
+    logger.log(Constants.LOG_LEVEL_FINE, "Running the intake wheels (command)...");
   }
-  
-  @Override   // Returns true when the command should end.
+
+  @Override // Returns true when the command should end.
   public boolean isFinished() {
     return true;
   }
 
-} //End of class RunIntakeMotorsCommand
+} // End of class RunIntakeMotorsCommand

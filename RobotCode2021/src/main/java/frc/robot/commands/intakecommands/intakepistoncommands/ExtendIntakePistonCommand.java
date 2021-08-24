@@ -17,38 +17,43 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 
 //-------- COMMAND CLASS --------\\
-
+/**
+ * <h4>ExtendIntakePistonCommand</h4> Extends pistons on the intake.
+ */
 public class ExtendIntakePistonCommand extends CommandBase {
 
-  //-------- CONSTANTS --------\\
+  // -------- CONSTANTS --------\\
 
   private static final Logger logger = Logger.getLogger(ExtendIntakePistonCommand.class.getName());
 
-  //-------- DECLARATIONS --------\\
+  // -------- DECLARATIONS --------\\
 
-  private final IntakePistonSubsystem intakePistonsSubsystem;
+  private final IntakePistonSubsystem intakePistonSubsystem;
 
+  // -------- CONSTRUCTOR --------\\
+  /**
+   * 
+   * @param iPiston instantiated {@link IntakePistonSubsystem} object.
+   */
+  public ExtendIntakePistonCommand(IntakePistonSubsystem iPiston) {
+    intakePistonSubsystem = iPiston;
 
-  //-------- CONSTRUCTOR --------\\
-
-  public ExtendIntakePistonCommand(IntakePistonSubsystem iPistons) {
-    intakePistonsSubsystem = iPistons;
-
-    addRequirements(iPistons);  // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(iPiston); // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  //-------- COMMANDBASE METHODS --------\\
+  // -------- COMMANDBASE METHODS --------\\
 
-  @Override   // Called when the command is initially scheduled.
+  @Override // Called when the command is initially scheduled.
   public void initialize() {
-    intakePistonsSubsystem.setIntakePistonState(Constants.INTAKE_PISTONS_DOWN);
-    
-    logger.log(Constants.LOG_LEVEL_FINE, "Extending the intake piston (command)..."); 
+    // Sets the piston to the down state
+    intakePistonSubsystem.setIntakePistonState(intakePistonSubsystem.getIntakePistonDownState());
+
+    logger.log(Constants.LOG_LEVEL_FINE, "Extending the intake piston (command)...");
   }
 
-  @Override   // Returns true when the command should end.
+  @Override // Returns true when the command should end.
   public boolean isFinished() {
     return true;
   }
 
-} //End of class ExtendIntakePistonCommand
+} // End of class ExtendIntakePistonCommand

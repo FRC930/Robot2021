@@ -12,10 +12,12 @@ package frc.robot.commands.towercommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.TowerSubsystem;
-import frc.robot.Constants;
 
 //-------- COMMAND CLASS --------\\
-
+/**
+ * <h4>ReverseTowerCommand</h4> Reverses the motor for the tower to release any
+ * stuck balls.
+ */
 public class ReverseTowerCommand extends CommandBase {
 
     // -------- DECLARATIONS --------\\
@@ -23,7 +25,11 @@ public class ReverseTowerCommand extends CommandBase {
     private TowerSubsystem towerSubsystem;
 
     // -------- CONSTRUCTOR --------\\
-
+    /**
+     * Creates instance of the command.
+     * 
+     * @param towerSubsystem instance of the TowerSubsystem
+     */
     public ReverseTowerCommand(TowerSubsystem towerSubsystem) {
         this.towerSubsystem = towerSubsystem;
         addRequirements(towerSubsystem);
@@ -34,7 +40,8 @@ public class ReverseTowerCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        towerSubsystem.setSpeed(Constants.TOWER_REVERSE_SPEED);
+        // Sets the speed
+        towerSubsystem.setSpeed(towerSubsystem.getTowerReverseSpeed());
     }
 
     // Returns true when the command should end.
