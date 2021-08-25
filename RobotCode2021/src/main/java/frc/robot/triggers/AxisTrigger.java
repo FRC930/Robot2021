@@ -16,6 +16,10 @@ import edu.wpi.first.wpilibj.Joystick;
 
 //-------- TRIGGER CLASS --------\\
 
+/**
+ * <h3>AxisTrigger</h3>
+ * AxisTrigger is used to create a trigger when a joystick is moved past a certain point. 
+ */
 public class AxisTrigger extends Trigger {
 
   //--------- CONSTANTS --------\\
@@ -34,7 +38,7 @@ public class AxisTrigger extends Trigger {
    *
    * @param joystick     The Joystick object that has an axis
    * 
-   * @param axisNumber The button number (see {@link joystick#getRawAxis(int) }
+   * @param axisNumber The button number (see {@link edu.wpi.first.wpilibj.Joystick#getRawAxis(int) getRawAxis})
    */
   public AxisTrigger(Joystick joystick, int axisNumber) {
     requireNonNullParam(joystick, "joystick", "JoystickButton");

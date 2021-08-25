@@ -13,7 +13,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem;
 
 //-------- COMMAND CLASS --------\\
-
+/**
+ * <h3>SetHopperReverseCommand</h3>
+ * 
+ * TODO: combine with set hopper command
+ */
 public class SetHopperReverseCommand extends CommandBase {
 
     //-------- DECLARATIONS --------\\

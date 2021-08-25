@@ -18,6 +18,11 @@ import frc.robot.subsystems.LimelightSubsystem;
 
 //-------- COMMAND CLASS --------\\
 
+/**
+ * <h3>SetLimelightLEDStateCommand</h3>
+ * 
+ * Determines if the lights on the limelight are on or off
+ */
 public class SetLimelightLEDStateCommand extends CommandBase {
 
 
@@ -28,7 +33,14 @@ public class SetLimelightLEDStateCommand extends CommandBase {
 
     private int state;
     
-    // Constructor
+    /**
+     * <h3>SetLimelightLEDStateCommand</h3>
+     * 
+     * Turns the LEDs on the Limelight to on or off
+     * 
+     * @param limelightSubsystem the instance of the limelight subsystem to use
+     * @param state TODO: get what the state means
+     */
     public SetLimelightLEDStateCommand(LimelightSubsystem limelightSubsystem, int state){
         this.limelightSubsystem = limelightSubsystem;
         this.state = state;

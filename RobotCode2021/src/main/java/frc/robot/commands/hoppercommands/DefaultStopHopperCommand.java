@@ -14,6 +14,11 @@ import frc.robot.subsystems.HopperSubsystem;
 
 //-------- COMMAND CLASS --------\\
 
+/**
+ * <h3>DefaultStopHopperCommand</h3>
+ * 
+ * This class sets the hopper speed to zero whenever it is executed
+ */
 public class DefaultStopHopperCommand extends CommandBase {
 
     //-------- DECLARATIONS --------\\
@@ -23,8 +28,15 @@ public class DefaultStopHopperCommand extends CommandBase {
     //private 
     //-------- CONSTRUCTOR --------\\
 
-    public DefaultStopHopperCommand(HopperSubsystem HopperSubsystem) {
-        m_HopperSubsystem = HopperSubsystem;
+    /**
+     * <h3>DefaultStopHopperCommand</h3>
+     * 
+     * Creates the class with the passed hopper subsystem
+     * 
+     * @param hopperSubsystem the reference to the hopper that the class will use
+     */
+    public DefaultStopHopperCommand(HopperSubsystem hopperSubsystem) {
+        m_HopperSubsystem = hopperSubsystem;
         addRequirements(m_HopperSubsystem);
     }
 

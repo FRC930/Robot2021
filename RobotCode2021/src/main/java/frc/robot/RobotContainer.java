@@ -9,12 +9,12 @@ import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening_Long;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheForwarding;
 import frc.robot.commands.autocommands.LakeshorePath.LeFishe_Long;
-import frc.robot.commands.autocommands.LakeshorePath.LeFisheCantAim;
+// import frc.robot.commands.autocommands.LakeshorePath.LeFisheCantAim;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheThe2nd;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening;
 import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening_Long;
 // --Our Commands
-import frc.robot.commands.autocommands.paths.*;
+// import frc.robot.commands.autocommands.paths.*;
 import frc.robot.commands.drivecommands.*;
 
 import frc.robot.commands.intakecommands.intakemotorcommands.*;
@@ -33,12 +33,12 @@ import frc.robot.commands.towercommands.*;
 import frc.robot.commands.turretcommads.*;
 //import frc.robot.commands.ultrasoniccommands.UltrasonicPingCommand;
 import frc.robot.commands.endgamecommands.*;
-import frc.robot.commands.hoppercommands.DefaultHopperCommand;
+// import frc.robot.commands.hoppercommands.DefaultHopperCommand;
 import frc.robot.commands.hoppercommands.DefaultHopperCommandGroup;
 import frc.robot.commands.hoppercommands.DefaultStopHopperCommand;
 import frc.robot.commands.hoppercommands.SetHopperCommand;
 import frc.robot.commands.hoppercommands.SetHopperReverseCommand;
-import frc.robot.commands.hoppercommands.StopHopperStateCommand;
+// import frc.robot.commands.hoppercommands.StopHopperStateCommand;
 // --Subsystem imports
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.DriveSubsystem.DRIVE_TYPE;
@@ -222,7 +222,7 @@ public class RobotContainer {
   // --Hopper commands
   // private final StopHopperCommand stopHopperCommand;
   private final DefaultHopperCommandGroup defaultHopperCommand;
-  private final StopHopperStateCommand stopHopperStateCommand;
+  // private final StopHopperStateCommand stopHopperStateCommand;
   private final DefaultStopHopperCommand defaultStopHopperCommand;
 
   // --LED commands
@@ -351,7 +351,7 @@ public class RobotContainer {
 
     // hopper
     defaultStopHopperCommand = new DefaultStopHopperCommand(hopperSubsystem);
-    stopHopperStateCommand = new StopHopperStateCommand();
+    // stopHopperStateCommand = new StopHopperStateCommand();
     defaultHopperCommand = new DefaultHopperCommandGroup(hopperSubsystem);
 
     // leds
@@ -650,7 +650,7 @@ public class RobotContainer {
     // positionalButton.whileActiveOnce(positionalControlCommandGroup);
 
     // Drive command binds
-    swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
+    // swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
     //endgameRetractButton.whenHeld(new EndgameRunCommand(endgameSubsystem, "down"));//.whenReleased(new EndgameCommandFlipState(endgameSubsystem));
     endgameExtendButton.whenHeld(new EndgameRunCommand(endgameSubsystem));
 
@@ -714,7 +714,7 @@ public class RobotContainer {
 
     reverseHopperButton.whileActiveOnce(new SetHopperReverseCommand(hopperSubsystem, Constants.HOPPER_REVERSE_SPEED, true));
     // manual
-    stopHopperButton.whileActiveOnce(stopHopperStateCommand);
+    // stopHopperButton.whileActiveOnce(stopHopperStateCommand);
 
     //startAccuracyChallengeButton.whileActiveContinuous(accuracyChallengeCommand);
   } // end of method configureDriverBindings()
@@ -781,7 +781,7 @@ public class RobotContainer {
       scheduler.setDefaultCommand(hopperSubsystem, defaultHopperCommand);
       scheduler.setDefaultCommand(flywheelSubsystem, defaultFlywheelCommand);
       scheduler.setDefaultCommand(limelightSubsystem,
-          new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
+          new SetLimelightLEDStateCommand(limelightSubsystem, limelightSubsystem.getLIMELIGHT_LEDS_OFF()));
       // scheduler.setDefaultCommand(ultrasonicSubsystem, new
       // UltrasonicPingCommand(ultrasonicSubsystem));
 
@@ -805,7 +805,7 @@ public class RobotContainer {
     scheduler.setDefaultCommand(hopperSubsystem, defaultStopHopperCommand);
     scheduler.setDefaultCommand(flywheelSubsystem, defaultFlywheelCommand);
     scheduler.setDefaultCommand(limelightSubsystem,
-        new SetLimelightLEDStateCommand(limelightSubsystem, Constants.LIMELIGHT_LEDS_OFF));
+        new SetLimelightLEDStateCommand(limelightSubsystem, limelightSubsystem.getLIMELIGHT_LEDS_OFF()));
 
     scheduler.setDefaultCommand(flywheelPistonSubsystem, defaultFullExtendFlywheelCommand);
   }

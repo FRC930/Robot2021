@@ -16,6 +16,11 @@ import edu.wpi.first.wpilibj.Joystick;
 
 //-------- TRIGGER CLASS --------\\
 
+/**
+ * <h3>POVTrigger</h3>
+ * 
+ * POVTrigger is used to create a trigger for events dealing with the d-pad
+ */
 public class POVTrigger extends Trigger {
 
   // -------- DECLARATIONS --------\\
@@ -31,10 +36,10 @@ public class POVTrigger extends Trigger {
    *
    * @param joystick     The Joystick object that has an axis
    * 
-   * @param povNumber The direction number (see {@link joystick#getRawAxis(int) }
+   * @param povNumber The direction number (see {@link edu.wpi.first.wpilibj.Joystick#getRawAxis(int) getRawAxis})
    */
   public POVTrigger(Joystick joystick, int povAxis, int povNumber) {
-    requireNonNullParam(joystick, "joystick", "JoystickButton");
+    requireNonNullParam(joystick, "joystick", "POVTrigger");
 
     this.joystick = joystick;
     this.povAxis = povAxis;

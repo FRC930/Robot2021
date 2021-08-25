@@ -11,35 +11,49 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.DriveSubsystem;
 
+/**
+ * <h3>ResetSwerveDriveCommand</h3>
+ * 
+ * This class is used for resetting the wheel angles to zero and zeroing the
+ * gyro. Used mainly for testing.
+ */
 public class ResetSwerveDriveCommand extends CommandBase {
     private DriveSubsystem driveSubsystem;
-    
-    public ResetSwerveDriveCommand(DriveSubsystem dSubsystem){
+
+    /**
+     * <h3>ResetSwerveDriveCommand</h3>
+     * 
+     * Takes a {@link frc.robot.subsystems.DriveSubsystem DriveSubsystem} and zeros
+     * the wheels and gyro whenever it is executed
+     * 
+     * @param dSubsystem the instance of {@link frc.robot.subsystems.DriveSubsystem
+     *                   DriveSubsystem} to use
+     */
+    public ResetSwerveDriveCommand(DriveSubsystem dSubsystem) {
         driveSubsystem = dSubsystem;
         addRequirements(dSubsystem);
     }
+
     @Override
-    public void initialize() {  
-        
+    public void initialize() {
+
     }
+
     // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute() {  
+    public void execute() {
         driveSubsystem.swerveResetWheels();
         driveSubsystem.rebootGyro();
-        //driveSubsystem.resetSwerveOdemetry();
     }
+
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
     }
-    
+
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        // if(driveSubsystem.getPose() ){
-
-        // }
         return false;
     }
 }

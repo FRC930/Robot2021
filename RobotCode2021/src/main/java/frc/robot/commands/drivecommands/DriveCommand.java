@@ -7,22 +7,28 @@
 
 package frc.robot.commands.drivecommands;
 
-import frc.robot.Constants;
-
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.Joystick;
 
 import java.util.logging.*;
 
+/**
+ * <h3>DriveCommand</h3>
+ * 
+ * Implements tank drive for the robot
+ * 
+ * @deprecated fix and use
+ */
+@Deprecated
 public class DriveCommand extends CommandBase {
 
-  //-------- CONSTANTS --------\\
+  // -------- CONSTANTS --------\\
 
   private final double DRIVE_DEADBAND_JOYSTICK = 0.000125;
   private final double DRIVE_TURNING_MULTIPLIER = 0.5;
 
-  //-------- DECLARATIONS --------\\
+  // -------- DECLARATIONS --------\\
 
   private final DriveSubsystem driveSubsystem;
   private final Joystick m_driveStick;
@@ -31,42 +37,53 @@ public class DriveCommand extends CommandBase {
 
   private static final Logger logger = Logger.getLogger(DriveCommand.class.getName());
 
-  //-------- CONSTRUCTOR --------\\
+  // -------- CONSTRUCTOR --------\\
 
+  /**
+   * <h3>DriveCommand</h3>
+   * 
+   * Instantiates drive command
+   * 
+   * @param dSubsystem   the subsystem to use
+   * @param driverStick  the driver stick
+   * @param turningAxis  axis ID for turning
+   * @param throttleAxis axis ID for throttle
+   */
   public DriveCommand(DriveSubsystem dSubsystem, Joystick driverStick, int turningAxis, int throttleAxis) {
     driveSubsystem = dSubsystem;
     m_driveStick = driverStick;
     setTurningAndThrottleAxis(turningAxis, throttleAxis);
-    addRequirements(dSubsystem);  // Use addRequirements() here to declare subsystem dependencies.
-  } 
-  //-------- COMMANDBASE METHODS --------\\
-  @Override   // Called when the command is initially scheduled.
+    addRequirements(dSubsystem); // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+  // -------- COMMANDBASE METHODS --------\\
+  @Override // Called when the command is initially scheduled.
   public void initialize() {
   }
 
-  @Override   // Called every time the scheduler runs while the command is scheduled.
-  public void execute() {  
+  @Override // Called every time the scheduler runs while the command is scheduled.
+  public void execute() {
     // Sends our two driver axis to our run method see below
     run(m_driveStick.getRawAxis(driverTurninAxis), m_driveStick.getRawAxis(driverThrottleAxis));
   }
-  @Override   // Called once the command ends or is interrupted.
+
+  @Override // Called once the command ends or is interrupted.
   public void end(boolean interrupted) {
   }
 
+  // -------- METHODS --------\\
 
-  //-------- METHODS --------\\
-  
-  //sets up our two driver axis for driving
-  public void setTurningAndThrottleAxis(int turningAxis, int throttleAxis){
+  // sets up our two driver axis for driving
+  public void setTurningAndThrottleAxis(int turningAxis, int throttleAxis) {
     driverTurninAxis = turningAxis;
     driverThrottleAxis = throttleAxis;
   }
 
-  // this is our run method it contains all our logic for driving 
+  // this is our run method it contains all our logic for driving
   private void run(double stickX, double stickY) {
-        
+
     // Cubing values to create smoother function
-    //stickX = -Math.pow(stickX, 3);
+    // stickX = -Math.pow(stickX, 3);
     stickY = -Math.pow(stickY, 3);
 
     // Multiplies for smoothing turning
@@ -81,7 +98,9 @@ public class DriveCommand extends CommandBase {
       logger.log(Level.INFO, "stickY < DRIVE_DEADBAND_JOYSTICK");
       stickY = 0;
     }
-    // sends the values of our sticks (with some math for turning) to our drive train motors
-    driveSubsystem.tankDrive((stickY - stickX), (stickY + stickX));
-  } //End of method run()
-} //End of class DriveCommand
+    // sends the values of our sticks (with some math for turning) to our drive
+    // train motors
+    // TODO: look at implementing tank drive
+    // driveSubsystem.tankDrive((stickY - stickX), (stickY + stickX));
+  } // End of method run()
+} // End of class DriveCommand

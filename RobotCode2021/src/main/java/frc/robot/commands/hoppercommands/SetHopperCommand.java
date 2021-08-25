@@ -14,33 +14,47 @@ import frc.robot.subsystems.HopperSubsystem;
 
 //-------- COMMAND CLASS --------\\
 
+/**
+ * <h3>SetHopperCommand</h3>
+ * 
+ * SetHopperCommand controls the hopper used to store the power cells
+ */
 public class SetHopperCommand extends CommandBase {
 
-    //-------- DECLARATIONS --------\\
+    // -------- DECLARATIONS --------\\
 
     private HopperSubsystem m_HopperSubsystem;
     private double speed;
     private boolean isInverted;
+    
+    // -------- CONSTRUCTOR --------\\
 
-    //private 
-    //-------- CONSTRUCTOR --------\\
-
-    public SetHopperCommand(HopperSubsystem HopperSubsystem, double speed, boolean isInverted) {
-        m_HopperSubsystem = HopperSubsystem;
+    /**
+     * <h3>SetHopperCommand</h3>
+     * 
+     * This command runs once, setting the hopper speed to the passed value
+     * 
+     * @param hopperSubsystem the instance of
+     *                        {@link frc.robot.subsystems.HopperSubsystem
+     *                        HopperSubsystem} to use
+     * @param speed           the speed at which to run the motor
+     * @param isInverted      whether to run the motor in reverse or not
+     */
+    public SetHopperCommand(HopperSubsystem hopperSubsystem, double speed, boolean isInverted) {
+        m_HopperSubsystem = hopperSubsystem;
         this.speed = speed;
         this.isInverted = isInverted;
         addRequirements(m_HopperSubsystem);
     }
 
-    //-------- METHODS --------\\    
+    // -------- METHODS --------\\
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        if(isInverted){
+        if (isInverted) {
             m_HopperSubsystem.setSpeed(-speed);
-        }
-        else{
+        } else {
             m_HopperSubsystem.setSpeed(speed);
         }
     }
@@ -54,4 +68,4 @@ public class SetHopperCommand extends CommandBase {
     public boolean isFinished() {
         return true;
     }
-} //end of class DefaultHopperCommand
+} // end of class DefaultHopperCommand

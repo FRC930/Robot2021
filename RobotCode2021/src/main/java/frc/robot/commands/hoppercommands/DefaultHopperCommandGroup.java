@@ -15,16 +15,26 @@ import frc.robot.Constants;
 import frc.robot.subsystems.HopperSubsystem;
 
 //-------- COMMANDGROUP CLASS --------\\
+
+/**
+ * <h3>DefaultHopperCommandGroup</h3>
+ * 
+ * This command runs the default hopper while the robot is running during
+ * autonomous
+ */
 public class DefaultHopperCommandGroup extends SequentialCommandGroup {
-    //-------- CONSTRUCTORS --------\\
-    
+    // -------- CONSTRUCTORS --------\\
+
+    /**
+     * <h3>DefaultHopperCommandGroup</h3>
+     * 
+     * The constructor adds all the commands to the command group
+     * 
+     * @param hSubsystem the instance of the hopper subsystem to control
+     */
     public DefaultHopperCommandGroup(HopperSubsystem hSubsystem) {
-        addCommands(
-            new PrintCommand("STARTING DEFAULT HOPPER"),
-            new SetHopperCommand(hSubsystem, Constants.HOPPER_DEFAULT_SPEED, false),
-            new WaitCommand(1.25),
-            new SetHopperCommand(hSubsystem, Constants.HOPPER_REVERSE_SPEED, true),
-            new WaitCommand(0.5)
-        );
+        addCommands(new PrintCommand("STARTING DEFAULT HOPPER"),
+                new SetHopperCommand(hSubsystem, Constants.HOPPER_DEFAULT_SPEED, false), new WaitCommand(1.25),
+                new SetHopperCommand(hSubsystem, Constants.HOPPER_REVERSE_SPEED, true), new WaitCommand(0.5));
     } // End of Constructor
 } // End of Class
