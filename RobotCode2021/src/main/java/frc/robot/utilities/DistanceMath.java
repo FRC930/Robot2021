@@ -11,7 +11,7 @@ public class DistanceMath {
   public static final double CAMERA_ANGLE = 20;        //angle has changed, find the new angle
   
   //Logger
-  private static final Logger logger = Logger.getLogger(CameraUtil.class.toString());
+  private static final Logger logger = Logger.getLogger(DistanceMath.class.toString());
 
   //Inputs: Goal Angle on Y Axis
   //Outputs: Distance from base of ground directly beneath camera to base of goal
