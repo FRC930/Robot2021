@@ -3,10 +3,7 @@ package frc.robot.utilities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.*;
-
-import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
@@ -15,33 +12,37 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
- * DeadbandMath
+ * <h4>AutonConfig</h4>
+ * <p>
+ * Utility class used to help create and manage autonomous path trajectories.
+ * This class also does deadband math.
+ * </p>
+ * 
+ * <p>
+ * Constructor is set to private due to AutonConfig being a singleton.
+ * </p>
+ * 
+ * <p>
+ * Note: All measurements are in meters.
+ * </p>
  */
 public class AutonConfig {
 
     // All measurements are in meters
 
-    private SwerveDriveKinematicsConstraint autoVoltageConstraint;
+    //----- TRAJECTORY CONFIGURATIONS -----\\
 
     private TrajectoryConfig trajectoryConfig;
-
     private TrajectoryConfig reverseConfig;
-
     private TrajectoryConfig slowConfigStart;
-
     private TrajectoryConfig slowConfigContinue;
-
     private TrajectoryConfig slowConfigEnd;
 
-    private final int endVelocity_SlowConfig = 2;
-
-    // Static flag for singleton
-    private static AutonConfig lastInstance = null;
+    //----- CONSTANT(S) -----\\
 
     // Constructs logger
     private static final Logger logger = Logger.getLogger(AutonConfig.class.toString());
-
-    // ------------- CONSTANTS --------------- //
+    
     public static final double PX = 0;
     public static final double IX = 0;
     public static final double DX = 0;
@@ -54,13 +55,35 @@ public class AutonConfig {
     public static final double MAXV = Math.PI * 2;
     public static final double MAXA = Math.PI;
 
+    private final int endVelocity_SlowConfig = 2;
+
+    //----- VARIABLE(S) -----\\
+
+    private SwerveDriveKinematicsConstraint autoVoltageConstraint;
+
+    // Static flag for singleton
+    private static AutonConfig lastInstance = null;
+
     public static double xOffset = inchesToMeters(35.25);
     public static double yOffset = inchesToMeters(6.5);
 
-    // Class constructor - sets logger lever
+    //----- CONSTRUCTOR(S) -----\\
+
+    /**
+     * <h4>AutonConfig</h4>
+     * Creates a utility class used to help create and manage autonomous path trajectories.
+     * This class also does deadband math.
+     * 
+     * Set to private due to AutonConfig being a singleton.
+     * 
+     * @param dSubsystem
+     */
     private AutonConfig(DriveSubsystem dSubsystem) {
-        autoVoltageConstraint = new SwerveDriveKinematicsConstraint(dSubsystem.getSwerveKinematics(),
-                Constants.KMAXSPEED);
+
+        autoVoltageConstraint = new SwerveDriveKinematicsConstraint(
+            dSubsystem.getSwerveKinematics(),
+            Constants.KMAXSPEED
+        );
         // Configurate the values of all trajectories for max velocity and acceleration
         trajectoryConfig = new TrajectoryConfig(5.5, 4.25)
                 // Add kinematics to ensure max speed is actually obeyed
@@ -101,6 +124,10 @@ public class AutonConfig {
     }
 
     // Method to get an instance of AutonConfig
+    /**
+     * <h4>getInstance</h4>
+     * Gets the singleton instance of the AutonConfig class.
+     */
     public static AutonConfig getInstance() {
         if (lastInstance == null) {
             logger.log(Level.SEVERE, "need to call init config");
@@ -117,7 +144,14 @@ public class AutonConfig {
         return trajectoryConfig;
     }
 
-    public TrajectoryConfig getTrajectoryConfig(double startVelocity, double endVelocity) {
+    /**
+     * <h4>setTrajectoryConfigVelocities</h4>
+     * Sets start and end velocities of the trajectoryConfig
+     * 
+     * @param startVelocity
+     * @param endVelocity
+     */
+    public TrajectoryConfig setTrajectoryConfigVelocities(double startVelocity, double endVelocity) {
         return trajectoryConfig.setStartVelocity(startVelocity).setEndVelocity(endVelocity);
     }
 
@@ -137,7 +171,14 @@ public class AutonConfig {
         return slowConfigEnd;
     }
 
-    // Custom transformBy from the trajectory class
+    /**
+     * <h4>transformBy</h4>
+     * Custom transformBy from the trajectory class
+     * 
+     * @param trajectory A trajectory
+     * @param transform Transformation for Pose2d
+     * @return new Trajectory(newStates)
+     */
     public Trajectory transformBy(Trajectory trajectory, Transform2d transform) {
         var firstState = trajectory.getStates().get(0);
         var firstPose = firstState.poseMeters;
@@ -145,14 +186,28 @@ public class AutonConfig {
         // Calculate the transformed first pose.
         List<State> newStates = new ArrayList<>();
 
-        newStates.add(new State(firstState.timeSeconds, firstState.velocityMetersPerSecond,
-                firstState.accelerationMetersPerSecondSq, firstPose, firstState.curvatureRadPerMeter));
+        newStates.add(
+            new State(
+                firstState.timeSeconds, 
+                firstState.velocityMetersPerSecond,
+                firstState.accelerationMetersPerSecondSq, 
+                firstPose, 
+                firstState.curvatureRadPerMeter
+            )
+        );
 
         for (int i = 1; i < trajectory.getStates().size(); i++) {
             var state = trajectory.getStates().get(i);
             // We are transforming relative to the coordinate frame of the new initial pose.
-            newStates.add(new State(state.timeSeconds, state.velocityMetersPerSecond,
-                    state.accelerationMetersPerSecondSq, state.poseMeters.plus(transform), state.curvatureRadPerMeter));
+            newStates.add(
+                new State(
+                    state.timeSeconds, 
+                    state.velocityMetersPerSecond,
+                    state.accelerationMetersPerSecondSq, 
+                    state.poseMeters.plus(transform), 
+                    state.curvatureRadPerMeter
+                )
+            );
         }
 
         return new Trajectory(newStates);

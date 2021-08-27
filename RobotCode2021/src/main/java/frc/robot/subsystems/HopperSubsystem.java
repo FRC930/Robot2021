@@ -40,8 +40,8 @@ public class HopperSubsystem extends SubsystemBase {
      * This constructor initializes the {@link #hopperMotor} to the correct motor
      * <p>It also sets the motor to be in inverted mode</p>
      */
-    public HopperSubsystem(int HOPPER_ID) {
-        hopperMotor = new WPI_VictorSPX(HOPPER_ID);
+    public HopperSubsystem(int hopperID) {
+        hopperMotor = new WPI_VictorSPX(hopperID);
         hopperMotor.setInverted(true);
     }
 

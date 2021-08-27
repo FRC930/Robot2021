@@ -12,83 +12,119 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * An example command that uses an example subsystem.
+ * <h4>ShooterLEDs</h4> 
+ * LED command for when the robot is shooting.
  */
 public class ShooterLEDs extends CommandBase {
+
+  // ----- CONSTANT(S) -----\\
+
+  // The LED Subsystem (strip) itself
   private final LEDSubsystem m_LEDSubsystem;
-  private AddressableLEDBuffer buffer;
-  private long counter;
-  private int index1;
-  private int index2;
+
+  // LED length for the buffer
+  private final int BUFFER_LENGTH;
+
+  // ----- VARIABLE(S) -----\\
 
   /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * LED patterns are made on the buffer then sent to the LED strip via
+   * LEDSubsystem
+   */
+  private AddressableLEDBuffer buffer;
+
+  // Delay variable between each pattern change
+  private int counter;
+
+  // Indices for managing LED colors between blue and green
+  private int blueIndex;
+  private int greenIndex;
+
+  /**
+   * <h4>ShooterLEDs</h4> 
+   * Creates an LED command for when the robot is shooting.
+   * 
+   * @param LEDSubsystem
    */
   public ShooterLEDs(LEDSubsystem LEDSubsystem) {
+
     m_LEDSubsystem = LEDSubsystem;
+    BUFFER_LENGTH = m_LEDSubsystem.getBufferLength();
     buffer = new AddressableLEDBuffer(60);
     counter = 0;
-    index1 = 0;
-    index2 = 19;
+    blueIndex = 0;
+    greenIndex = 19;
 
     addRequirements(LEDSubsystem);
-  }
+
+  } // End of constructor
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // for(int i = 0; i <= index2; i++)
-    // {
-    // buffer.setRGB(i, 0, 255, 0);
-    // }
-    // for(int i = index2 + 1; i < buffer.getLength(); i++)
-    // {
-    // buffer.setRGB(i, 0, 0, 255);
-    // }
 
-    for (int i = 0; i < buffer.getLength(); i++) {
+    for (int i = 0; i < BUFFER_LENGTH; i++) {
       buffer.setRGB(i, 0, 0, 255);
     }
     m_LEDSubsystem.setBuffer(buffer);
-  }
 
+  } // End of initialize()
+
+  /**
+   * <h4>moveLEDs</h4> Private helper method to move the light placement down the
+   * strip.
+   */
   private void moveLEDs() {
-    index1++;
-    index2++;
 
-    if (index2 >= buffer.getLength()) {
-      index2 = 0;
+    // Increments all index positions
+    blueIndex++;
+    greenIndex++;
+
+    // If said index variable is greater than or equal to BUFFER_LENGTH, set it to 0
+    if (greenIndex >= BUFFER_LENGTH) {
+      greenIndex = 0;
     }
-    if (index1 >= buffer.getLength()) {
-      index1 = 0;
+    if (blueIndex >= BUFFER_LENGTH) {
+      blueIndex = 0;
     }
-  }
+
+  } // End of moveLEDs()
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    /**
+     * GENERAL SUMMARY
+     * 
+     * Everytime the counter reaches 3, the LEDs are given an updated pattern.
+     * The pattern is just a rotating wheel of blue and green.
+     */
+
     counter++;
 
     // Keeping track of animation speed.
-    if (counter % 3 == 0) {
-      buffer.setRGB(index1, 0, 0, 255);
-      moveLEDs();
-      buffer.setRGB(index2, 0, 255, 0);
-      m_LEDSubsystem.setBuffer(buffer);
+    if (counter >= 3) {
+      buffer.setRGB(blueIndex, 0, 0, 255); // Sets LED at blueIndex to blue
+      moveLEDs(); // Moves the LEDs
+      buffer.setRGB(greenIndex, 0, 255, 0); // Sets LED at greenIndex to green
+
+      counter = 0;
     }
-  }
+    
+    m_LEDSubsystem.setBuffer(buffer);
+
+  } // End of execute()
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
 
-  }
+  } // End of end()
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
-  }
+  } // End of isFinished()
 }

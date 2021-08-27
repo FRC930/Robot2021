@@ -85,6 +85,7 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
     //------------------------------------------------------
 
     // Called every time the scheduler runs while the command is scheduled.
+    // TODO: Until we know what happens next season, we'll keep the setTop calls here
     @Override
     public void execute() {
          double distance = DistanceMath.getDistY(mLimelightSubsystem.getVerticleOffset());
@@ -93,25 +94,25 @@ public class AccuracyChallengeCommand extends SequentialCommandGroup {
          if (distance <= GREEN_END_ZONE ) {   // Green Zone (Back)
              mFlywheelSubsystem.setSpeedRPMs(GREEN_SPEED);        //needs to be changed!
              mFlywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
-             mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
+             //mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
              SmartDashboard.putString("Zone", "Green");
          } 
          else if ( GREEN_END_ZONE <= distance && distance <= YELLOW_END_ZONE ) {   // Yellow Zone (Back)
              mFlywheelSubsystem.setSpeedRPMs(YELLOW_SPEED);
              mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
-             mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
+             //mFlywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
              SmartDashboard.putString("Zone", "Yellow");
          } 
          else if ( YELLOW_END_ZONE <= distance && distance <= BLUE_END_ZONE ) {   // Blue Zone (Back)
              mFlywheelSubsystem.setSpeedRPMs(BLUE_SPEED);
              mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
-             mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
+             //mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
              SmartDashboard.putString("Zone", "Blue");
          } 
          else if ( BLUE_END_ZONE <= distance) {   // Red Zone (Front)  :)
              mFlywheelSubsystem.setSpeedRPMs(RED_SPEED);
              mFlywheelPistonSubsystem.setBottom(SolenoidValues.EXTEND);
-             mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
+             //mFlywheelPistonSubsystem.setTop(SolenoidValues.EXTEND);
              SmartDashboard.putString("Zone", "Red");
          } 
     }

@@ -11,27 +11,25 @@ import frc.robot.Constants;
 //--------- SUBSYSTEM CLASS ---------\\
 
 /**
- * <h3>FlywheelPistonSubsystem</h3> This class controls the piston on the
- * shooter
+ * <h3>FlywheelPistonSubsystem</h3> 
+ * This class controls the piston on the shooter
  */
 public class FlywheelPistonSubsystem extends SubsystemBase {
 
-    // -------- CONSTANTS --------\\
+    //-------- CONSTANTS --------\\
 
     /**
      * This logger will be used for sending information to the user
      */
     private static final Logger logger = Logger.getLogger(FlywheelPistonSubsystem.class.getName());
 
-    // -------- DECLARATIONS --------\\
+    //-------- DECLARATIONS --------\\
 
     /**
      * This Solenoid will be used for changing the shooting angle
      */
-    private Solenoid flywheelPistonTop;
-    private Solenoid flywheelPistonBottom;
+    private Solenoid flywheelPiston;
 
-  //private ShuffleboardUtility shuffleboardUtility;
 
     /**
      * This enum will be used for choosing piston state
@@ -51,32 +49,25 @@ public class FlywheelPistonSubsystem extends SubsystemBase {
         }
     }
 
-    // -------- CONSTRUCTOR --------\\
+    //-------- CONSTRUCTOR --------\\
 
     /**
+     * <h3>FlywheelPistonSubsystem</h3> 
      * This constructor will assign {@link #flywheelPiston} to the correct hardware
      */
-    public FlywheelPistonSubsystem(int SHOOTER_SOLENOID_TOP_ID,int SHOOTER_SOLENOID_BOTTOM_ID) {
-        //big
-        flywheelPistonTop = new Solenoid(SHOOTER_SOLENOID_TOP_ID);
+    public FlywheelPistonSubsystem(int shooterSolenoidTopID, int shooterSolenoidBottomID) {
         //small
-        flywheelPistonBottom = new Solenoid(SHOOTER_SOLENOID_BOTTOM_ID);
-        //shuffleboardUtility = ShuffleboardUtility.getInstance();
+        flywheelPiston = new Solenoid(shooterSolenoidBottomID);
     }
 
-    // -------- METHODS --------\\
+    //-------- METHODS --------\\
 
     /**
      * Sets the state of the piston
      * @param state the state of the piston
      */
-    public void setTop(SolenoidValues state) {
-        flywheelPistonTop.set(state.getSolenoidState());
-        logger.log(Constants.LOG_LEVEL_FINE, "set(" + state + ")");
-
-    }
     public void setBottom(SolenoidValues state) {
-        flywheelPistonBottom.set(state.getSolenoidState());
+        flywheelPiston.set(state.getSolenoidState());
         logger.log(Constants.LOG_LEVEL_FINE, "set(" + state + ")");
 
     }
@@ -85,12 +76,8 @@ public class FlywheelPistonSubsystem extends SubsystemBase {
      * This method will get the solenoid position
      * @return the solenoid position using the custom enum
      */
-    public boolean getTop() {
-        logger.log(Constants.LOG_LEVEL_FINER, "getPistonValue: " + (flywheelPistonTop.get() ? "True" : "False"));
-        return flywheelPistonTop.get();
-    }
     public boolean getBottom() {
-        logger.log(Constants.LOG_LEVEL_FINER, "getPistonValue: " + (flywheelPistonBottom.get() ? "True" : "False"));
-        return flywheelPistonBottom.get();
+        logger.log(Constants.LOG_LEVEL_FINER, "getPistonValue: " + (flywheelPiston.get() ? "True" : "False"));
+        return flywheelPiston.get();
     }
 } // end of class FlywheelPistonSubsystem

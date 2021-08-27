@@ -13,32 +13,67 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
-// //-------- SUBSYSTEM CLASS --------\\
-
+/**
+ * <h4>LEDSubsystem</h4>
+ * Subsystem class for managing the LED hardware
+ */
 public class LEDSubsystem extends SubsystemBase {
 
-    //-------- DECLARATIONS --------\\
+    //----- CONSTANT(S) -----\\
+
+    private final int BUFFER_LENGTH;
+
+    //----- VARIABLE(S) -----\\
 
     private AddressableLED leds;
 
-    //-------- CONSTRUCTOR --------\\
+    //----- CONSTRUCTOR(S) -----\\
 
+    /**
+     * <h4>LEDSubsystem</h4>
+     * Creates a subsystem class for managing the LED hardware
+     * 
+     * @param port LED Strip Port
+     * @param length Length of the LED Strip
+     */
     public LEDSubsystem(int port, int length) {
+        BUFFER_LENGTH = length;
         leds = new AddressableLED(port); //initialization of the AdressableLED
         leds.setLength(length); //Sets the LED Strip length once
     }
 
-    //-------- METHODS --------\\
+    //----- METHOD(S) -----\\
     
-    //call the leds to start the subsystem
+    /**
+     * <h4>start</h4>
+     * Call the leds to start the subsystem
+     */
     public void start(){
         leds.start();
-    }
+    } // End of start()
 
-    //sets the buffer(color strips) for the LED Strip
+    /**
+     * <h4>setBuffer</h4>
+     * Sets the buffer(color strips) for the LED Strip
+     * 
+     * @param buffer
+     */
     public void setBuffer(AddressableLEDBuffer buffer){
+
         leds.setData(buffer);
-    }
+
+    } // End of setBuffer()
+
+    /**
+     * <h4>getBufferLength</h4>
+     * Returns the buffer length
+     * 
+     * @return BUFFER_LENGTH
+     */
+    public int getBufferLength() {
+
+        return BUFFER_LENGTH;
+
+    } // End of getBufferLength()
     
 } // end of class LEDSubsystem

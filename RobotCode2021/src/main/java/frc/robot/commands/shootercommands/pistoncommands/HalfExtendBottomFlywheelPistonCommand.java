@@ -30,7 +30,8 @@ public class HalfExtendBottomFlywheelPistonCommand extends CommandBase {
     // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    flywheelAngleSubsystem.setTop(SolenoidValues.RETRACT);
+    // Until we know what happens next season, we'll keep it here
+    //flywheelAngleSubsystem.setTop(SolenoidValues.RETRACT);
     flywheelAngleSubsystem.setBottom(SolenoidValues.EXTEND);
     // True = far shot
     shuffleboardUtility.putShooterAngle(true);

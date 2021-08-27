@@ -12,89 +12,129 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * An example command that uses an example subsystem.
+ * <h4>IntakeLEDs</h4>
+ * LED command for when the robot is intaking.
  */
 public class IntakeLEDs extends CommandBase {
-    private final int BUFFER_LENGTH = 60;
+
+    // ----- CONSTANT(S) -----\\
+
+    // The LED Subsystem (strip) itself
     private final LEDSubsystem m_LEDSubsystem;
-    private AddressableLEDBuffer buffer;
-    private long counter;
-    private int index1;
-    private int index2;
-    private int indexA;
-    private int indexB;
+
+    // LED length for the buffer
+    private final int BUFFER_LENGTH;
+
+    //----- VARIABLE(S) -----\\
 
     /**
-     * Creates a new ExampleCommand.
+     * LED patterns are made on the buffer then sent to the LED strip via
+     * LEDSubsystem
+     */
+    private AddressableLEDBuffer buffer;
+
+    // Delay variable between each pattern change
+    private int counter;
+
+    // Indices for managing color and when one should be on and off
+    private int blueOffIndex;
+    private int blueOnIndex;
+    private int yellowOffIndex;
+    private int yellowOnIndex;
+
+    /**
+     * <h4>IntakeLEDs</h4>
+     * Creates a new LED command for when the robot is intaking.
      *
-     * @param subsystem The subsystem used by this command.
+     * @param ledSubsystem Manages LEDs
      */
     public IntakeLEDs(LEDSubsystem LEDSubsystem) {
+        
         m_LEDSubsystem = LEDSubsystem;
+        BUFFER_LENGTH = m_LEDSubsystem.getBufferLength(); // gets the buffer length from the subsystem
         buffer = new AddressableLEDBuffer(BUFFER_LENGTH);
         counter = 0;
-        index1 = 0;
-        index2 = 19;
-        indexA = 30;
-        indexB = 49;
+        blueOffIndex = 0;
+        blueOnIndex = 19;
+        yellowOffIndex = 30;
+        yellowOnIndex = 49;
 
+        // Reserving the ledSubsystem for use by this command and this command only.
         addRequirements(LEDSubsystem);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        for (int i = 0; i < buffer.getLength(); i++) {
+
+        // Turns off all LEDs and sends the new LED states to the LEDSubsystem
+        for (int i = 0; i < BUFFER_LENGTH; i++) {
             buffer.setRGB(i, 0, 0, 0);
         }
         m_LEDSubsystem.setBuffer(buffer);
-    }
 
+    } // End of initialize()
+
+    /**
+     * <h4>moveLEDs</h4> Private helper method to move the light placement down the
+     * strip.
+     */
     private void moveLEDs() {
-        index1++;
-        index2++;
-        indexA++;
-        indexB++;
 
-        if (index2 >= BUFFER_LENGTH) {
-            index2 = 0;
+        // Increments all index positions
+        blueOffIndex++;
+        blueOnIndex++;
+        yellowOffIndex++;
+        yellowOnIndex++;
+
+        // If said index variable is greater than or equal to BUFFER_LENGTH, set it to 0
+        if (blueOnIndex >= BUFFER_LENGTH) {
+            blueOnIndex = 0;
         }
-        if (index1 >= BUFFER_LENGTH) {
-            index1 = 0;
+        if (blueOffIndex >= BUFFER_LENGTH) {
+            blueOffIndex = 0;
         }
-        if (indexA >= BUFFER_LENGTH) {
-            indexA = 0;
+        if (yellowOffIndex >= BUFFER_LENGTH) {
+            yellowOffIndex = 0;
         }
-        if (indexB >= BUFFER_LENGTH) {
-            indexB = 0;
+        if (yellowOnIndex >= BUFFER_LENGTH) {
+            yellowOnIndex = 0;
         }
-    }
+
+    } // End of moveLEDs()
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+
         counter++;
 
-        // Keeping track of animation speed.
-        if (counter % 2 == 0) {
-            buffer.setRGB(index1, 0, 0, 0);
-            buffer.setRGB(indexA, 0, 0, 0);
-            moveLEDs();
-            buffer.setRGB(index2, 0, 0, 255);
-            buffer.setRGB(indexB, 255, 255, 0);
-            m_LEDSubsystem.setBuffer(buffer);
+        // If counter is equal or greater to 2 (basically acting as a delay)
+        if (counter >= 2) {
+
+            buffer.setRGB(blueOffIndex, 0, 0, 0);
+            buffer.setRGB(yellowOffIndex, 0, 0, 0);
+            moveLEDs(); // Moves the LEDs
+            buffer.setRGB(blueOnIndex, 0, 0, 255); // Blue
+            buffer.setRGB(yellowOnIndex, 255, 255, 0); // Yellow
+
+            // Resets the counter to 0 once the pattern is set
+            counter = 0;
         }
-    }
+
+        m_LEDSubsystem.setBuffer(buffer);
+
+    } // End of Execute()
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
 
-    }
+    } // End of end()
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
         return false;
-    }
+    } // End of isFinished()
 }

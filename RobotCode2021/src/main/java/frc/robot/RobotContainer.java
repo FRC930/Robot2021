@@ -319,7 +319,7 @@ public class RobotContainer {
     // (CLIMBER_ARM_ID, CLIMBER_ENCODER_PORT_ID)
     // climberArmSubsystem = new ClimberArmSubsystem(12, 2);
 
-    ledSubsystem = new LEDSubsystem(0, 20);
+    ledSubsystem = new LEDSubsystem(0, 60);
 
     // (_limelightNetworkInstance)
     limelightSubsystem = new LimelightSubsystem(NetworkTableInstance.getDefault().getTable("limelight"));

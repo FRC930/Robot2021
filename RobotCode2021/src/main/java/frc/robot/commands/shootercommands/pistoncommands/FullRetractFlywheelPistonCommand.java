@@ -35,7 +35,8 @@ public class FullRetractFlywheelPistonCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    flywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
+    // Until we know what happens next season, we'll keep it here
+    //flywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
     flywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
     // False = close shot
     shuffleboardUtility.putShooterAngle(false);

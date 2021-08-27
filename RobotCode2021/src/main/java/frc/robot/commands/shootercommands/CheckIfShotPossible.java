@@ -36,6 +36,8 @@ public class CheckIfShotPossible extends CommandBase{
 
     @Override
     public boolean isFinished() {
+        // TODO: Needs to be refractored because of top piston being gone
+        /*
         if (flywheelPistonSubsystem.getTop()  && flywheelPistonSubsystem.getBottom()) {
             angle = 10.65;
         } 
@@ -45,6 +47,7 @@ public class CheckIfShotPossible extends CommandBase{
         else {
             angle = 30;
         }
+        */
 
         //Set the shot type to the shooter.
         shooterMath.setPosition(angle, DistanceMath.getDistY(limeLightSubsystem.getVerticleOffset()));
