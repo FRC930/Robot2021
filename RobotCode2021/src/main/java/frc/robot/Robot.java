@@ -7,15 +7,10 @@
 
 package frc.robot;
 
-import edu.wpi.cscore.HttpCamera;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.utilities.RobotPreferences;
-import frc.robot.utilities.ShuffleboardUtility;
 
 
 /**
@@ -32,9 +27,7 @@ public class Robot extends TimedRobot {
 
     private CommandScheduler commandScheduler;
 
-    private HttpCamera limelightCamera;
-
-    private ShuffleboardUtility shuffleboardUtility;
+    // Robot mode methods
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -46,17 +39,9 @@ public class Robot extends TimedRobot {
         // and put our
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
-        shuffleboardUtility = ShuffleboardUtility.getInstance();
-        
-
         commandScheduler = CommandScheduler.getInstance();
         
         
-        //ShuffleboardTab driveTab = Shuffleboard.getTab("Driver Station");
-        //driveTab.add("LL", limelightCamera);
-        //shuffleboardUtility.setLimelightCameraStream(limelightCamera);
-
-
         //Runs sim method if robot is simulated
         if(RobotBase.isSimulation()){
             // Flush NetworkTables every loop. This ensures that robot pose and other values
@@ -64,10 +49,6 @@ public class Robot extends TimedRobot {
             setNetworkTablesFlushEnabled(true);
             m_robotContainer.robotSimInit();
         }
-
-        // SmartDashboard.putNumber("TP", 0.03);
-        // SmartDashboard.putNumber("TI", 0.0);
-        // SmartDashboard.putNumber("TD", 0.001);
 
         m_robotContainer.getShuffleboardCommand().execute();
     }
@@ -91,8 +72,6 @@ public class Robot extends TimedRobot {
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
 
-        //shuffleboardUtility.driveTab();
-        //shuffleboardUtility.testingTab();
         m_robotContainer.StartShuffleBoard();
 
         commandScheduler.run();
@@ -108,9 +87,9 @@ public class Robot extends TimedRobot {
         if(m_shuffleboardCommand != null) {
             m_shuffleboardCommand.execute();
         }
-
-        //shuffleboard.run();
     }
+
+    // Disable mode methods
 
     /**
      * This function is called once each time the robot enters Disabled mode.
@@ -122,6 +101,8 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledPeriodic() {
     }
+
+    // Autonomous mode methods
 
     /**
      * This autonomous runs the autonomous command selected by your
@@ -163,6 +144,8 @@ public class Robot extends TimedRobot {
         }
     }
 
+    // Teleop mode methods
+
     @Override
     public void teleopInit() {
         m_robotContainer.beginTelopRunCommands();
@@ -175,19 +158,28 @@ public class Robot extends TimedRobot {
         }
     }
 
-    //Needed for robot simulation
+    // Simulation mode methods
+
+    /**
+     * Needed for robot simulation 
+     */
     @Override
     public void simulationPeriodic() {
         m_robotContainer.simPeriodic();
     }
-     //Needed for robot test mode
+
+    // Test mode methods
+
+    /**
+     * Needed for robot test mode
+     */
      @Override
      public void testInit() {
          m_robotContainer.testInit();
     }
     @Override
     public void testPeriodic() {
-    m_robotContainer.testPeriodic();
+        m_robotContainer.testPeriodic();
     }
 
   }
