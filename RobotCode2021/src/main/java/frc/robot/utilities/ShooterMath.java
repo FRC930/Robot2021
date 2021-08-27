@@ -2,6 +2,7 @@ package frc.robot.utilities;
 
 /**
  * ShooterSubsystem
+ * Calculates how to get a shot on the goal
  */
 public class ShooterMath {
 
@@ -27,10 +28,18 @@ public class ShooterMath {
     private double velocity;
     private ShotOutcome shotOutcome;
 
+    /**
+     * Sets shooter math array to 0,0
+     */
     private ShooterMath() {
         this(0, 0);
     }
 
+    /**
+     *  initilizes values
+     * @param angle
+     * @param distance
+     */
     private ShooterMath(double angle, double distance) {
         this.velocity = 0.0;
         this.angle = 0.0;
@@ -40,7 +49,13 @@ public class ShooterMath {
         setPosition(this.angle, this.distance);
     }
 
-    // Methods to get instance from singleton
+
+    /**
+     * Methods to get instance from singleton
+     * this one uses the default constructed object, this is the one to use when getting single instance
+     * If lastInstance doesnt exist create it
+     * @return
+     */
     public static ShooterMath getInstance() {
         if (lastInstance == null) {
             lastInstance = new ShooterMath();
@@ -48,6 +63,14 @@ public class ShooterMath {
         return lastInstance;
     }
 
+    /**
+     * Methods to get instance from singleton
+     * this one allows the user to change the angle and distance
+     * If lastInstance doesnt exist create it
+     * @param angle
+     * @param distance
+     * @return
+     */
     public static ShooterMath getInstance(double angle, double distance) {
         if (lastInstance == null) {
             lastInstance = new ShooterMath(angle, distance);
@@ -150,16 +173,23 @@ public class ShooterMath {
         return START_HEIGHT + yVelocity * time - 0.5 * GRAVITY * time * time;
     }
 
+    /**
+     * Creates custom enum to represent the 3 shot zones
+     */
     public static enum ShotOutcome {
         NONE(0), OUTER(1), INNER(2);
 
         //private int type;
-
         private ShotOutcome(int type) {
             //this.type = type;
         }
     }
 
+    /**
+     * checks possibility of shot
+     * @param type zone that the robot is currently in
+     * @return
+     */
     public static String getShotType(ShotOutcome type){
         String shotType;
         if (type == ShotOutcome.NONE){

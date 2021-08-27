@@ -32,7 +32,19 @@ public class DriveSubsystem extends SubsystemBase {
 
     // -------- CONSTANTS --------\\
     private static final Logger logger = Logger.getLogger(DriveSubsystem.class.getName());
+    public static final double KSVOLTS = 0.67;
+    public static final double KVVOLT = 2.31;
+    public static final double KAVOLT = 0.0844; // this is in seconds squared per meter
+    public static final double KMAXSPEED = Units.feetToMeters(16.2); //in meters per second 
+    public static final double KMAXACCELERATION = 2; //in meters per seconds squared 
+    public static final double KMAXANGULARSPEED = Math.PI * 2;
+    //gyro values
+    public static final double KRAMSETEB = 2;
+    public static final double KRAMSETEZETA = 0.7;
 
+    // Track width of our robot
+    public static final double KTRACKWIDTH = 0.5715; // in meters
+    public static final double KPDRIVEVEL = 1.49;
     // -------- DECLARATIONS --------\\
 
     private SwerveModule swerveRightFront;
