@@ -28,35 +28,35 @@ import edu.wpi.first.wpiutil.math.numbers.N1;
 //-------- COMMAND CLASS --------\\
 
 public class DefaultFlywheelCommand extends CommandBase {
-
+  
   // -------- DECLARATIONS --------\\
 
+  //this is the private object representing the subsystem
   private FlywheelSubsystem m_FlywheelSubsystem;
 
   private double kSpinupRadPerSec; 
-  public final double kFlywheelMomentOfInertia = 0.00094610399; 
-  private final double kFlywheelGearing = 1.0;
+  public final double KFLYWHEELMOMENTOFINERTIA = 0.00094610399; 
+  private final double KFLYWHEELGEARING = 1.0;
   
-
   // Velocity Error - Velocity error tolerance, in radians per second. Decrease
   // this to more heavily penalize state excursion, or make the controller behave
   // more
   // aggressively.
-  private double mVelError = 8.0;
+  private double MVELERROR = 8.0;
   // Control effort (voltage) tolerance. Decrease this to more
   // heavily penalize control effort, or make the controller less aggressive. 12
   // is a good
   // starting point because that is the (approximate) maximum voltage of a
   // battery.
-  private double mControlTol = 12.0;
+  private double MCONTROLTOL = 12.0;
   // Model Accuracy - How accurate we think our model is
-  private double mModelAcc = 3.0;
+  private double MMODELACC = 3.0;
   // Encoder Accuracy - How accurate we think our encoder is
-  private double mEncodAcc = 0.01;
+  private double MENCODACC = 0.01;
   // Max Voltage - the max voltage , used for our loop
-  private double mMaxVoltage = 12.0;
+  private double MMAXVOLTAGE = 12.0;
   // dtSeconds - time between loops, sync up with TimedRobot
-  private double mDtSeconds = 0.020;
+  private double MDTSECONDS = 0.020;
 
   private LinearSystem<N1, N1, N1> m_flywheelPlant;
   private KalmanFilter<N1, N1, N1> m_observer;
@@ -67,57 +67,73 @@ public class DefaultFlywheelCommand extends CommandBase {
   //private static final Logger logger = Logger.getLogger(DefaultFlywheelCommand.class.getName());
 
   // -------- CONSTRUCTOR --------\\
+  /**
+   * this constucts the class
+   * @param flywheelSubsystem controls the flywheel
+   */
   public DefaultFlywheelCommand(FlywheelSubsystem flywheelSubsystem) {
 
+    //this code has been implamented from the Wpilib control base system
     m_FlywheelSubsystem = flywheelSubsystem;
     addRequirements(m_FlywheelSubsystem);
-    m_flywheelPlant = LinearSystemId.createFlywheelSystem(DCMotor.getNEO(2), kFlywheelMomentOfInertia,
-        kFlywheelGearing);
+    m_flywheelPlant = LinearSystemId.createFlywheelSystem(DCMotor.getNEO(2), KFLYWHEELMOMENTOFINERTIA,
+        KFLYWHEELGEARING);
 
     m_controller = new LinearQuadraticRegulator<>(m_flywheelPlant, 
-        VecBuilder.fill(mVelError), // qelms.
-        VecBuilder.fill(mControlTol), // relms.
+        VecBuilder.fill(MVELERROR), // qelms.
+        VecBuilder.fill(MCONTROLTOL), // relms.
         0.020); // Nominal time between loops. 0.020 for TimedRobot, but can be
 
     m_observer = new KalmanFilter<>(Nat.N1(), Nat.N1(), m_flywheelPlant, 
-        VecBuilder.fill(mModelAcc), 
-        VecBuilder.fill(mEncodAcc), 
+        VecBuilder.fill(MMODELACC), 
+        VecBuilder.fill(MENCODACC), 
         // data is
         0.020);
 
-    m_loop = new LinearSystemLoop<>(m_flywheelPlant, m_controller, m_observer, mMaxVoltage, mDtSeconds);
+    m_loop = new LinearSystemLoop<>(m_flywheelPlant, m_controller, m_observer, MMAXVOLTAGE, MDTSECONDS);
 
     kSpinupRadPerSec = m_FlywheelSubsystem.getRadiansPerSecond();
   }
 
   // Constructor (the second one. m-modifiable)
+  /**
+   * this constucts the class, allows you to change attributes
+   * TODO: refactor to use in other constructer
+   * @param flywheelSubsystem
+   * @param velError
+   * @param controlTol
+   * @param modelAcc
+   * @param encodAcc
+   * @param maxVoltage
+   * @param dtSeconds
+   */
   public DefaultFlywheelCommand(FlywheelSubsystem flywheelSubsystem, double velError, double controlTol,
       double modelAcc, double encodAcc, double maxVoltage, double dtSeconds) {
       
-    mVelError = velError;
-    mControlTol = controlTol;
-    mEncodAcc = encodAcc;
-    mModelAcc = modelAcc;
-    mMaxVoltage = maxVoltage;
-    mDtSeconds = dtSeconds;
+        MVELERROR = velError;
+        MCONTROLTOL = controlTol;
+    MENCODACC = encodAcc;
+    MMODELACC = modelAcc;
+    MMAXVOLTAGE = maxVoltage;
+    MDTSECONDS = dtSeconds;
     m_FlywheelSubsystem = flywheelSubsystem;
 
-    //shuffleboard.putControlConfig(mVelError, mControlTol, mModelAcc, mEncodAcc, mMaxVoltage, mDtSeconds);
+    //shuffleboard.putControlConfig(MVELERROR, MCONTROLTOL, MMODELACC, MENCODACC, MMAXVOLTAGE, MDTSECONDS);
     addRequirements(m_FlywheelSubsystem);
-    m_flywheelPlant = LinearSystemId.createFlywheelSystem(DCMotor.getNEO(2), kFlywheelMomentOfInertia,
-        kFlywheelGearing);
+    m_flywheelPlant = LinearSystemId.createFlywheelSystem(DCMotor.getNEO(2), KFLYWHEELMOMENTOFINERTIA,
+        KFLYWHEELGEARING);
 
     m_controller = new LinearQuadraticRegulator<>(m_flywheelPlant,
-      	VecBuilder.fill(mVelError), // qelms
-        VecBuilder.fill(mControlTol), // relms 
+      	VecBuilder.fill(MVELERROR), // qelms
+        VecBuilder.fill(MCONTROLTOL), // relms 
         0.020); // Nominal time between loops. 0.020 for TimedRobot
 
-    m_observer = new KalmanFilter<>(Nat.N1(), Nat.N1(), m_flywheelPlant, VecBuilder.fill(mModelAcc), 
-        VecBuilder.fill(mEncodAcc), 
+    m_observer = new KalmanFilter<>(Nat.N1(), Nat.N1(), m_flywheelPlant, VecBuilder.fill(MMODELACC), 
+        VecBuilder.fill(MENCODACC), 
         // data is
         0.020);
 
-    m_loop = new LinearSystemLoop<>(m_flywheelPlant, m_controller, m_observer, mMaxVoltage, mDtSeconds);
+    m_loop = new LinearSystemLoop<>(m_flywheelPlant, m_controller, m_observer, MMAXVOLTAGE, MDTSECONDS);
   }
 
   // -------- COMMANDBASE METHODS --------\\
@@ -141,7 +157,7 @@ public class DefaultFlywheelCommand extends CommandBase {
       //System.out.println(m_FlywheelSubsystem.getSpeed());
     /// Update our LQR to generate new voltage commands and use the voltages to
     // predict the next state with out Kalman filter.
-     m_loop.predict(mDtSeconds);
+     m_loop.predict(MDTSECONDS);
 
     // Send the new calculated voltage to the motors.
     // voltage = duty cycle * battery voltage, so duty cycle = voltage / battery voltage

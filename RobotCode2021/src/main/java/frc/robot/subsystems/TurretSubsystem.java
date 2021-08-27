@@ -40,16 +40,26 @@ public class TurretSubsystem extends SubsystemBase {
     private final double UPPER_LIMIT = 0.697;
     private final double LOWER_LIMIT = 0.335;
     private final double TURRET_FRONT_POSITION = 0.383; // back of robot
+    private final double TURRET_AUTO_TURN_POSITION = 0.3565;
     private final double TURRET_BACK_POSITION = 0.635;  // front robot intake
     private final double TURRET_RIGHT_POSITION = 0.51;
     private final double TURRET_LEFT_POSITION = 0.256;
-      // encoder positions for setting turret to one of four directions
+    // encoder positions for setting turret to one of four directions
     private final double FRONT_LEFT_POSITION = 0.3195;
     private final double FRONT_RIGHT_POSITION = 0.4465;
     private final double BACK_RIGHT_POSITION = 0.5725;
 
+    // speed used for turning the turret
+    private final double TURRET_TURNING_SPEED = 0.4;
+
+    // deadband for the turret joystick
+    private final double JOYSTICK_TURRET_DEADBAND = 0.1;
+
+    // deadband for the turret set position commands
+    private final double TURRET_DEADBAND = 0.01;
+
     private final double TURRET_MAX_SPEED = 0.6;
-    private final double TURRET_MAX_SET_POSITION_SPEED = Constants.TURRET_MAX_SET_POSITION_SPEED;
+    private final double TURRET_MAX_SET_POSITION_SPEED = 0.4;
 
     // -------- DECLARATIONS --------\\
 
@@ -113,7 +123,7 @@ public class TurretSubsystem extends SubsystemBase {
         }
 
         this.turretMotor.set(ControlMode.PercentOutput, speed);
-        
+
         logger.log(Constants.LOG_LEVEL_FINER, "Set speed to " + getSpeed());
     }
 
@@ -183,7 +193,19 @@ public class TurretSubsystem extends SubsystemBase {
         return speed;
     }
 
-    public double getFrontPosition() {
+    public double getTurretTurningSpeed(){
+        return TURRET_TURNING_SPEED;
+    }
+
+    public double getJoystickTurretDeadband(){
+        return JOYSTICK_TURRET_DEADBAND;
+    }
+
+    public double getTurretDeadband(){
+        return TURRET_DEADBAND;
+    }
+
+    public double getFrontPosition(){
         return TURRET_FRONT_POSITION;
     }
 
@@ -211,4 +233,8 @@ public class TurretSubsystem extends SubsystemBase {
         return BACK_RIGHT_POSITION;
     }
 
+    public double getTurretAutoTurnPosition() {
+        return TURRET_AUTO_TURN_POSITION;
+    }
+    
 } // end of class TurretSubsystem

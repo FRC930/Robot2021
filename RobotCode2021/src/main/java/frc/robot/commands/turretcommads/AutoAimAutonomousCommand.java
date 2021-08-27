@@ -20,32 +20,47 @@ import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 //-------- PIDCOMMAND CLASS --------\\
-
+/**
+ * <h4>AutoAimAutonomousCommand</h4> Tracks the Power Port using the limelight
+ * until it is with tolerances.
+ */
 public class AutoAimAutonomousCommand extends PIDCommand {
+
+    // TODOS:
+    // Change PID calculation comments inside the constructor
+    // Move PID values from constants into subsystem
+    // Move PID controller construction to this command
 
     // -------- DECLARATIONS --------\\
 
     private static final Logger logger = Logger.getLogger(AutoAimTurretCommand.class.getName());
-    private LimelightSubsystem limelight;
+    private LimelightSubsystem limelightSubsystem;
     private int counter;
-    private final int LEDS_ON = 3;
 
     // -------- CONSTRUCTOR --------\\
-
-    public AutoAimAutonomousCommand(LimelightSubsystem limelight, TurretSubsystem turretSubsystem, PIDController controller) {
+    /**
+     * Creates an instance of the class.
+     * 
+     * @param limelightSubsytem instantiated LimelightSubsystem
+     * @param turretSubsystem   instantiated TurretSubsystem
+     * @param controller        PIDController for the turret
+     */
+    public AutoAimAutonomousCommand(LimelightSubsystem limelightSubsystem, TurretSubsystem turretSubsystem,
+            PIDController controller) {
         // Initial P = 0.065
         // Oscillations over time: 3 cycles per 1 second
-        // Period = 0.33   :    Took the oscillations over time and divided one by that number
+        // Period = 0.33 : Took the oscillations over time and divided one by that
+        // number
         // Calcualted P = 0.6 * Initial P = 0.039
         // Calculated I = (1.2 * Initial P) / Period = 0.24
         // Calculated D = (3 * Initial P * Period) / 40
         super(controller,
                 // This lambda tells the controller where to get the input values from
                 () -> {
-                    SmartDashboard.putNumber("horiz off", limelight.getHorizontalOffset());
+                    SmartDashboard.putNumber("horiz off", limelightSubsystem.getHorizontalOffset());
                     // SmartDashboard.putNumber("PID error", value);
-                    if (limelight.getValidTargets()) {
-                        return limelight.getHorizontalOffset();
+                    if (limelightSubsystem.getValidTargets()) {
+                        return limelightSubsystem.getHorizontalOffset();
                     } else {
                         controller.reset();
                         return 0.0;
@@ -64,18 +79,16 @@ public class AutoAimAutonomousCommand extends PIDCommand {
                     }
                     SmartDashboard.putNumber("controller", output);
 
-                    
+                    if (Math.abs(limelightSubsystem.getHorizontalOffset()) < 27) {
+                        turretSubsystem.setSpeed(output);
 
-                    if(Math.abs(limelight.getHorizontalOffset()) < 27) {
-                            turretSubsystem.setSpeed(output);
-                        
                     }
                 },
                 // Pass in the subsystems we will need
-                turretSubsystem, limelight); // End of super constructor
+                turretSubsystem, limelightSubsystem); // End of super constructor
 
         logger.entering(AutoAimAutonomousCommand.class.getName(), "AutoAimTurretCommand");
-        this.limelight = limelight;
+        this.limelightSubsystem = limelightSubsystem;
         counter = 0;
 
         // Enable the controller to continuously get input
@@ -85,29 +98,29 @@ public class AutoAimAutonomousCommand extends PIDCommand {
         this.getController().setTolerance(0.2);
 
         // Require the subsystems that we need
-        addRequirements(limelight, turretSubsystem);
+        addRequirements(limelightSubsystem, turretSubsystem);
 
     } // end of constructor AutoAimTurretCommand()
 
     @Override
     public void initialize() {
         // turn limelight LEDs on
-        limelight.setLightMode(LEDS_ON);
+        limelightSubsystem.setLightMode(limelightSubsystem.getLIMELIGHT_LEDS_ON());
     }
 
     @Override
     public boolean isFinished() {
 
-        double offset = limelight.getHorizontalOffset();
+        double offset = limelightSubsystem.getHorizontalOffset();
         boolean inRange = false;
-
-        if(Math.abs(offset) < 1.5) {
+        // isFinished() waits for 10 consecutive loops where the turret is aligned
+        // within tolerances, then end the command.
+        if (Math.abs(offset) < 1.5) {
             counter++;
-            if(counter >= 10) {
+            if (counter >= 10) {
                 inRange = true;
             }
-        } 
-        else {
+        } else {
             counter = 0;
             inRange = false;
         }

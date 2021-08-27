@@ -1,8 +1,6 @@
 /**
  * This class simulates a drivetrain for desktop simulation of the robot.
  */
-
-
 package frc.robot.utilities;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
@@ -30,19 +28,23 @@ import edu.wpi.first.wpiutil.math.numbers.N2;
 @SuppressWarnings("PMD.TooManyFields")
 
 //-------- CLASS --------\\
-
+/**
+ * TODO: figure out how to use this 
+ * TODO: comment and describe every method
+ * this class simulates the drive train for the simulation robot
+ */
 public class SimulatedDrivetrain {
 
 
   //-------- CONSTANTS --------\\
 
-  public static final double kMaxSpeed = 3.0;
+  public static final double KMAXSPEED = 3.0;
   // 3 meters per second
-  public static final double kMaxAngularSpeed = Math.PI;
+  public static final double KMAXANGULARSPEED = Math.PI;
 
-  private static final double kTrackWidth = 0.381 * 2;
-  private static final double kWheelRadius = 0.0508;
-  private static final int kEncoderResolution = -4096;
+  private static final double KTRACKWIDTH = 0.381 * 2;
+  private static final double KWHEELRADIUS = 0.0508;
+  private static final int KENCODERRESOLUTION = -4096;
 
   //-------Simulated Hardware-------\\
   private final PWMVictorSPX m_leftLeader = new PWMVictorSPX(1);
@@ -64,7 +66,7 @@ public class SimulatedDrivetrain {
   private final AnalogGyro m_gyro = new AnalogGyro(0);
 
   private final DifferentialDriveKinematics m_kinematics =
-      new DifferentialDriveKinematics(kTrackWidth);
+      new DifferentialDriveKinematics(KTRACKWIDTH);
   private final DifferentialDriveOdometry m_odometry = 
     new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
@@ -81,17 +83,19 @@ public class SimulatedDrivetrain {
       LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3);
   private final DifferentialDrivetrainSim m_drivetrainSimulator =
       new DifferentialDrivetrainSim(
-          m_drivetrainSystem, DCMotor.getCIM(2), 8, kTrackWidth, kWheelRadius, null);
+          m_drivetrainSystem, DCMotor.getCIM(2), 8, KTRACKWIDTH, KWHEELRADIUS, null);
 
   
   //-------- CONSTRUCTOR --------\\
-
+  /**
+   * this constructs the class
+   */
   public SimulatedDrivetrain() {
     // Set the distance per pulse for the drive encoders. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
-    m_leftEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
-    m_rightEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
+    m_leftEncoder.setDistancePerPulse(2 * Math.PI * KWHEELRADIUS / KENCODERRESOLUTION);
+    m_rightEncoder.setDistancePerPulse(2 * Math.PI * KWHEELRADIUS /KENCODERRESOLUTION);
     m_leftEncoder.reset();
     m_rightEncoder.reset();
     m_rightGroup.setInverted(true);

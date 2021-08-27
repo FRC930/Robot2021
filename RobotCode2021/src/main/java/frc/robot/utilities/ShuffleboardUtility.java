@@ -17,29 +17,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.cscore.HttpCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import frc.robot.utilities.RobotPreferences;
 
 //-------- CLASS --------\\
+/**
+ * <h4>ShuffleboardUtility</h4> This class manages all data displayed on the
+ * Driver Station via Shuffleboard.
+ */
+public class ShuffleboardUtility {
 
-public class ShuffleboardUtility {	
+    // -------- DECLARATIONS --------\\
 
-	//-------- CONSTANTS --------\\
-
-    //-------- DECLARATIONS --------\\
-    
+    // Chooser objects for dropdowns
     private SendableChooser<Command> autonChooser;
     private SendableChooser<Command> shuffleboardChooser;
-    // private List<ShuffleboardComponent<?>> pidController;
-    // private double kP;
-    // private double kI;
-    // private double kD;
-    // private double kF;
-    // private double kSetpoint;
-	private boolean intakeIndicator;
+
+    // Intake data
+    private boolean intakeIndicator;
+
+    // Flywheel data
     private boolean shootIndicator;
-    private boolean manualMode;
-	private double distanceFromTarget;
-    private String shotType;
     private boolean shooterUpToSpeed;
     private double flywheelSpeed;
     private double flywheelVoltage;
@@ -49,19 +45,32 @@ public class ShuffleboardUtility {
     private double encodAcc;
     private double maxVoltage;
     private double dtSeconds;
-    // private String fmsColor;
-    // private String logger;
-    // private String fmsColorDebug;
-    private double hopperSpeed;
     private double shooterRPM;
     private boolean shooterAngle;
+
+    // Miscellaneous data
+    private boolean manualMode;
+    private String shotType;
+    private double gyroYaw;
+
+    // Limelight data
+    private double distanceFromTarget;
+
+    // Turret data
     private double turretSpeed;
     private double turretEncoderPosition;
-    private double gyroYaw;
-    private double shootSpeed;
+
+    // Hopper data
+    private double hopperSpeed;
+
+    // Endgame data
     private double endgameEncoderPosition;
+
+    // Two tab setups
     private ShuffleboardTab testDebugTab;
     private ShuffleboardTab driverStationTab;
+
+    // Entry nodes
     private NetworkTableEntry intakingEntry;
     private NetworkTableEntry shootingEntry;
     private NetworkTableEntry manualModeEntry;
@@ -74,7 +83,6 @@ public class ShuffleboardUtility {
     private NetworkTableEntry shooterRPMEntry;
     private NetworkTableEntry turretEncoderPositionEntry;
     private NetworkTableEntry gyroYawEntry;
-    private NetworkTableEntry shooterSetEntry;
     private NetworkTableEntry flywheelSpeedEntry;
     private NetworkTableEntry flywheelVoltageEntry;
     private NetworkTableEntry velErrorEntry;
@@ -85,6 +93,7 @@ public class ShuffleboardUtility {
     private NetworkTableEntry dtSecondsEntry;
     private NetworkTableEntry endgameEncoderPositionEntry;
 
+    // Access flags for each group
     private boolean intakeAccess;
     private boolean hopperAccess;
     private boolean limelightAccess;
@@ -93,19 +102,23 @@ public class ShuffleboardUtility {
     private boolean endgameAccess;
     private boolean miscellaneousAccess;
 
+    // Limelight object
     private HttpCamera limelightCamera;
 
+    // Flag variable for singleton
+    private static ShuffleboardUtility instance = null;
 
-    //-------- CONSTRUCTOR --------\\
+    // -------- CONSTRUCTOR --------\\
 
+    /**
+     * The constructor is made private to make a singleton. Only one instance is
+     * allowed to be made.
+     */
     private ShuffleboardUtility() {
-        // Singleton class
-
-        //pidController = testDebugTab.getComponents();
+        // Initialize all variables
         intakeIndicator = false;
         shootIndicator = false;
         manualMode = false;
-        // turretEncoder = 0.0;
         distanceFromTarget = 0.0;
         shotType = "";
         shooterUpToSpeed = false;
@@ -117,9 +130,6 @@ public class ShuffleboardUtility {
         encodAcc = 0.0;
         maxVoltage = 12.0;
         dtSeconds = 0.0;
-        // fmsColor = "";
-        // logger = "";
-        // fmsColorDebug = "";
         hopperSpeed = 0.0;
         shooterRPM = 0.0;
         shooterAngle = false;
@@ -127,12 +137,6 @@ public class ShuffleboardUtility {
         turretEncoderPosition = 0.0;
         gyroYaw = 0.0;
         endgameEncoderPosition = 0.0;
-        // kP = 0.0;
-        // kI = 0.0;
-        // kD = 0.0;
-        // kF = 0.0;
-        // kSetpoint = 0.0;
-        shootSpeed = Constants.FLYWHEEL_TELEOP_SPEED;
         driverStationTab = Shuffleboard.getTab("Driver Station");
         testDebugTab = Shuffleboard.getTab("Testing & Debugging");
         intakingEntry = driverStationTab.add("Intaking?", intakeIndicator).getEntry();
@@ -147,7 +151,6 @@ public class ShuffleboardUtility {
         shooterRPMEntry = testDebugTab.add("Shooter RPM", shooterRPM).getEntry();
         turretEncoderPositionEntry = testDebugTab.add("Turret Encoder Position", turretEncoderPosition).getEntry();
         gyroYawEntry = testDebugTab.add("Gyro Yaw", gyroYaw).getEntry();
-        shooterSetEntry = driverStationTab.add("set Shooter DEFUALT IS 0.8",shootSpeed).getEntry();
         flywheelSpeedEntry = driverStationTab.add("Flywheel Speed", flywheelSpeed).getEntry();
         flywheelVoltageEntry = driverStationTab.add("Flywheel Voltage", flywheelVoltage).getEntry();
         velErrorEntry = driverStationTab.add("Velocity Error", velError).getEntry();
@@ -159,10 +162,10 @@ public class ShuffleboardUtility {
         endgameEncoderPositionEntry = driverStationTab.add("Endgame Encoder", endgameEncoderPosition).getEntry();
         autonChooser = new SendableChooser<Command>();
         shuffleboardChooser = new SendableChooser<Command>();
-      
+
         driverStationTab.add("Auton Path Selector", autonChooser);
         testDebugTab.add("Shuffleboard Detail Selector", shuffleboardChooser);
-       
+
         intakeAccess = false;
         hopperAccess = false;
         limelightAccess = false;
@@ -173,19 +176,35 @@ public class ShuffleboardUtility {
 
     }
 
-    private static ShuffleboardUtility instance = null;
-    
-	// Singleton
+    /**
+     * getInstance only allows the creation of one instance of the class to be made.
+     * 
+     * @return singular instance of the ShuffleboardUtility class
+     */
     public static ShuffleboardUtility getInstance() {
-        if (instance == null){
+        // Checks for existing object
+        if (instance == null) {
             instance = new ShuffleboardUtility();
         }
         return instance;
     }
 
-    //------ Data Access ------\\
+    // ------ Data Access ------\\
 
-    public void setDataAccess(boolean _intakeAccess, boolean _hopperAccess, boolean _limelightAccess, boolean _flywheelAccess, boolean _turretAccess, boolean _endgameAccess, boolean _miscellaneousAccess) {
+    /**
+     * Set Shuffleboard accessibility for each data group. "true" allows the value
+     * to be displayed on the Shuffleboard.
+     * 
+     * @param _intakeAccess        set access for intake data
+     * @param _hopperAccess        set access for hopper data
+     * @param _limelightAccess     set access for limelight data
+     * @param _flywheelAccess      set access for flywheel data
+     * @param _turretAccess        set access for turret data
+     * @param _endgameAccess       set access for endgame data
+     * @param _miscellaneousAccess set access for miscellaneous data
+     */
+    public void setDataAccess(boolean _intakeAccess, boolean _hopperAccess, boolean _limelightAccess,
+            boolean _flywheelAccess, boolean _turretAccess, boolean _endgameAccess, boolean _miscellaneousAccess) {
         intakeAccess = _intakeAccess;
         hopperAccess = _hopperAccess;
         limelightAccess = _limelightAccess;
@@ -195,6 +214,9 @@ public class ShuffleboardUtility {
         miscellaneousAccess = _miscellaneousAccess;
     }
 
+    /**
+     * Sets accessibility for all groups to false.
+     */
     public void allAccessFalse() {
         intakeAccess = false;
         hopperAccess = false;
@@ -205,19 +227,29 @@ public class ShuffleboardUtility {
         miscellaneousAccess = false;
     }
 
+    /**
+     * Toggles the accessibility for the intake group.
+     */
     public void toggleIntakeAccess() {
         intakeAccess = !intakeAccess;
     }
 
+    /**
+     * Toggles the accessibility for the hopper group.
+     */
     public void toggleHopperAccess() {
         hopperAccess = !hopperAccess;
     }
-    
+
+    /**
+     * Toggles the accessibility for the limelight group.
+     */
     public void toggleLimelightAccess() {
         limelightAccess = !limelightAccess;
-
-        if(limelightAccess) {
-            if(RobotPreferences.getInstance().getTeamNumber() == 930){
+        // Prevents instantiation unless accessible
+        if (limelightAccess) {
+            // Checks which robot to change address
+            if (RobotPreferences.getInstance().getTeamNumber() == 930) {
                 limelightCamera = new HttpCamera("limelight", "http://10.9.30.11:5801/stream.mjpg");
             } else {
                 limelightCamera = new HttpCamera("limelight", "http://10.99.30.11:5801/stream.mjpg");
@@ -228,91 +260,153 @@ public class ShuffleboardUtility {
         }
     }
 
+    /**
+     * Toggles the accessibility for the flywheel group.
+     */
     public void toggleFlywheelAccess() {
         flywheelAccess = !flywheelAccess;
     }
 
+    /**
+     * Toggles the accessibility for the endgame group.
+     */
     public void toggleEndgameAccess() {
         endgameAccess = !endgameAccess;
     }
 
+    /**
+     * Toggles the accessibility for the miscellaneous group.
+     */
     public void toggleMiscellaneousAccess() {
         miscellaneousAccess = !miscellaneousAccess;
     }
 
-    //------- Drive Tab -------\\
+    // ------- Drive Tab -------\\
 
-    // TODO: set methods to respective commands
-	public void putIntakeIndicator(boolean IntakeIndicator){
+    /**
+     * Set the intaking state on the Shuffleboard.
+     * 
+     * @param IntakeIndicator boolean state for the intake
+     */
+    public void putIntakeIndicator(boolean IntakeIndicator) {
         intakeIndicator = IntakeIndicator;
-        if(intakeAccess) {
+        if (intakeAccess) {
             intakingEntry.setBoolean(intakeIndicator);
         }
     }
-    
-	public void putShootIndicator(boolean ShootIndicator){
+
+    /**
+     * Set the shooting state on the Shuffleboard.
+     * 
+     * @param ShootIndicator boolean state for the shooter
+     */
+    public void putShootIndicator(boolean ShootIndicator) {
         shootIndicator = ShootIndicator;
-        if(flywheelAccess) {
+        if (flywheelAccess) {
             shootingEntry.setBoolean(shootIndicator);
         }
     }
 
-    public void putManualMode(boolean ManualMode){
+    /**
+     * Set the manual-mode state on the Shuffleboard.
+     * 
+     * @param ManualMode boolean state for the robot
+     */
+    public void putManualMode(boolean ManualMode) {
         manualMode = ManualMode;
-        if(miscellaneousAccess) {
+        if (miscellaneousAccess) {
             manualModeEntry.setBoolean(manualMode);
         }
     }
 
-	public void putDistanceFromTarget(double DistanceFromTarget){
+    /**
+     * Set the limelight data on the Shuffleboard.
+     * 
+     * @param DistanceFromTarget the calculated distance from the target
+     */
+    public void putDistanceFromTarget(double DistanceFromTarget) {
         distanceFromTarget = DistanceFromTarget;
-        if(limelightAccess) {
+        if (limelightAccess) {
             distanceFromTargetEntry.setNumber(distanceFromTarget);
         }
     }
 
+    /**
+     * Set the shot type state on the Shuffleboard.
+     * 
+     * @param ShotType enum state for the shooter
+     */
     // TODO: find method for shot types
-	public void putShotType(String ShotType){
-		shotType = ShotType;
-        if(miscellaneousAccess) {
+    public void putShotType(String ShotType) {
+        shotType = ShotType;
+        if (miscellaneousAccess) {
             shotTypeEntry.setString(shotType);
         }
     }
 
-    public void putHopperFeed(){
-        
+    /**
+     * Set the hopper state on the Shuffleboard.
+     * 
+     */
+    public void putHopperFeed() {
+
     }
 
-    public void putShooterUpToSpeed(boolean ShooterUpToSpeed){
+    /**
+     * Set the shooter speed state on the Shuffleboard.
+     * 
+     * @param ShooterUpToSpeed boolean state for the shooter speed
+     */
+    public void putShooterUpToSpeed(boolean ShooterUpToSpeed) {
         shooterUpToSpeed = ShooterUpToSpeed;
-        if(flywheelAccess) {
+        if (flywheelAccess) {
             shooterUpToSpeedEntry.setBoolean(shooterUpToSpeed);
         }
     }
 
-    public void putFlywheelSpeed(double FlywheelSpeed){
-		flywheelSpeed = FlywheelSpeed;
-        if(flywheelAccess) {
+    /**
+     * Set the flywheel speed on the Shuffleboard.
+     * 
+     * @param FlywheelSpeed speed of the flywheel
+     */
+    public void putFlywheelSpeed(double FlywheelSpeed) {
+        flywheelSpeed = FlywheelSpeed;
+        if (flywheelAccess) {
             flywheelSpeedEntry.setNumber(flywheelSpeed);
         }
     }
- 
-    public void putFlywheelVoltage(double FlywheelVoltage){
-		flywheelVoltage = FlywheelVoltage;
-        if(flywheelAccess) {
+
+    /**
+     * Set the flywheel voltage on the Shuffleboard.
+     * 
+     * @param FlywheelVoltage voltage of the flywheel motors
+     */
+    public void putFlywheelVoltage(double FlywheelVoltage) {
+        flywheelVoltage = FlywheelVoltage;
+        if (flywheelAccess) {
             flywheelVoltageEntry.setNumber(flywheelVoltage);
         }
     }
 
-    public void putControlConfig(double mVelError, double mControlTol , double mModelAcc, double mEncodAcc , double mMaxVoltage ,
-     double mDtSeconds){
+    /**
+     * Set the flywheel control data on the Shuffleboard.
+     * 
+     * @param mVelError
+     * @param mControlTol
+     * @param mModelAcc
+     * @param mEncodAcc
+     * @param mMaxVoltage
+     * @param mDtSeconds
+     */
+    public void putControlConfig(double mVelError, double mControlTol, double mModelAcc, double mEncodAcc,
+            double mMaxVoltage, double mDtSeconds) {
         velError = mVelError;
         controlTol = mControlTol;
         modelAcc = mModelAcc;
         encodAcc = mEncodAcc;
         maxVoltage = mMaxVoltage;
         dtSeconds = mDtSeconds;
-        if(flywheelAccess) {
+        if (flywheelAccess) {
             velErrorEntry.setNumber(velError);
             controlTolEntry.setNumber(controlTol);
             modelAccEntry.setNumber(modelAcc);
@@ -320,102 +414,153 @@ public class ShuffleboardUtility {
             maxVoltageEntry.setNumber(maxVoltage);
             dtSecondsEntry.setNumber(dtSeconds);
         }
-        
-        
+
     }
- 
-    // public String getFMSColor(){
-	// 	fmsColor = SmartDashboard.getString("FMS Color", "No Color Available");
-	// 	return fmsColor;
-    // }
 
-	//----- Testing & Debugging -----\\
+    // ----- Testing & Debugging -----\\
 
-    public void putTurretSpeed(double TurretSpeed){
+    /**
+     * Set the turret speed on the Shuffleboard.
+     * 
+     * @param TurretSpeed speed of the turret
+     */
+    public void putTurretSpeed(double TurretSpeed) {
         turretSpeed = TurretSpeed;
-        if(turretAccess) {
+        if (turretAccess) {
             turretSpeedEntry.setNumber(turretSpeed);
         }
     }
 
-    public void putHopperSpeed(double HopperSpeed){
+    /**
+     * Set the hopper speed on the Shuffleboard.
+     * 
+     * @param HopperSpeed speed of the hopper
+     */
+    public void putHopperSpeed(double HopperSpeed) {
         hopperSpeed = HopperSpeed;
-        if(hopperAccess) {
+        if (hopperAccess) {
             hopperSpeedEntry.setNumber(hopperSpeed);
         }
     }
 
-    public void putShooterAngle(boolean ShooterAngle){
+    /**
+     * Set the shooter angle state on the Shuffleboard.
+     * 
+     * @param ShooterAngle boolean state for the shooter position
+     */
+    public void putShooterAngle(boolean ShooterAngle) {
         shooterAngle = ShooterAngle;
-        if(flywheelAccess) {
+        if (flywheelAccess) {
             shooterAngleEntry.setBoolean(shooterAngle);
         }
     }
 
-    public void putEndgameEncoderPosition(double encoderPosition){
+    /**
+     * Set the endgame encoder position on the Shuffleboard.
+     * 
+     * @param encoderPosition position of the endgame encoder
+     */
+    public void putEndgameEncoderPosition(double encoderPosition) {
         endgameEncoderPosition = encoderPosition;
-        if(endgameAccess) {
+        if (endgameAccess) {
             endgameEncoderPositionEntry.setDouble(endgameEncoderPosition);
         }
     }
 
-	// public void getLogger(String logger){
-	// 	this.logger = logger;
-	// 	SmartDashboard.putString("Logger Level", logger);
-    // }
-    
-	public void putShooterRPM(double ShooterRPM){
-		shooterRPM = ShooterRPM;
-        if(flywheelAccess) {
+    /**
+     * Set the shooter speed on the Shuffleboard.
+     * 
+     * @param ShooterRPM speed of the shooter
+     */
+    public void putShooterRPM(double ShooterRPM) {
+        shooterRPM = ShooterRPM;
+        if (flywheelAccess) {
             shooterRPMEntry.setNumber(shooterRPM);
         }
     }
-    
-	public void putTurretEncoderPosition(double TurretEncoderPosition){
-		turretEncoderPosition = TurretEncoderPosition;
-        if(turretAccess) {
+
+    /**
+     * Set the turret encoder position on the Shuffleboard.
+     * 
+     * @param TurretEncoderPosition position of the turret encoder
+     */
+    public void putTurretEncoderPosition(double TurretEncoderPosition) {
+        turretEncoderPosition = TurretEncoderPosition;
+        if (turretAccess) {
             turretEncoderPositionEntry.setNumber(turretEncoderPosition);
         }
     }
 
-    public void putGyroYaw(double GyroYaw){
+    /**
+     * Set the gyre yaw on the Shuffleboard.
+     * 
+     * @param GyroYaw yaw angle on the gyro
+     */
+    public void putGyroYaw(double GyroYaw) {
         gyroYaw = GyroYaw;
-        if(miscellaneousAccess) {
+        if (miscellaneousAccess) {
             gyroYawEntry.setNumber(gyroYaw);
         }
     }
 
-    //----- Miscellaneous -----\\
+    // ----- Miscellaneous -----\\
 
-    public double getShooterSpeed(){
-        return shooterSetEntry.getDouble(shootSpeed);
-    }
-
-    public void addAutonOptions(String pathName,CommandBase autoCommand){
+    /**
+     * Adds an option for auton selection
+     * @param pathName name of the path added
+     * @param autoCommand instance of the command being added
+     */
+    public void addAutonOptions(String pathName, CommandBase autoCommand) {
         autonChooser.addOption(pathName, autoCommand);
     }
 
-    public void setDefaultAutonOptions(String pathName,CommandBase autoCommand){
+    /**
+     * Sets the default option for auton selection
+     * @param pathName name of the path added
+     * @param autoCommand instance of the command being added
+     */
+    public void setDefaultAutonOptions(String pathName, CommandBase autoCommand) {
         autonChooser.setDefaultOption(pathName, autoCommand);
     }
 
-    public Command getSelectedAutonPath(){
+    /**
+     * get the option selected on the Shuffleboard
+     * @return the selected auton path
+     */
+    public Command getSelectedAutonPath() {
         return autonChooser.getSelected();
     }
 
+    /**
+     * Adds an additional Shuffleboard setup
+     * @param settingName name for the added tab
+     * @param settingCommand instance of the command being added
+     */
     public void addShuffleboardOptions(String settingName, CommandBase settingCommand) {
         shuffleboardChooser.addOption(settingName, settingCommand);
     }
 
+    /**
+     * Sets the default setup
+     * @param settingName name for the tab
+     * @param settingCommand instance of the command being added
+     */
     public void setDefaultShuffleboardOptions(String settingName, CommandBase settingCommand) {
         shuffleboardChooser.setDefaultOption(settingName, settingCommand);
     }
 
+    /**
+     * Get the selected setup from the Shuffleboard
+     * @return the selected setup
+     */
     public Command getSelectedShuffleboardOption() {
         return shuffleboardChooser.getSelected();
     }
 
+    /**
+     * Disables streaming of the limelight to the Shuffleboard.
+     */
     public void disableLimelightStream() {
         limelightCamera = null;
     }
-} //end of class Shuffleboard
+} // end of class Shuffleboard

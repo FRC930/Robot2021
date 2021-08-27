@@ -9,16 +9,15 @@
 
 package frc.robot.subsystems;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//import frc.robot.utilities.SmootherStack;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
-//import frc.robot.utilities.ShuffleboardUtility;
 
 //-------- SUBSYSTEM CLASS --------\\
 /**
@@ -63,8 +62,7 @@ public class LimelightSubsystem extends SubsystemBase {
     // network table that holds the limelight's settings
     private NetworkTable limelightTable;
 
-    // shuffleboardUtility
-    //private ShuffleboardUtility shuffleboardUtility;
+
 
     // tv Whether the limelight has any valid targets (0 or 1)
     private boolean validTarget;
@@ -82,7 +80,6 @@ public class LimelightSubsystem extends SubsystemBase {
     // the Limelight's current pipeline
     private LimelightPipelines currentPipeline;
 
-    //private FIFOStack smoother = new FIFOStack(10);
 
     // enum for the different limelight pipelines
     public enum LimelightPipelines {
@@ -101,10 +98,13 @@ public class LimelightSubsystem extends SubsystemBase {
     }
 
     //-------- CONSTRUCTOR --------\\
-
+/**
+ * subsystem for handling limelight
+ * 
+ * @param _limelightTable
+ */
     public LimelightSubsystem(NetworkTable _limelightTable) {
         limelightTable = _limelightTable;
-        //shuffleboardUtility = ShuffleboardUtility.getInstance();
     }
 
     // -------- METHODS --------\\
@@ -114,13 +114,12 @@ public class LimelightSubsystem extends SubsystemBase {
 
         logger.entering(LimelightSubsystem.class.getName(), "getHorizontalOffset()");
 
-        //smoother.insert(limelightTable.getEntry("tx").getDouble(DEFAULT_HORIZ_ANGLE_OFFSET));
 
         horizontalOffset = limelightTable.getEntry("tx").getDouble(DEFAULT_HORIZ_ANGLE_OFFSET);
 
         logger.log(Constants.LOG_LEVEL_FINER, "Horizontal Offset = " + horizontalOffset);
         logger.exiting(LimelightSubsystem.class.getName(), "getHorizontalOffset()");
-
+        
         return horizontalOffset;
     }
 
@@ -153,12 +152,12 @@ public class LimelightSubsystem extends SubsystemBase {
     // whether the limelight sees a target or not :)
     public boolean getValidTargets() {
 
-        // logger.entering(LimelightSubsystem.class.getName(), "getValidTargets()");
+        logger.entering(LimelightSubsystem.class.getName(), "getValidTargets()");
 
         validTarget = limelightTable.getEntry("tv").getDouble(DEFAULT_VALID_TARGET) > 0.0 ? true : false;
 
-        // logger.log(Level.FINE, "Valid Target?: " + validTarget);
-        // logger.exiting(LimelightSubsystem.class.getName(), "getValidTargets()");
+        logger.log(Level.FINE, "Valid Target?: " + validTarget);
+        logger.exiting(LimelightSubsystem.class.getName(), "getValidTargets()");
 
         return validTarget;
     }
@@ -166,12 +165,12 @@ public class LimelightSubsystem extends SubsystemBase {
     // this returns the verticle offset between the limelights crosshair and the target crosshair :)
     public double getVerticleOffset() {
 
-        // logger.entering(LimelightSubsystem.class.getName(), "getVerticleOffset()");
+        logger.entering(LimelightSubsystem.class.getName(), "getVerticleOffset()");
 
         verticleOffset = limelightTable.getEntry("ty").getDouble(DEFAULT_VERT_ANGLE_OFFSET);
 
-        // logger.log(Level.FINER, "Verticle Offset = " + verticleOffset);
-        // logger.exiting(LimelightSubsystem.class.getName(), "getVerticleOffset()");
+        logger.log(Level.FINER, "Verticle Offset = " + verticleOffset);
+        logger.exiting(LimelightSubsystem.class.getName(), "getVerticleOffset()");
 
         return verticleOffset;
     }
@@ -193,14 +192,14 @@ public class LimelightSubsystem extends SubsystemBase {
     // sets the pipeline, or configuration, of the limelight
     public void setPipeline(LimelightPipelines pipeline) {
 
-        // logger.entering(LimelightSubsystem.class.getName(), "setPipeline()");
+        logger.entering(LimelightSubsystem.class.getName(), "setPipeline()");
 
         // sets the pipeline to the associated number of the pipeline enum
         limelightTable.getEntry("pipeline").setNumber(pipeline.getPipeline());
         currentPipeline = pipeline;
 
-        // logger.log(Level.FINE, "Pipeline: " + pipeline);
-        // logger.exiting(LimelightSubsystem.class.getName(), "setPipeline()");
+        logger.log(Level.FINE, "Pipeline: " + pipeline);
+        logger.exiting(LimelightSubsystem.class.getName(), "setPipeline()");
     }
 
     // returns the Limelight's pipeline, returns "error" if no pipeline can be found
@@ -222,7 +221,7 @@ public class LimelightSubsystem extends SubsystemBase {
     public void setLightMode(int mode) {
         limelightTable.getEntry("ledMode").setNumber(mode);
     }
-
+    
     public int getLIMELIGHT_LEDS_ON(){
         return LIMELIGHT_LEDS_ON;
     }
@@ -234,20 +233,9 @@ public class LimelightSubsystem extends SubsystemBase {
     @Override
     public void periodic() {    
 
-        // if(getDistance() > DISTANCE_THRESHOLD) {
-        //     setPipeline(LimelightPipelines.ZOOM_2X);
-        // } else {
-        //     setPipeline(LimelightPipelines.NO_ZOOM);
-        // }
-
-        // SmartDashboard.putNumber("horiz offset", getHorizontalOffset());
-        // SmartDashboard.putNumber("verical offset", getVerticleOffset());
-        // SmartDashboard.putBoolean("valid targets", getValidTargets());
-        // SmartDashboard.putNumber("distance", getDistance());
-        // SmartDashboard.putString("pipeline", getPipeline());
+       
         SmartDashboard.putNumber("skew", getSkew());
 
-        //shuffleboardUtility.setDistanceFromTarget(getDistance());
     }
 
 } // end of class LimelightSubsystem

@@ -16,12 +16,18 @@ import edu.wpi.first.wpilibj.Preferences;
    --- TeamNumber(Number) = 930 or 9930  (WHEN SMARTDASHBOARD CONNECTED!)
    After that can shutdown dashboard!!  Values saved in RoboIO (i think)
 */
+/** 
+ * changes the number team(930 or 9930)
+ */
 public class RobotPreferences {
     private static RobotPreferences instance;
     private Preferences pref;
     int teamNumber;
 
-    public RobotPreferences() {
+    /**
+     * hides constructer from public, becuase its a singleton
+     */
+    private RobotPreferences() {
         pref = Preferences.getInstance();
         teamNumber = pref.getInt("TeamNumber", 930);
         // TODO Add more preferences (get create a getter and private field)
@@ -34,7 +40,12 @@ public class RobotPreferences {
     public int getTeamNumber() {
         return teamNumber;
     }
-
+    /**
+     * 
+     * gets pointer to this object
+     * @return
+     * 
+     */
     // Singleton
     public static RobotPreferences getInstance() {
         if (instance == null) {

@@ -705,8 +705,8 @@ public class RobotContainer {
         .whenInactive(new StopTowerCommand(towerSubsystem));
     // manual flywheel spinning
 
-    manualFlywheelButton.whenActive(new RunFlywheelCommand(flywheelSubsystem, 0.7))
-        .whenInactive(new StopFlywheelCommand(flywheelSubsystem));
+   // manualFlywheelButton.whenActive(new RunFlywheelCommand(flywheelSubsystem, 0.7))
+      //  .whenInactive(new StopFlywheelCommand(flywheelSubsystem));
 
     // manual flywheel piston stuff
     //manualFlywheelPistonButton.whenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem))
