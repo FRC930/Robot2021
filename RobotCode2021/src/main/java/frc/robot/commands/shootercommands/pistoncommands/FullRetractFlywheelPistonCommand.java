@@ -15,6 +15,9 @@ import frc.robot.subsystems.FlywheelPistonSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem.SolenoidValues;
 import frc.robot.utilities.ShuffleboardUtility;
 
+/**
+ * fully retracts the pistons on the shooter
+ */
 public class FullRetractFlywheelPistonCommand extends CommandBase {
 
   //-------- DECLARATIONS --------\\
@@ -23,7 +26,10 @@ public class FullRetractFlywheelPistonCommand extends CommandBase {
   private ShuffleboardUtility shuffleboardUtility;
 
   //-------- CONSTRUCTOR --------\\
-    
+    /**
+     * this constructs the class
+     * @param flywheelPistonSubsystem controls the pistons for the shooter
+     */
   public FullRetractFlywheelPistonCommand(FlywheelPistonSubsystem flywheelPistonSubsystem){
     this.flywheelPistonSubsystem = flywheelPistonSubsystem;
     shuffleboardUtility = ShuffleboardUtility.getInstance();
@@ -35,9 +41,8 @@ public class FullRetractFlywheelPistonCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    flywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
+   // flywheelPistonSubsystem.setTop(SolenoidValues.RETRACT);
     flywheelPistonSubsystem.setBottom(SolenoidValues.RETRACT);
-    // False = close shot
     shuffleboardUtility.putShooterAngle(false);
   }
 

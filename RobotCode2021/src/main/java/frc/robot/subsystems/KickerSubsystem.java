@@ -22,11 +22,13 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //-------- SUBSYSTEM CLASS --------\\
-
+    /**
+     * this subsystem controls the kicker 
+     */
 public class KickerSubsystem extends SubsystemBase {
   
     //-------- CONSTANTS --------\\
-
+    public static final double KICKER_SPEED = 1.0;
     private static final Logger logger = Logger.getLogger(KickerSubsystem.class.getName());
 
     //-------- DECLARATIONS --------\\
@@ -36,13 +38,16 @@ public class KickerSubsystem extends SubsystemBase {
     private DutyCycleEncoder encoder;
 
     //-------- CONSTRUCTOR --------\\
-
-    public KickerSubsystem(int KICKER_ID, int HOPPER_ENCODER_PORT_ID) {
-        //kickerMotor = new WPI_VictorSPX(KICKER_ID);  
+    /**
+     * this constructs the class
+     * @param kickerId id for the kicker moter
+     * @param hopperEncoderPortId id for the hopper encoder
+     */
+    public KickerSubsystem(int kickerId, int hopperEncoderPortId) {  
 
         //Dont use encoder in simulation
         if(RobotBase.isReal()){
-            this.encoder = new DutyCycleEncoder(HOPPER_ENCODER_PORT_ID);
+            this.encoder = new DutyCycleEncoder(hopperEncoderPortId);
             //kickerMotor.setInverted(true);
         }
     }   
@@ -80,7 +85,7 @@ public class KickerSubsystem extends SubsystemBase {
 
     //stops the motor
     public void stopMotor() {
-        //kickerMotor.set(ControlMode.PercentOutput, 0.0);
+    
     }
 
 } //end of class KickerSubsystem

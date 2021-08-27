@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.KickerSubsystem;
 
 //-------- COMMAND CLASS --------\\
-
+/**
+ * This command stops the kicker
+ */
 public class StopKickerCommand extends CommandBase {
 
     //-------- DECLARATIONS --------\\
@@ -21,7 +23,11 @@ public class StopKickerCommand extends CommandBase {
     private KickerSubsystem kickerSubsystem;
 
     //-------- CONSTRUCTOR --------\\
-
+/**
+ * stop kicker command 
+ * constructs the class
+ * @param kSubsystem is the KickerSubsystem
+ */
     public StopKickerCommand(KickerSubsystem kSubsystem) {
         kickerSubsystem = kSubsystem;
         addRequirements(kSubsystem);
