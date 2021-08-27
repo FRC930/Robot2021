@@ -28,12 +28,6 @@ public final class Constants {
     public static final double HOPPER_DEFAULT_SPEED = 0.3;
     public static final double HOPPER_REVERSE_SPEED = 0.35;
     public static final double HOPPER_SHOOTING_SPEED = 0.7;
-
-    public static final double FLYWHEEL_TELEOP_SPEED = 0.5;
-    public static final double FLYWHEEL_AUTON_SPEED = 0.8;
-
-    public static final double CLIMBER_EXTEND_SPEED = 0.1;
-    public static final double CLIMBER_RETRACT_SPEED = -0.1;
   
     // [-------------------LIMITS--------------------------]
 
@@ -41,20 +35,9 @@ public final class Constants {
 
     // [-------------------TURRET--------------------------]
 
-    public static final double TURRET_MAX_SET_POSITION_SPEED = 0.4;
-
     public static final double TURRET_P = 0.025;
     public static final double TURRET_I = 0.0;
     public static final double TURRET_D = 0.0008;
-
-    // speed used for turning the turret
-    public static final double TURRET_TURNING_SPEED = 0.4;
-
-    // deadband for the turret joystick
-    public static final double JOYSTICK_TURRET_DEADBAND = 0.1;
-
-    // deadband for the turret set position commands
-    public static final double TURRET_DEADBAND = 0.01;
 
     // [--------------------AUTO--------------------------]
 
