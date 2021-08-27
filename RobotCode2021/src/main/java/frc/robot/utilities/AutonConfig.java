@@ -82,7 +82,7 @@ public class AutonConfig {
 
         autoVoltageConstraint = new SwerveDriveKinematicsConstraint(
             dSubsystem.getSwerveKinematics(),
-            Constants.KMAXSPEED
+            DriveSubsystem.KMAXSPEED
         );
         // Configurate the values of all trajectories for max velocity and acceleration
         trajectoryConfig = new TrajectoryConfig(5.5, 4.25)

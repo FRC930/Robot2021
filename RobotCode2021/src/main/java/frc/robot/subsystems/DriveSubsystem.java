@@ -138,9 +138,9 @@ public class DriveSubsystem extends SubsystemBase {
         logger.entering(DriveSubsystem.class.getName(), "swerveDrive()");
 
         Rotation2d heading = Rotation2d.fromDegrees(gyro.getFusedHeading());
-        double speedForward = (targetY * Constants.KMAXSPEED);
-        double speedStrafe = targetX * Constants.KMAXSPEED;
-        double speedRotation = rotation * Constants.KMAXANGULARSPEED;
+        double speedForward = (targetY * DriveSubsystem.KMAXSPEED);
+        double speedStrafe = targetX * DriveSubsystem.KMAXSPEED;
+        double speedRotation = rotation * DriveSubsystem.KMAXANGULARSPEED;
 
         // TODO: add in a proper flag for this
         // Create ChassisSpeeds to determine speed of robot frame
@@ -151,7 +151,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         // Normalize speed so speed wont go over 1
         // This also will lower other wheel speeds if a speed goes over 1 on any wheel
-        SwerveDriveKinematics.normalizeWheelSpeeds(states, Constants.KMAXSPEED);
+        SwerveDriveKinematics.normalizeWheelSpeeds(states, DriveSubsystem.KMAXSPEED);
 
         swerveLeftFront.drive(states[0], speedModifierTeleop);
         swerveRightFront.drive(states[1], speedModifierTeleop);

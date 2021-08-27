@@ -573,7 +573,7 @@ public class RobotContainer {
     // --AutoSim
     m_drivetrainSystem = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3);
     m_drivetrainSimulator = new DifferentialDrivetrainSim(m_drivetrainSystem, DCMotor.getCIM(2), 8,
-        Constants.KTRACKWIDTH, 3, null);
+        DriveSubsystem.KTRACKWIDTH, 3, null);
   } // end of constructor RobotContainer()
 
   // -------- METHODS --------\\

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import frc.robot.Constants;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * Controls swerve drive on robot
@@ -39,6 +40,10 @@ public class SwerveModule {
     private static final Logger logger = Logger.getLogger(SwerveModule.class.getName());
 
     private final double RADIUS = 0.1016;
+
+    private SimpleMotorFeedforward feedForward;
+
+    private PIDController drivePID;
     
     /**
      * Helper class for a swerve wheel. Holds two Falcon500's.
@@ -106,7 +111,7 @@ public class SwerveModule {
     public void drive(SwerveModuleState state, double speedModifier) {
         SwerveModuleState optimized = SwerveModuleState.optimize(state, getAngle());
         double angle = optimized.angle.getDegrees();
-        double speed = optimized.speedMetersPerSecond / KMAXSPEED;
+        double speed = optimized.speedMetersPerSecond / DriveSubsystem.KMAXSPEED;
 
         if (speed != 0.0) {
             setAngle(angle);

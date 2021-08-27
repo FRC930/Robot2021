@@ -20,7 +20,8 @@ public class EndgameSubsystem extends SubsystemBase {
     //Starts limit hit at false
     private boolean limitHit = false;
     //Starts going up to true
-    private boolean goingUp = true;;
+    private boolean goingUp = true;
+    private double encoderPosition;
 
     /**
      * instantiate the object
