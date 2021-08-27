@@ -2,14 +2,25 @@ package frc.robot.utilities;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
-
-/*Manipulates buffer to change the LEDs. Buffer can access each LED on the strip and 
-receive color values to make them light up. Class contains methods that will show a 
-certain pattern on the strip when another LED class runs. Other LED classes run when 
-certain actions/conditions are applied to the robot*/
-
-/*need to test setting color outside buffer size*/
+/**
+ * <h4>LEDBufferManager</h4>
+ * <p>
+ * Utility class to manage and manipulate buffers to change the LEDs.
+ * </p>
+ * 
+ * <p>
+ * Manipulates buffer to change the LEDs. Buffer can access each LED on the strip and 
+ * receive color values to make them light up. Class contains methods that will show a 
+ * certain pattern on the strip when another LED class runs. Other LED classes run when 
+ * certain actions/conditions are applied to the robot
+ * </p>
+ * 
+ * <p>
+ * TODO: need to test setting color outside buffer size
+ * </p>
+ */
 public class LEDBufferManager {
+
     //Arrays storing the HSV values for each color
     //  HSV: hue, saturation, value
     private final int[] red;
@@ -39,6 +50,17 @@ public class LEDBufferManager {
     //buffer will be changed in each method to change the LEDs
     private AddressableLEDBuffer buffer;
 
+    /**
+     * <h4>LEDBufferManager</h4>
+     * Creates a utility class to manage and manipulate buffers to change the LEDs.
+     * 
+     * Manipulates buffer to change the LEDs. Buffer can access each LED on the strip and 
+     * receive color values to make them light up. Class contains methods that will show a 
+     * certain pattern on the strip when another LED class runs. Other LED classes run when 
+     * certain actions/conditions are applied to the robot  
+     * 
+     * @param bufferLength
+     */
     public LEDBufferManager(int bufferLength) {
         buffer = new AddressableLEDBuffer(bufferLength);
         HUE = 0;
@@ -63,8 +85,13 @@ public class LEDBufferManager {
         off = new int[] {0, 0, 0};
     }
 
-    /*The color handed in will set the HSV value to an empty array. This array will be
-    returned with the corresponding HSV values*/
+    /**
+     * <h4>getColor</h4>
+     * The color handed in will set the HSV value to an empty array. This array will be
+     * returned with the corresponding HSV values
+     * 
+     * @param colorInput Color to get HSV values for
+     */
     private int[] getColor(String colorInput) {
         int[] color;
         if (colorInput.equalsIgnoreCase("red")) {
@@ -112,16 +139,21 @@ public class LEDBufferManager {
         return color;
     }
 
-    //Sets the color of an LED with a given position and String for color
+    /**
+     * <h4>colorSet</h4>
+     * Sets the color of an LED with a given position and String for color
+     * 
+     * @param position
+     * @param _color
+     */
     private void colorSet(int position, String _color) {
         int[] color = this.getColor(_color);
         buffer.setHSV(position, color[HUE], color[SAT], color[VAL]);
     }
 
     /**
+     * <h4>clear</h4>
      * Turns off all LEDs.
-     * @param 
-     * @param
      */
     private void clear() {
         for (int i = 0; i < buffer.getLength(); i++) {
@@ -129,7 +161,12 @@ public class LEDBufferManager {
         }
     }
 
-    //Shows which alliance our team is on by turning all the LEDs to the alliance's color
+    /**
+     * <h4>allianceSet</h4>
+     * Shows which alliance our team is on by turning all the LEDs to the alliance's color
+     * 
+     * @param _team
+     */
     public AddressableLEDBuffer allianceSet(int _team) {
         String team;
         team = (_team == redTeam) ? "red" : "blue";
@@ -139,7 +176,14 @@ public class LEDBufferManager {
         return buffer;
     }
 
-    //Sets all LEDs to a single color one by one
+    /**
+     * <h4>colorWipe</h4>
+     * Sets all LEDs to a single color one by one
+     * 
+     * @param counter
+     * @param color
+     * @return
+     */
     public AddressableLEDBuffer colorWipe(int counter, String color) {
         if (counter < buffer.getLength()) {
             this.colorSet(counter, color);
@@ -148,7 +192,15 @@ public class LEDBufferManager {
         return buffer;
     }
 
-    //Places a segment of lit LEDs along strip, then starts over from the beginning
+    /**
+     * <h4>movingSegmentLoop</h4>
+     * Places a segment of lit LEDs along strip, then starts over from the beginning
+     * 
+     * @param counter
+     * @param color
+     * @param segLength
+     * @return
+     */
     public AddressableLEDBuffer movingSegmentLoop(int counter, String color, int segLength) {
         if (counter < buffer.getLength()) {
             this.colorSet(counter, color);
@@ -158,9 +210,15 @@ public class LEDBufferManager {
         return buffer;
     }
 
-    /* Same as movingSegmentLoop, but instead of starting over from beginning, it rebounds
+    /**
+     * <h4>movingSegmentPong</h4>
+     * Same as movingSegmentLoop, but instead of starting over from beginning, it rebounds
      * back and goes the other way
-     * */
+     * 
+     * @param counter
+     * @param color Color of the bouncing segment
+     * @param segLength Length of the bouncing segment
+     */
     public AddressableLEDBuffer movingSegmentPong(int counter, String color, int segLength) {
         if (counter < buffer.getLength() - segLength) {
             for (int j = 0; j < segLength; j++) {
@@ -186,7 +244,14 @@ public class LEDBufferManager {
         return buffer;
     }
 
-    //alternates between two colors down the strip
+    /**
+     * <h4>twoColorAlt</h4>
+     * Alternates between two colors down the strip
+     * 
+     * @param color1
+     * @param color2
+     * @return
+     */
     public AddressableLEDBuffer twoColorAlt(String color1, String color2) {
         String[] twoColors = new String[] {color1, color2};
         //Changes between both colors
@@ -196,17 +261,29 @@ public class LEDBufferManager {
         return buffer;
     }
 
-    //uses twoColorAlt to swap the positions of the alternating colors
+    /**
+     * <h4>twoColorAnim</h4>
+     * Uses twoColorAlt to swap the positions of the alternating colors
+     * 
+     * @param color1
+     * @param color2
+     * @return
+     */
     public AddressableLEDBuffer twoColorAnim(String color1, String color2) {
         //Shifts pattern back and forth
         this.twoColorAlt(color1, color2);
-        //delay(wait);
         this.twoColorAlt(color2, color1);
-        //delay(wait);
         return buffer;
     }
 
-    //lights every third LED along the strip at a given position
+    /**
+     * <h4>theaterChase</h4>
+     * Lights every third LED along the strip at a given position
+     * 
+     * @param counter
+     * @param color
+     * @return
+     */
     public AddressableLEDBuffer theaterChase(int counter, String color) {
         //Shifts pattern over
         for (int i = counter; i < buffer.getLength(); i += 3) {
@@ -215,34 +292,13 @@ public class LEDBufferManager {
         return buffer;
     }
 
-    /*public AddressableLEDBuffer theaterChaseRainbow2(String c, int wait) {
-        //Splits HUE spectrum equally to all pixels
-        int dif = 65536 / (buffer.getLength() * 3);
-        //Shifts pattern over
-        for(int j = 0; j <= 3; j++) {
-            //Fills every 3 LEDs
-            for (int i = j; i < buffer.getLength(); i+=3) {
-                //strip.setPixelColor(i, color);
-                this.colorSet(i, c);
-            }
-            delay(wait);
-            clear(); //strip.clear();
-            //Wraps pattern to create a "wheel"
-            if (i + k < buffer.getLength()) {
-                //strip.setPixelColor(i+k, strip.ColorHSV((i*dif)+j, 255, 255));
-                buffer.setHSV(i + k, (i * dif) + j, 255, 255);
-                _LEDSubsystem.updateBuffer(buffer);
-            }
-            else {
-                //strip.setPixelColor((i+k)-STRIP_LEDS, strip.ColorHSV((i*dif)+j, 255, 255));
-                buffer.setHSV((i + k) - buffer.getLength(), (i * dif) + j, 255, 255);
-                _LEDSubsystem.updateBuffer(buffer);
-            }
-        }
-        return buffer;
-    }*/
-
-    //color wheel that rotates about the LED strip
+    /**
+     * <h4>rainbowWheel</h4>
+     * Color wheel that rotates about the LED strip
+     * 
+     * @param counter
+     * @return
+     */
     public AddressableLEDBuffer rainbowWheel(int counter) {
         int dif = 65536/buffer.getLength();
         if(counter < buffer.getLength()) {
@@ -258,13 +314,12 @@ public class LEDBufferManager {
                         buffer.setHSV((i - counter) + buffer.getLength(), (i * dif) + j, 255, 255);
                     }
                 }
-                //delay(wait);
             }
         }
         return buffer;
     }
 
-    //Will be worked on
+    //TODO: Will be worked on
 
         //Input a value 0 to 255 to get a color value.
         //The colours are a transition r - g - b - back to r.
