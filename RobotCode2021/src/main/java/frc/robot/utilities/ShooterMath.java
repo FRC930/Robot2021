@@ -85,7 +85,7 @@ public class ShooterMath {
      * called in this method also
      * 
      * @param angle    is the current angle of the shooter, angles inputed as
-     *                 degrees, converted to radians
+     *                 degrees
      * @param distance is the distance away from the goal, in meters
      */
     public void setPosition(double angle, double distance) {
