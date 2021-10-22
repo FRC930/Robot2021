@@ -360,7 +360,8 @@ public class RobotContainer {
     // Flywheel
     // Note: Tune values for if(930 robot) and else(9930 robot) statements
     if(RobotPreferences.getInstance().getTeamNumber() == 930) {
-      flywheelSubsystem.setSpeedRPMs(AccuracyChallengeCommand.BLUE_SPEED); // originally 2000 rpm
+      // TODO: hardcoded speed for Roboteer
+      flywheelSubsystem.setSpeedRPMs(3000.0/*AccuracyChallengeCommand.BLUE_SPEED*/); // originally 2000 rpm
     }
     else{
       flywheelSubsystem.setSpeedRPMs(AccuracyChallengeCommand.RED_SPEED); // originally 2500 rpm
