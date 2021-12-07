@@ -134,8 +134,10 @@ public class NewDriveSubsystem extends SubsystemBase {
         Pose2d currentPose;
         if (swerveDriveOdometry != null) {
             currentPose = swerveDriveOdometry.getPoseMeters();
+            return currentPose;
+        } else {
+            throw new RuntimeException("Tried to get pose with null swerve odometry");
         }
-        return currentPose;
     }
 
     // public void swerveResetWheels() {
@@ -162,7 +164,7 @@ public class NewDriveSubsystem extends SubsystemBase {
         if (swerveDriveOdometry != null) {
             swerveDriveOdometry.update(getGyroRotation(), states[0], states[1], states[2], states[3]);
         } else {
-            throw new RuntimeException("Attempted to run the robot with a null swerve drive odometry");
+            throw new RuntimeException("Attempted to run the robot with a null swerve odometry");
         }
     }
 }
