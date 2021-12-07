@@ -175,7 +175,7 @@ public class RobotContainer {
   // private final ColorWheelSpinnerSubsystem colorWheelSpinnerSubsystem;
 
   // --Drive subsystem
-  private DriveSubsystem driveSubsystem;
+  private NewDriveSubsystem driveSubsystem;
   // private SwerveDriveSubsystem swerveDriveSubsystem;
 
   // --Shooter stuff subsystems
@@ -216,7 +216,7 @@ public class RobotContainer {
 
   // --Drive commands
   // private final ClimberArmCommandGroup climberArmCommandGroup;
-  private SwerveDriveCommand swerveDriveCommand;
+  private NewDriveCommand swerveDriveCommand;
  
 
   // --Hopper commands
@@ -304,8 +304,7 @@ public class RobotContainer {
     // Must be initialized after intake
     // the first boolean determines to use field orientation if true
     // the second boolean if true halves the speed
-    driveSubsystem = new DriveSubsystem(additionalDriveIDs, drfid, dlfid, drbid, dlbid, DRIVE_TYPE.SWERVE_DRIVE,
-        intakeMotorSubsystem, false, true);
+    driveSubsystem = new NewDriveSubsystem();
     // swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false,
     // true);
 
@@ -345,8 +344,7 @@ public class RobotContainer {
     // new JoystickButton(coDriverController, XB_RB));
 
     // drive (NOTE: This is where we bind the driver controls to the drivetrain)
-    swerveDriveCommand = new SwerveDriveCommand(driveSubsystem, driverController, XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y,
-        XB_AXIS_RIGHT_X);
+    swerveDriveCommand = new NewDriveCommand(driveSubsystem, driverController);
 
     // hopper
     defaultStopHopperCommand = new DefaultStopHopperCommand(hopperSubsystem);

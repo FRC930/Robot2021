@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint;
-import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.NewDriveSubsystem;
 
 /**
  * <h4>AutonConfig</h4>
@@ -78,7 +78,7 @@ public class AutonConfig {
      * 
      * @param dSubsystem
      */
-    private AutonConfig(DriveSubsystem dSubsystem) {
+    private AutonConfig(NewDriveSubsystem dSubsystem) {
 
         autoVoltageConstraint = new SwerveDriveKinematicsConstraint(
             dSubsystem.getSwerveKinematics(),
@@ -119,7 +119,7 @@ public class AutonConfig {
                 .addConstraint(autoVoltageConstraint);
     }
 
-    public static void initInstance(DriveSubsystem dSubsystem) {
+    public static void initInstance(NewDriveSubsystem dSubsystem) {
         lastInstance = new AutonConfig(dSubsystem);
     }
 

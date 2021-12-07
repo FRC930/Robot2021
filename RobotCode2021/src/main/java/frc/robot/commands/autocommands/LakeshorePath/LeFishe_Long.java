@@ -30,7 +30,6 @@ import frc.robot.commands.shootercommands.ShootPowerCellCommandGroup;
 import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
 import frc.robot.commands.turretcommads.AutoAimAutonomousCommand;
 import frc.robot.commands.turretcommads.AutoTurretTurnCommand;
-import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
@@ -38,6 +37,7 @@ import frc.robot.subsystems.IntakeMotorSubsystem;
 import frc.robot.subsystems.IntakePistonSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.NewDriveSubsystem;
 import frc.robot.subsystems.TowerSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.utilities.AutonConfig;
@@ -79,7 +79,7 @@ public class LeFishe_Long extends SequentialCommandGroup {
          * @param fPistonSubsystem flywheel piston subsystem
          * @param turSubsystem     turret subsystem
          */
-        public LeFishe_Long(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
+        public LeFishe_Long(NewDriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
                         IntakeMotorSubsystem iMotorSubsystem, FlywheelSubsystem fSubsystem, TowerSubsystem tSubsystem,
                         HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
                         FlywheelPistonSubsystem fPistonSubsystem, TurretSubsystem turSubsystem) {

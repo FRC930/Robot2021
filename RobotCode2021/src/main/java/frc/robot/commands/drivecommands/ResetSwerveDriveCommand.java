@@ -9,7 +9,7 @@ package frc.robot.commands.drivecommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.NewDriveSubsystem;
 
 /**
  * <h3>ResetSwerveDriveCommand</h3>
@@ -18,7 +18,7 @@ import frc.robot.subsystems.DriveSubsystem;
  * gyro. Used mainly for testing.
  */
 public class ResetSwerveDriveCommand extends CommandBase {
-    private DriveSubsystem driveSubsystem;
+    private NewDriveSubsystem driveSubsystem;
 
     /**
      * <h3>ResetSwerveDriveCommand</h3>
@@ -29,7 +29,7 @@ public class ResetSwerveDriveCommand extends CommandBase {
      * @param dSubsystem the instance of {@link frc.robot.subsystems.DriveSubsystem
      *                   DriveSubsystem} to use
      */
-    public ResetSwerveDriveCommand(DriveSubsystem dSubsystem) {
+    public ResetSwerveDriveCommand(NewDriveSubsystem dSubsystem) {
         driveSubsystem = dSubsystem;
         addRequirements(dSubsystem);
     }
@@ -42,7 +42,7 @@ public class ResetSwerveDriveCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        driveSubsystem.swerveResetWheels();
+        // driveSubsystem.swerveResetWheels();
         driveSubsystem.rebootGyro();
     }
 
