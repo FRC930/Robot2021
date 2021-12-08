@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint;
-import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.NewDriveSubsystem;
 
 /**
  * <h4>AutonConfig</h4>
@@ -64,8 +64,8 @@ public class AutonConfig {
     // Static flag for singleton
     private static AutonConfig lastInstance = null;
 
-    public static double xOffset = inchesToMeters(35.25);
-    public static double yOffset = inchesToMeters(6.5);
+    public static double xOffset = 0; // inchesToMeters(35.25);
+    public static double yOffset = 0; // inchesToMeters(6.5);
 
     //----- CONSTRUCTOR(S) -----\\
 
@@ -78,7 +78,7 @@ public class AutonConfig {
      * 
      * @param dSubsystem
      */
-    private AutonConfig(DriveSubsystem dSubsystem) {
+    private AutonConfig(NewDriveSubsystem dSubsystem) {
 
         autoVoltageConstraint = new SwerveDriveKinematicsConstraint(
             dSubsystem.getSwerveKinematics(),
@@ -119,7 +119,7 @@ public class AutonConfig {
                 .addConstraint(autoVoltageConstraint);
     }
 
-    public static void initInstance(DriveSubsystem dSubsystem) {
+    public static void initInstance(NewDriveSubsystem dSubsystem) {
         lastInstance = new AutonConfig(dSubsystem);
     }
 

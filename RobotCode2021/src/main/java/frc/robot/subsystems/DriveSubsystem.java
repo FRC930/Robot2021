@@ -117,7 +117,7 @@ public class DriveSubsystem extends SubsystemBase {
         gyro = new PigeonIMU(_intake.getIntakeMotor());
         swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics, Rotation2d.fromDegrees(0.0));
         // initializing autonomous config. Done for performance reasons
-        AutonConfig.initInstance(this);
+        // AutonConfig.initInstance(this);
     }
 
     // -------- METHODS --------\\
