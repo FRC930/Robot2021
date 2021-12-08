@@ -1,18 +1,11 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019-2020 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.subsystems;
-
-import java.util.logging.Logger;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
+import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
+import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
+import com.swervedrivespecialties.swervelib.SwerveModule;
 
-//import frc.robot.utilities.ShuffleboardUtility;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -22,255 +15,163 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.utilities.AutonConfig;
-import frc.robot.utilities.SwerveModule;
-
-//-------- SUBSYSTEM CLASS --------\\
 
 public class DriveSubsystem extends SubsystemBase {
+    public static final double KMAXSPEED = Units.inchesToMeters(16.2);
+    public static final double KTRACKWIDTH = 0.5715;
+    /**
+     * The left-to-right distance between the drivetrain wheels
+     *
+     * Should be measured from center to center.
+     */
+    public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(21);
+    /**
+     * The front-to-back distance between the drivetrain wheels.
+     *
+     * Should be measured from center to center.
+     */
+    public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(18.25);
 
-    // -------- CONSTANTS --------\\
-    private static final Logger logger = Logger.getLogger(DriveSubsystem.class.getName());
-    public static final double KSVOLTS = 0.67;
-    public static final double KVVOLT = 2.31;
-    public static final double KAVOLT = 0.0844; // this is in seconds squared per meter
-    public static final double KMAXSPEED = Units.feetToMeters(16.2); //in meters per second 
-    public static final double KMAXACCELERATION = 2; //in meters per seconds squared 
-    public static final double KMAXANGULARSPEED = Math.PI * 2;
-    //gyro values
-    public static final double KRAMSETEB = 2;
-    public static final double KRAMSETEZETA = 0.7;
+    public static final int DRIVETRAIN_PIGEON_ID = 17;
 
-    // Track width of our robot
-    public static final double KTRACKWIDTH = 0.5715; // in meters
-    public static final double KPDRIVEVEL = 1.49;
-    // -------- DECLARATIONS --------\\
+    public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
+    public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 5;
+    public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 9;
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(188.251);
 
-    private SwerveModule swerveRightFront;
-    private SwerveModule swerveRightBack;
-    private SwerveModule swerveLeftFront;
-    private SwerveModule swerveLeftBack;
+    public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 3;
+    public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7;
+    public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 11;
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(296.191);
 
-    // The gyro, used for autonomous
-    private PigeonIMU gyro;
+    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 2;
+    public static final int BACK_LEFT_MODULE_STEER_MOTOR = 6;
+    public static final int BACK_LEFT_MODULE_STEER_ENCODER = 10;
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(320.705);
 
-    private SwerveDriveOdometry swerveDriveOdometry;
+    public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 4;
+    public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 8;
+    public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 12;
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(135.077);
 
-    private int[] driveRightFrontIDs;
-    private int[] driveLeftFrontIDs;
-    private int[] driveRightBackIDs;
-    private int[] driveLeftBackIDs;
+    public static final double MAX_VOLTAGE = 12.0;
 
-    private final Translation2d m_frontLeftLocation = new Translation2d(Units.inchesToMeters(10.625),
-            Units.inchesToMeters(9.25));
-    private final Translation2d m_frontRightLocation = new Translation2d(Units.inchesToMeters(10.625),
-            Units.inchesToMeters(-9.25));
-    private final Translation2d m_backLeftLocation = new Translation2d(Units.inchesToMeters(-10.625),
-            Units.inchesToMeters(9.25));
-    private final Translation2d m_backRightLocation = new Translation2d(Units.inchesToMeters(-10.625),
-            Units.inchesToMeters(-9.25));
+    public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0
+            * SdsModuleConfigurations.MK3_STANDARD.getDriveReduction()
+            * SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI / 10;
 
-    private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation,
-            m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
-    private double gyroAngle;
+    public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND
+            / Math.hypot(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0) / 3;
 
-    private double speedModifierAuton = 1.0;
-    private double speedModifierTeleop = 0.7;
+    private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
+            // Front left
+            new Translation2d(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
+            // Front right
+            new Translation2d(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0),
+            // Back left
+            new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
+            // Back right
+            new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
-    // Drive type enum
-    public static enum DRIVE_TYPE {
-        TANK_DRIVE(0), SWERVE_DRIVE(1);
+    private final PigeonIMU m_pigeon;
 
-        private int driveType;
+    private final SwerveModule m_frontLeftModule;
+    private final SwerveModule m_frontRightModule;
+    private final SwerveModule m_backLeftModule;
+    private final SwerveModule m_backRightModule;
 
-        private DRIVE_TYPE(int _driveType) {
-            driveType = _driveType;
-        }
+    private final SwerveDriveOdometry swerveDriveOdometry;
 
-        public int Get() {
-            return this.driveType;
-        }
-    }
+    private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
-    public static DRIVE_TYPE driveType;
+    public DriveSubsystem(IntakeMotorSubsystem intake) {
+        m_frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(Mk3SwerveModuleHelper.GearRatio.FAST,
+                FRONT_LEFT_MODULE_DRIVE_MOTOR, FRONT_LEFT_MODULE_STEER_MOTOR, FRONT_LEFT_MODULE_STEER_ENCODER,
+                FRONT_LEFT_MODULE_STEER_OFFSET);
 
-    public static final double DRIVER_LEFT_AXIS_Y_DEADBAND = 0.15;
-    public static final double DRIVER_LEFT_AXIS_X_DEADBAND = 0.15;
-    public static final double DRIVER_RIGHT_AXIS_X_DEADBAND = 0.1;
+        m_frontRightModule = Mk3SwerveModuleHelper.createFalcon500(Mk3SwerveModuleHelper.GearRatio.FAST,
+                FRONT_RIGHT_MODULE_DRIVE_MOTOR, FRONT_RIGHT_MODULE_STEER_MOTOR, FRONT_RIGHT_MODULE_STEER_ENCODER,
+                FRONT_RIGHT_MODULE_STEER_OFFSET);
 
-    // -------- CONSTRUCTOR --------\\
+        m_backLeftModule = Mk3SwerveModuleHelper.createFalcon500(Mk3SwerveModuleHelper.GearRatio.FAST,
+                BACK_LEFT_MODULE_DRIVE_MOTOR, BACK_LEFT_MODULE_STEER_MOTOR, BACK_LEFT_MODULE_STEER_ENCODER,
+                BACK_LEFT_MODULE_STEER_OFFSET);
 
-    public DriveSubsystem(int[] additionalIDs, int[] _driveRightFrontIDs, int[] _driveLeftFrontIDs,
-            int[] _driveRightBackIDs, int[] _driveLeftBackIDs, DRIVE_TYPE _driveType, IntakeMotorSubsystem _intake,
-            boolean _usingGyro, boolean _slowSpeed) {
+        m_backRightModule = Mk3SwerveModuleHelper.createFalcon500(Mk3SwerveModuleHelper.GearRatio.FAST,
+                BACK_RIGHT_MODULE_DRIVE_MOTOR, BACK_RIGHT_MODULE_STEER_MOTOR, BACK_RIGHT_MODULE_STEER_ENCODER,
+                BACK_RIGHT_MODULE_STEER_OFFSET);
 
-        driveType = _driveType;
-
-        driveRightFrontIDs = _driveRightFrontIDs;
-        driveLeftFrontIDs = _driveLeftFrontIDs;
-        driveRightBackIDs = _driveRightBackIDs;
-        driveLeftBackIDs = _driveLeftBackIDs;
-
-        gyro = new PigeonIMU(_intake.getIntakeMotor());
-        setSwerveDriveMotors();
-        gyro = new PigeonIMU(_intake.getIntakeMotor());
         swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics, Rotation2d.fromDegrees(0.0));
-        // initializing autonomous config. Done for performance reasons
-        // AutonConfig.initInstance(this);
+
+        m_pigeon = new PigeonIMU(intake.getIntakeMotor());
+
+        AutonConfig.initInstance(this);
     }
 
-    // -------- METHODS --------\\
-
-    // SWERVE DRIVE
-    public void setSwerveDriveMotors() {
-        // instantiates the swerve modules on the robot (We use 4)
-        swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics, getAngleHeading(),
-                new Pose2d(0, 0, new Rotation2d()));
-        swerveRightFront = new SwerveModule(driveRightFrontIDs[0], driveRightFrontIDs[1], driveRightFrontIDs[2]);
-        swerveRightBack = new SwerveModule(driveRightBackIDs[0], driveRightBackIDs[1], driveRightBackIDs[2]);
-        swerveLeftFront = new SwerveModule(driveLeftFrontIDs[0], driveLeftFrontIDs[1], driveLeftFrontIDs[2]);
-        swerveLeftBack = new SwerveModule(driveLeftBackIDs[0], driveLeftBackIDs[1], driveLeftBackIDs[2]);
+    public void zeroGyro() {
+        m_pigeon.setFusedHeading(0.0);
     }
 
-    // SWERVE DRIVE: Drive method
-    public void swerveDrive(double targetX, double targetY, double rotation) {
-        logger.entering(DriveSubsystem.class.getName(), "swerveDrive()");
+    public Rotation2d getGyroRotation() {
+        return Rotation2d.fromDegrees(m_pigeon.getFusedHeading());
+    }
 
-        Rotation2d heading = Rotation2d.fromDegrees(gyro.getFusedHeading());
-        double speedForward = (targetY * DriveSubsystem.KMAXSPEED);
-        double speedStrafe = targetX * DriveSubsystem.KMAXSPEED;
-        double speedRotation = rotation * DriveSubsystem.KMAXANGULARSPEED;
-
-        // TODO: add in a proper flag for this
-        // Create ChassisSpeeds to determine speed of robot frame
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speedForward, speedStrafe, speedRotation, heading);
-        // Turn off field centric ChassisSpeeds speeds = new ChassisSpeeds(speedForward,
-        // speedStrafe, speedRotation);
-        SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(speeds);
-
-        // Normalize speed so speed wont go over 1
-        // This also will lower other wheel speeds if a speed goes over 1 on any wheel
-        SwerveDriveKinematics.normalizeWheelSpeeds(states, DriveSubsystem.KMAXSPEED);
-
-        swerveLeftFront.drive(states[0], speedModifierTeleop);
-        swerveRightFront.drive(states[1], speedModifierTeleop);
-        swerveLeftBack.drive(states[2], speedModifierTeleop);
-        swerveRightBack.drive(states[3], speedModifierTeleop);
-
-        logger.exiting(DriveSubsystem.class.getName(), "swerveDrive()");
-    } // end of method drive()
+    public void drive(ChassisSpeeds chassisSpeeds) {
+        m_chassisSpeeds = chassisSpeeds;
+    }
 
     public void swerveDrive(SwerveModuleState[] states) {
-        logger.entering(DriveSubsystem.class.getName(), "swerveDrive()");
-
-        swerveLeftFront.drive(states[0], speedModifierAuton);
-        swerveRightFront.drive(states[1], speedModifierAuton);
-        swerveLeftBack.drive(states[2], speedModifierAuton);
-        swerveRightBack.drive(states[3], speedModifierAuton);
-
-        logger.exiting(DriveSubsystem.class.getName(), "swerveDrive()");
-    } // end of method swerveDrive()
-
-    /**
-     * Returns the gyro's yaw, in degrees
-     * 
-     * @return The gyro's yaw value, in degrees
-     */
-    public double getHeading() {
-        // gyro.getYawPitchRoll(yawPitchRollValues);
-        // return Math.IEEEremainder(yawPitchRollValues[0], 360);
-        return gyro.getFusedHeading();
+        m_chassisSpeeds = m_kinematics.toChassisSpeeds(states);
     }
 
-    /**
-     * Returns the current heading of the robot
-     * 
-     * @return angle
-     */
-    public Rotation2d getAngleHeading() {
-        Rotation2d angle;
-        angle = new Rotation2d(Math.toRadians(getHeading()));
-        return angle;
-    }
-
-    /**
-     * Reset the Swerve Odometry to "zero"
-     */
-    public void resetSwerveOdemetry() {
-        swerveDriveOdometry.resetPosition(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), getAngleHeading());
-    }
-
-    /**
-     * Reboot the PigeonIMU (This takes around 4-10 seconds)
-     */
     public void rebootGyro() {
-        gyro.enterCalibrationMode(CalibrationMode.BootTareGyroAccel);
+        m_pigeon.enterCalibrationMode(CalibrationMode.BootTareGyroAccel);
     }
 
-    // SWERVE DRIVE
-    public Pose2d getSwervePose() {
-        Pose2d VRtn = new Pose2d();
-        if (swerveDriveOdometry != null) {
-            VRtn = swerveDriveOdometry.getPoseMeters();
-            System.out.println("Pose X: " + VRtn.getX() + " Pose Y: " + VRtn.getY());
-        } else {
-            // TODO: get LOG_LEVEL_ERROR
-            logger.log(Constants.LOG_LEVEL_WARNING, "calling null swerveDriveOdometry");
-            throw new RuntimeException("calling null swerveDriveOdometry");
-        }
-        return VRtn;
-    }
-
-    public Pose2d getPose() {
-        return getSwervePose();
-    }
-
-    public void resetPose(Pose2d newPose) {
-        swerveDriveOdometry.resetPosition(newPose, Rotation2d.fromDegrees(0));
-    }
-
-    // SWERVE DRIVE
-    public void swerveStop() {
-        swerveLeftFront.setSpeed(0);
-        swerveRightFront.setSpeed(0);
-        swerveLeftBack.setSpeed(0);
-        swerveRightBack.setSpeed(0);
-    }
-
-    // SWERVE DRIVE
-    public void swerveResetWheels() {
-        swerveLeftFront.setAngle(0);
-        swerveRightFront.setAngle(0);
-        swerveLeftBack.setAngle(0);
-        swerveRightBack.setAngle(0);
-    }
-
-    // SWERVE DRIVE
-    public void setSpeedModifier(double newSpeedModifier) {
-        speedModifierTeleop = newSpeedModifier;
-    }
-
-    // SWERVE DRIVE
     public SwerveDriveKinematics getSwerveKinematics() {
         return m_kinematics;
     }
 
-    @Override
-    // TODO: Figure out what the heck this does
-    public void periodic() throws RuntimeException {
-        // TODO: Set to different log level
-        // logger.entering(DriveSubsystem.class.getName(), "periodic()");
-        gyroAngle = gyro.getFusedHeading();
+    public void swerveStop() {
+        drive(new ChassisSpeeds(0, 0, 0));
+    }
+
+    public Pose2d getPose() {
+        Pose2d currentPose;
         if (swerveDriveOdometry != null) {
-            swerveDriveOdometry.update(Rotation2d.fromDegrees(gyroAngle), swerveLeftFront.getSwerveStates(),
-                    swerveRightFront.getSwerveStates(), swerveLeftBack.getSwerveStates(),
-                    swerveRightBack.getSwerveStates());
+            currentPose = swerveDriveOdometry.getPoseMeters();
+            return currentPose;
         } else {
-            // TODO: get LOG_LEVEL_ERROR
-            logger.log(Constants.LOG_LEVEL_WARNING, "calling null <tank/swerve>DriveOdometry");
-            throw new RuntimeException("calling null <tank/swerve>DriveOdometry");
+            throw new RuntimeException("Tried to get pose with null swerve odometry");
         }
     }
 
-} // end of the class DriveSubsystem
+    // public void swerveResetWheels() {
+    // m_frontLeftModule.setAngle(0);
+    // m_rightFrontModule.setAngle(0);
+    // m_leftBackModule.setAngle(0);
+    // m_rightBackModule.setAngle(0);
+    // }
+
+    @Override
+    public void periodic() {
+        SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+        SwerveDriveKinematics.normalizeWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
+
+        m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                states[0].angle.getRadians());
+        m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                states[1].angle.getRadians());
+        m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                states[2].angle.getRadians());
+        m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                states[3].angle.getRadians());
+
+        if (swerveDriveOdometry != null) {
+            swerveDriveOdometry.update(getGyroRotation(), states[0], states[1], states[2], states[3]);
+        } else {
+            throw new RuntimeException("Attempted to run the robot with a null swerve odometry");
+        }
+    }
+}

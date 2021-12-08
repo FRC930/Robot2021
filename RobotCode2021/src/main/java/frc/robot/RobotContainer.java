@@ -41,7 +41,6 @@ import frc.robot.commands.hoppercommands.SetHopperReverseCommand;
 // import frc.robot.commands.hoppercommands.StopHopperStateCommand;
 // --Subsystem imports
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.DriveSubsystem.DRIVE_TYPE;
 import frc.robot.subsystems.LimelightSubsystem.LimelightPipelines;
 // --Trigger imports
 import frc.robot.triggers.*;
@@ -175,7 +174,7 @@ public class RobotContainer {
   // private final ColorWheelSpinnerSubsystem colorWheelSpinnerSubsystem;
 
   // --Drive subsystem
-  private NewDriveSubsystem driveSubsystem;
+  private DriveSubsystem driveSubsystem;
   // private SwerveDriveSubsystem swerveDriveSubsystem;
 
   // --Shooter stuff subsystems
@@ -216,7 +215,7 @@ public class RobotContainer {
 
   // --Drive commands
   // private final ClimberArmCommandGroup climberArmCommandGroup;
-  private NewDriveCommand swerveDriveCommand;
+  private DriveCommand swerveDriveCommand;
 
   // --Hopper commands
   // private final StopHopperCommand stopHopperCommand;
@@ -302,7 +301,7 @@ public class RobotContainer {
     // Must be initialized after intake
     // the first boolean determines to use field orientation if true
     // the second boolean if true halves the speed
-    driveSubsystem = new NewDriveSubsystem(intakeMotorSubsystem);
+    driveSubsystem = new DriveSubsystem(intakeMotorSubsystem);
     // swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false,
     // true);
 
@@ -342,7 +341,7 @@ public class RobotContainer {
     // new JoystickButton(coDriverController, XB_RB));
 
     // drive (NOTE: This is where we bind the driver controls to the drivetrain)
-    swerveDriveCommand = new NewDriveCommand(driveSubsystem, driverController, XB_AXIS_LEFT_Y, XB_AXIS_LEFT_X,
+    swerveDriveCommand = new DriveCommand(driveSubsystem, driverController, XB_AXIS_LEFT_Y, XB_AXIS_LEFT_X,
         XB_AXIS_RIGHT_X);
 
     // hopper

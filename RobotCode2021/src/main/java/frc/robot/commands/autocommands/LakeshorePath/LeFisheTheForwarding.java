@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.subsystems.NewDriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelPistonSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
@@ -66,7 +66,7 @@ public class LeFisheTheForwarding extends SequentialCommandGroup {
          * @param fPistonSubsystem flywheel piston subsystem
          * @param turSubsystem     turret subsystem
          */
-        public LeFisheTheForwarding(NewDriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
+        public LeFisheTheForwarding(DriveSubsystem dSubsystem, IntakePistonSubsystem iPistonSubsystem,
                         IntakeMotorSubsystem iMotorSubsystem, FlywheelSubsystem fSubsystem, TowerSubsystem tSubsystem,
                         HopperSubsystem hSubsystem, KickerSubsystem kSubsystem, LimelightSubsystem lLightSubsystem,
                         FlywheelPistonSubsystem fPistonSubsystem, TurretSubsystem turSubsystem) {
