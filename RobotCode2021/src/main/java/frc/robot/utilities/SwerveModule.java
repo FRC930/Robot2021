@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
@@ -18,6 +19,11 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import frc.robot.Constants;
 
 public class SwerveModule {
+
+    private final double maxCurrent = 40;
+    private final double triggerCurrent = 40;
+    private final double thresholdTime = 0.25;
+
     private WPI_TalonFX driveFx;
 
     private WPI_TalonFX steerFx;
@@ -55,6 +61,10 @@ public class SwerveModule {
         driveFx = new WPI_TalonFX(driveID);
         steerFx = new WPI_TalonFX(turnID);
         steerEncoder = new CANCoder(encID);
+
+        // Configures all motors to be current-limited
+        driveFx.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, maxCurrent, triggerCurrent, thresholdTime));
+        steerFx.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, maxCurrent, triggerCurrent, thresholdTime));
 
         // Force brake mode on the drive motors
         driveFx.setNeutralMode(NeutralMode.Brake);
