@@ -217,7 +217,6 @@ public class RobotContainer {
   // --Drive commands
   // private final ClimberArmCommandGroup climberArmCommandGroup;
   private NewDriveCommand swerveDriveCommand;
- 
 
   // --Hopper commands
   // private final StopHopperCommand stopHopperCommand;
@@ -262,7 +261,6 @@ public class RobotContainer {
   private final ShuffleboardUtility shuffleboardUtility;
   private Command previousShuffleboardCommand;
 
-
   // --Endgame
   private final EndgameSubsystem endgameSubsystem;
 
@@ -304,7 +302,7 @@ public class RobotContainer {
     // Must be initialized after intake
     // the first boolean determines to use field orientation if true
     // the second boolean if true halves the speed
-    driveSubsystem = new NewDriveSubsystem();
+    driveSubsystem = new NewDriveSubsystem(intakeMotorSubsystem);
     // swerveDriveSubsystem = new SwerveDriveSubsystem(intakeMotorSubsystem, false,
     // true);
 
@@ -344,7 +342,8 @@ public class RobotContainer {
     // new JoystickButton(coDriverController, XB_RB));
 
     // drive (NOTE: This is where we bind the driver controls to the drivetrain)
-    swerveDriveCommand = new NewDriveCommand(driveSubsystem, driverController);
+    swerveDriveCommand = new NewDriveCommand(driveSubsystem, driverController, XB_AXIS_LEFT_Y, XB_AXIS_LEFT_X,
+        XB_AXIS_RIGHT_X);
 
     // hopper
     defaultStopHopperCommand = new DefaultStopHopperCommand(hopperSubsystem);
@@ -356,16 +355,15 @@ public class RobotContainer {
 
     // Flywheel
     // Note: Tune values for if(930 robot) and else(9930 robot) statements
-    if(RobotPreferences.getInstance().getTeamNumber() == 930) {
+    if (RobotPreferences.getInstance().getTeamNumber() == 930) {
       flywheelSubsystem.setSpeedRPMs(AccuracyChallengeCommand.BLUE_SPEED); // originally 2000 rpm
-    }
-    else{
+    } else {
       flywheelSubsystem.setSpeedRPMs(AccuracyChallengeCommand.RED_SPEED); // originally 2500 rpm
     }
     defaultFlywheelCommand = new DefaultFlywheelCommand(flywheelSubsystem);
     accuracyChallengeCommand = new AccuracyChallengeCommand(flywheelSubsystem, flywheelPistonSubsystem,
         limelightSubsystem);
-    
+
     defaultFullExtendFlywheelCommand = new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem);
 
     // turret
@@ -395,173 +393,74 @@ public class RobotContainer {
     // kickerSubsystem);
 
     shuffleboardUtility.setDefaultAutonOptions("Default (None)", null);
-    
+
     // SHORT
 
-    shuffleboardUtility.addAutonOptions(
-      "Trench, Rendezvous and Shoot - Secondary", 
-      new LeFishe(
-        driveSubsystem,
-        intakePistonSubsystem,
-        intakeMotorSubsystem,
-        flywheelSubsystem,
-        towerSubsystem,
-        hopperSubsystem,
-        kickerSubsystem,
-        limelightSubsystem,
-        flywheelPistonSubsystem,
-        turretSubsystem
-      )
-    );
+    shuffleboardUtility.addAutonOptions("Trench, Rendezvous and Shoot - Secondary",
+        new LeFishe(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem, towerSubsystem,
+            hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, turretSubsystem));
 
-    shuffleboardUtility.addAutonOptions(
-      "Rendezvous and Shoot - Secondary", 
-      new LeFisheTheFishening(
-        driveSubsystem,
-        intakePistonSubsystem,
-        intakeMotorSubsystem,
-        flywheelSubsystem,
-        towerSubsystem,
-        hopperSubsystem,
-        kickerSubsystem,
-        limelightSubsystem,
-        flywheelPistonSubsystem,
-        turretSubsystem
-      )
-    );
-    
-    shuffleboardUtility.addAutonOptions(
-      "Trench and Shoot - Secondary", 
-      new LeFisheTheBackening(
-        driveSubsystem,
-        intakePistonSubsystem,
-        intakeMotorSubsystem,
-        flywheelSubsystem,
-        towerSubsystem,
-        hopperSubsystem,
-        kickerSubsystem,
-        limelightSubsystem,
-        flywheelPistonSubsystem,
-        turretSubsystem
-      )
-    );
+    shuffleboardUtility.addAutonOptions("Rendezvous and Shoot - Secondary",
+        new LeFisheTheFishening(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+            towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem,
+            turretSubsystem));
+
+    shuffleboardUtility.addAutonOptions("Trench and Shoot - Secondary",
+        new LeFisheTheBackening(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+            towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem,
+            turretSubsystem));
 
     // MISCELLANEOUS
 
-    shuffleboardUtility.addAutonOptions(
-      "Robot Forward and Shoot", 
-      new LeFisheThe2nd(
-        driveSubsystem,
-        intakePistonSubsystem,
-        intakeMotorSubsystem,
-        flywheelSubsystem,
-        towerSubsystem,
-        hopperSubsystem,
-        kickerSubsystem,
-        limelightSubsystem,
-            flywheelPistonSubsystem,
-            turretSubsystem
-      )
-    );
+    shuffleboardUtility.addAutonOptions("Robot Forward and Shoot",
+        new LeFisheThe2nd(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+            towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem,
+            turretSubsystem));
 
-    shuffleboardUtility.addAutonOptions(
-      "Robot Forward and NO Shoot", 
-      new LeFisheTheForwarding(
-        driveSubsystem,
-        intakePistonSubsystem,
-        intakeMotorSubsystem,
-        flywheelSubsystem,
-        towerSubsystem,
-        hopperSubsystem,
-        kickerSubsystem,
-        limelightSubsystem,
-        flywheelPistonSubsystem,
-        turretSubsystem
-      )
-    );
+    shuffleboardUtility.addAutonOptions("Robot Forward and NO Shoot",
+        new LeFisheTheForwarding(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+            towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem,
+            turretSubsystem));
 
     // LONG
-    
-    shuffleboardUtility.addAutonOptions(
-      "Trench, Rendezvous and Shoot - Primary", 
-      new LeFishe_Long(
-        driveSubsystem,
-        intakePistonSubsystem,
-        intakeMotorSubsystem,
-        flywheelSubsystem,
-        towerSubsystem,
-        hopperSubsystem,
-        kickerSubsystem,
-        limelightSubsystem,
-        flywheelPistonSubsystem,
-        turretSubsystem
-      )
-    );
 
-    shuffleboardUtility.addAutonOptions(
-      "Rendezvous and Shoot - Primary", 
-      new LeFisheTheFishening_Long(
-        driveSubsystem,
-        intakePistonSubsystem,
-        intakeMotorSubsystem,
-        flywheelSubsystem,
-        towerSubsystem,
-        hopperSubsystem,
-        kickerSubsystem,
-        limelightSubsystem,
-        flywheelPistonSubsystem,
-        turretSubsystem
-      )
-    );
-    
-    shuffleboardUtility.addAutonOptions(
-      "Trench and Shoot - Primary", 
-      new LeFisheTheBackening_Long(
-        driveSubsystem,
-        intakePistonSubsystem,
-        intakeMotorSubsystem,
-        flywheelSubsystem,
-        towerSubsystem,
-        hopperSubsystem,
-        kickerSubsystem,
-        limelightSubsystem,
-        flywheelPistonSubsystem,
-        turretSubsystem
-      )
-    );
-    
+    shuffleboardUtility.addAutonOptions("Trench, Rendezvous and Shoot - Primary",
+        new LeFishe_Long(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem, towerSubsystem,
+            hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem, turretSubsystem));
+
+    shuffleboardUtility.addAutonOptions("Rendezvous and Shoot - Primary",
+        new LeFisheTheFishening_Long(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+            towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem,
+            turretSubsystem));
+
+    shuffleboardUtility.addAutonOptions("Trench and Shoot - Primary",
+        new LeFisheTheBackening_Long(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+            towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem,
+            turretSubsystem));
+
     // Taken out unless explicity needed. Runs auton without AutoTurretTurnCommand.
     // shuffleboardUtility.addAutonOptions(
-    //   "9930's No Auto Turret Turn", 
-    //   new LeFisheCantAim(
-    //     driveSubsystem,
-    //     intakePistonSubsystem,
-    //     intakeMotorSubsystem,
-    //     flywheelSubsystem,
-    //     towerSubsystem,
-    //     hopperSubsystem,
-    //     kickerSubsystem,
-    //     limelightSubsystem,
-    //     flywheelPistonSubsystem,
-    //     turretSubsystem
-    //   )
+    // "9930's No Auto Turret Turn",
+    // new LeFisheCantAim(
+    // driveSubsystem,
+    // intakePistonSubsystem,
+    // intakeMotorSubsystem,
+    // flywheelSubsystem,
+    // towerSubsystem,
+    // hopperSubsystem,
+    // kickerSubsystem,
+    // limelightSubsystem,
+    // flywheelPistonSubsystem,
+    // turretSubsystem
+    // )
     // );
 
-    shuffleboardUtility.setDefaultShuffleboardOptions(
-      "Competition", 
-      new ShuffleboardCompetitionCommand()
-    );
+    shuffleboardUtility.setDefaultShuffleboardOptions("Competition", new ShuffleboardCompetitionCommand());
 
-    shuffleboardUtility.addShuffleboardOptions(
-      "Debug", 
-      new ShuffleboardDebugCommand()
-    );
+    shuffleboardUtility.addShuffleboardOptions("Debug", new ShuffleboardDebugCommand());
 
-    
-    
     previousShuffleboardCommand = null;
 
-    
     // --Bindings
     configureButtonBindings(); // Configures buttons for drive team
 
@@ -625,18 +524,26 @@ public class RobotContainer {
     JoystickButton retractHoodButton = new JoystickButton(coDriverController, XB_RB);
 
     // --Command binds
-    //JoystickButton startAccuracyChallengeButton = new JoystickButton(coDriverController, XB_START);
+    // JoystickButton startAccuracyChallengeButton = new
+    // JoystickButton(coDriverController, XB_START);
 
     // D-pad controls for two-piston hood
     // POVTrigger fullExtendButton = new POVTrigger(driverController, 0, XB_POV_UP);
-    // POVTrigger fullRetractButton = new POVTrigger(driverController, 0, XB_POV_DOWN);
-    // POVTrigger halfExtendTopButton = new POVTrigger(driverController, 0, XB_POV_LEFT);
-    // POVTrigger halfExtendBottomButton = new POVTrigger(driverController, 0, XB_POV_RIGHT);
+    // POVTrigger fullRetractButton = new POVTrigger(driverController, 0,
+    // XB_POV_DOWN);
+    // POVTrigger halfExtendTopButton = new POVTrigger(driverController, 0,
+    // XB_POV_LEFT);
+    // POVTrigger halfExtendBottomButton = new POVTrigger(driverController, 0,
+    // XB_POV_RIGHT);
 
-    // fullExtendButton.toggleWhenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem));
-    // fullRetractButton.toggleWhenActive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
-    // halfExtendTopButton.toggleWhenActive(new HalfExtendTopFlywheelPistonCommand(flywheelPistonSubsystem));
-    // halfExtendBottomButton.toggleWhenActive(new HalfExtendBottomFlywheelPistonCommand(flywheelPistonSubsystem));
+    // fullExtendButton.toggleWhenActive(new
+    // FullExtendFlywheelPistonCommand(flywheelPistonSubsystem));
+    // fullRetractButton.toggleWhenActive(new
+    // FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    // halfExtendTopButton.toggleWhenActive(new
+    // HalfExtendTopFlywheelPistonCommand(flywheelPistonSubsystem));
+    // halfExtendBottomButton.toggleWhenActive(new
+    // HalfExtendBottomFlywheelPistonCommand(flywheelPistonSubsystem));
     retractHoodButton.whenHeld(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
     // Rotational control command bind
     // rotationalButton.whileActiveOnce(new
@@ -647,8 +554,10 @@ public class RobotContainer {
     // positionalButton.whileActiveOnce(positionalControlCommandGroup);
 
     // Drive command binds
-    // swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y, XB_AXIS_RIGHT_X);
-    //endgameRetractButton.whenHeld(new EndgameRunCommand(endgameSubsystem, "down"));//.whenReleased(new EndgameCommandFlipState(endgameSubsystem));
+    // swerveDriveCommand.setSwerveAxis(XB_AXIS_LEFT_X, XB_AXIS_LEFT_Y,
+    // XB_AXIS_RIGHT_X);
+    // endgameRetractButton.whenHeld(new EndgameRunCommand(endgameSubsystem,
+    // "down"));//.whenReleased(new EndgameCommandFlipState(endgameSubsystem));
     endgameExtendButton.whenHeld(new EndgameRunCommand(endgameSubsystem));
 
     // Shooter command binds
@@ -686,7 +595,8 @@ public class RobotContainer {
     Trigger manualFlywheelButton = new JoystickButton(driverController, XB_AXIS_RT).and(inManualModeTrigger);
 
     // ZL Button
-    //AxisTrigger manualFlywheelPistonButton = new AxisTrigger(driverController, XB_AXIS_LT);// .and(inManualModeTrigger);
+    // AxisTrigger manualFlywheelPistonButton = new AxisTrigger(driverController,
+    // XB_AXIS_LT);// .and(inManualModeTrigger);
 
     // --Command binds
 
@@ -702,18 +612,21 @@ public class RobotContainer {
         .whenInactive(new StopTowerCommand(towerSubsystem));
     // manual flywheel spinning
 
-   // manualFlywheelButton.whenActive(new RunFlywheelCommand(flywheelSubsystem, 0.7))
-      //  .whenInactive(new StopFlywheelCommand(flywheelSubsystem));
+    // manualFlywheelButton.whenActive(new RunFlywheelCommand(flywheelSubsystem,
+    // 0.7))
+    // .whenInactive(new StopFlywheelCommand(flywheelSubsystem));
 
     // manual flywheel piston stuff
-    //manualFlywheelPistonButton.whenActive(new FullExtendFlywheelPistonCommand(flywheelPistonSubsystem))
-      //  .whenInactive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
+    // manualFlywheelPistonButton.whenActive(new
+    // FullExtendFlywheelPistonCommand(flywheelPistonSubsystem))
+    // .whenInactive(new FullRetractFlywheelPistonCommand(flywheelPistonSubsystem));
 
-    reverseHopperButton.whileActiveOnce(new SetHopperReverseCommand(hopperSubsystem, Constants.HOPPER_REVERSE_SPEED, true));
+    reverseHopperButton
+        .whileActiveOnce(new SetHopperReverseCommand(hopperSubsystem, Constants.HOPPER_REVERSE_SPEED, true));
     // manual
     // stopHopperButton.whileActiveOnce(stopHopperStateCommand);
 
-    //startAccuracyChallengeButton.whileActiveContinuous(accuracyChallengeCommand);
+    // startAccuracyChallengeButton.whileActiveContinuous(accuracyChallengeCommand);
   } // end of method configureDriverBindings()
 
   private void configureCodriverBindings() {
@@ -792,7 +705,8 @@ public class RobotContainer {
     // --The instance of the scheduler
     CommandScheduler scheduler = CommandScheduler.getInstance();
 
-    scheduler.unregisterSubsystem(hopperSubsystem, turretSubsystem, flywheelSubsystem, kickerSubsystem, towerSubsystem, flywheelPistonSubsystem);
+    scheduler.unregisterSubsystem(hopperSubsystem, turretSubsystem, flywheelSubsystem, kickerSubsystem, towerSubsystem,
+        flywheelPistonSubsystem);
     scheduler.setDefaultCommand(turretSubsystem, joystickTurretCommand);// new AutoAimTurretCommand(limelightSubsystem,
                                                                         // turretSubsystem, new
                                                                         // PIDController(Constants.TURRET_P,
@@ -808,8 +722,9 @@ public class RobotContainer {
   }
 
   public Command getShuffleboardCommand() {
-    Command currentShuffleboardCommand = shuffleboardUtility.getSelectedShuffleboardOption();;
-    if(currentShuffleboardCommand != previousShuffleboardCommand) {
+    Command currentShuffleboardCommand = shuffleboardUtility.getSelectedShuffleboardOption();
+    ;
+    if (currentShuffleboardCommand != previousShuffleboardCommand) {
       previousShuffleboardCommand = currentShuffleboardCommand;
     } else {
       currentShuffleboardCommand = null;
@@ -831,87 +746,51 @@ public class RobotContainer {
 
     // TODO remove when merge with conors branch
     AutonConfig.initInstance(driveSubsystem);
-    /*return new LeFishe(driveSubsystem,
-    intakePistonSubsystem,
-      intakeMotorSubsystem,
-        flywheelSubsystem,
-        towerSubsystem,
-          hopperSubsystem,
-          kickerSubsystem,
-            limelightSubsystem,
-            flywheelPistonSubsystem);*/
-            /*
-            return new LeFisheTheFishening(driveSubsystem,
-            intakePistonSubsystem,
-              intakeMotorSubsystem,
-                flywheelSubsystem,
-                towerSubsystem,
-                  hopperSubsystem,
-                  kickerSubsystem,
-                    limelightSubsystem,
-                    flywheelPistonSubsystem);
-                    */
+    /*
+     * return new LeFishe(driveSubsystem, intakePistonSubsystem,
+     * intakeMotorSubsystem, flywheelSubsystem, towerSubsystem, hopperSubsystem,
+     * kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem);
+     */
+    /*
+     * return new LeFisheTheFishening(driveSubsystem, intakePistonSubsystem,
+     * intakeMotorSubsystem, flywheelSubsystem, towerSubsystem, hopperSubsystem,
+     * kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem);
+     */
     return shuffleboardUtility.getSelectedAutonPath();
     // Select the correct autonomous path with the galactic path enum we set
     /*
-    switch(GalacticPathUtil.getAutonomousPath(limelightSubsystem)) {
-      case RED_PATH_A:
-          return new GalacticSearch_A_RedCommand(driveSubsystem,
-                                                intakePistonSubsystem,
-                                                  intakeMotorSubsystem,
-                                                    flywheelSubsystem,
-                                                    towerSubsystem,
-                                                      hopperSubsystem,
-                                                      kickerSubsystem,
-                                                        limelightSubsystem,
-                                                        flywheelPistonSubsystem);
-      case BLUE_PATH_A:
-        return new GalacticSearch_A_BlueCommand(driveSubsystem,
-                                                intakePistonSubsystem,
-                                                  intakeMotorSubsystem,
-                                                    flywheelSubsystem,
-                                                    towerSubsystem,
-                                                      hopperSubsystem,
-                                                      kickerSubsystem,
-                                                        limelightSubsystem,
-                                                        flywheelPistonSubsystem);
-      case RED_PATH_B:
-        return new GalacticSearch_B_RedCommand(driveSubsystem,
-                                              intakePistonSubsystem,
-                                              intakeMotorSubsystem,
-                                                flywheelSubsystem,
-                                                towerSubsystem,
-                                                  hopperSubsystem,
-                                                  kickerSubsystem,
-                                                    limelightSubsystem,
-                                                    flywheelPistonSubsystem);
-      case BLUE_PATH_B:
-        return new GalacticSearch_B_BlueCommand(driveSubsystem,
-                                              intakePistonSubsystem,
-                                              intakeMotorSubsystem,
-                                                flywheelSubsystem,
-                                                towerSubsystem,
-                                                  hopperSubsystem,
-                                                  kickerSubsystem,
-                                                    limelightSubsystem,
-                                                    flywheelPistonSubsystem);
-      default:
-          System.out.println("No GalacticSearch path found!");
-          throw new NullPointerException("No Path Selected");
-    }
-    */
+     * switch(GalacticPathUtil.getAutonomousPath(limelightSubsystem)) { case
+     * RED_PATH_A: return new GalacticSearch_A_RedCommand(driveSubsystem,
+     * intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+     * towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem,
+     * flywheelPistonSubsystem); case BLUE_PATH_A: return new
+     * GalacticSearch_A_BlueCommand(driveSubsystem, intakePistonSubsystem,
+     * intakeMotorSubsystem, flywheelSubsystem, towerSubsystem, hopperSubsystem,
+     * kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem); case
+     * RED_PATH_B: return new GalacticSearch_B_RedCommand(driveSubsystem,
+     * intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
+     * towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem,
+     * flywheelPistonSubsystem); case BLUE_PATH_B: return new
+     * GalacticSearch_B_BlueCommand(driveSubsystem, intakePistonSubsystem,
+     * intakeMotorSubsystem, flywheelSubsystem, towerSubsystem, hopperSubsystem,
+     * kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem); default:
+     * System.out.println("No GalacticSearch path found!"); throw new
+     * NullPointerException("No Path Selected"); }
+     */
     // return new GalacticSearch_B_BlueCommand(driveSubsystem,
-    //                                             intakePistonSubsystem,
-    //                                               intakeMotorSubsystem,
-    //                                                 flywheelSubsystem,
-    //                                                 towerSubsystem,
-    //                                                   hopperSubsystem,
-    //                                                   kickerSubsystem,
-    //                                                     limelightSubsystem,
-    //                                                     flywheelPistonSubsystem); 
-    // return new BarrelRacingCommand(driveSubsystem, intakePistonSubsystem, intakeMotorSubsystem, flywheelSubsystem,
-    //   towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem, flywheelPistonSubsystem);
-        // Run path following command, then stop at the end.
+    // intakePistonSubsystem,
+    // intakeMotorSubsystem,
+    // flywheelSubsystem,
+    // towerSubsystem,
+    // hopperSubsystem,
+    // kickerSubsystem,
+    // limelightSubsystem,
+    // flywheelPistonSubsystem);
+    // return new BarrelRacingCommand(driveSubsystem, intakePistonSubsystem,
+    // intakeMotorSubsystem, flywheelSubsystem,
+    // towerSubsystem, hopperSubsystem, kickerSubsystem, limelightSubsystem,
+    // flywheelPistonSubsystem);
+    // Run path following command, then stop at the end.
   }
 
   // -------- METHODS FOR SHUFFLEBOARD --------\\
@@ -925,68 +804,68 @@ public class RobotContainer {
     // shuffleboardUtility.putTestingTab();
   }
 
-  //This begins the robot sim and sets our a trajectory and paths.
+  // This begins the robot sim and sets our a trajectory and paths.
   public void robotSimInit() {
     trajectoryJSON = Filesystem.getDeployDirectory() + "/Paths/Bounce.wpilib.json";
-    //Tries to create a trajectory from a JSON file. Logs and throws exception if fails.
+    // Tries to create a trajectory from a JSON file. Logs and throws exception if
+    // fails.
     try {
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        logger.log(Constants.LOG_LEVEL_INFO, "Bounce tragectory path: " + trajectoryPath.toString());
-        m_trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+      logger.log(Constants.LOG_LEVEL_INFO, "Bounce tragectory path: " + trajectoryPath.toString());
+      m_trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
     } catch (IOException ex) {
-        DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-        logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
-        throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+      logger.log(Constants.LOG_LEVEL_INFO, "Unable to open trajectory: " + trajectoryJSON);
+      throw new RuntimeException("Unable to open trajectory: " + trajectoryJSON);
     }
   }
 
-  //Updates simulated robot periodically.
+  // Updates simulated robot periodically.
   public void robotSimPeriodic() {
     m_simDrive.periodic();
   }
 
-  //Begins autonomous simulation. Resets position and timer.
-  public void autoSimInit(){
+  // Begins autonomous simulation. Resets position and timer.
+  public void autoSimInit() {
     m_timer.reset();
     m_timer.start();
     m_simDrive.resetOdometry(m_trajectory.getInitialPose());
   }
 
-  //Updates the position of the simulated robot autonomous periodically.
-  public void autoSimPeriodic(){
+  // Updates the position of the simulated robot autonomous periodically.
+  public void autoSimPeriodic() {
     double elapsed = m_timer.get();
     Trajectory.State reference = m_trajectory.sample(elapsed);
     ChassisSpeeds speeds = m_ramsete.calculate(m_simDrive.getPose(), reference);
     m_simDrive.drive(speeds.vxMetersPerSecond, speeds.omegaRadiansPerSecond);
   }
 
-  //Updates simulation
+  // Updates simulation
   public void simPeriodic() {
     m_simDrive.simulationPeriodic();
   }
+
   //
   public void testInit() {
     // stop subsystem during test mode\
-    safetystopSubsystems();         
+    safetystopSubsystems();
   }
 
   public void testPeriodic() {
-    //watch shuffle board button to see if we need to move endgame
-    if(driverController.getRawButton(XB_BACK)){
+    // watch shuffle board button to see if we need to move endgame
+    if (driverController.getRawButton(XB_BACK)) {
       endgameSubsystem.setSpeed(-0.2);
-    }
-    else if(driverController.getRawButton(XB_START)){
+    } else if (driverController.getRawButton(XB_START)) {
       endgameSubsystem.setSpeed(0.2);
-    }
-    else {
+    } else {
       endgameSubsystem.setSpeed(0.0);
     }
   }
-  
-  public void safetystopSubsystems(){
-         flywheelSubsystem.setVoltage(0.0);
-         driveSubsystem.swerveStop();
-         hopperSubsystem.setSpeed(0.0);
+
+  public void safetystopSubsystems() {
+    flywheelSubsystem.setVoltage(0.0);
+    driveSubsystem.swerveStop();
+    hopperSubsystem.setSpeed(0.0);
   }
 
 } // end of class RobotContainer

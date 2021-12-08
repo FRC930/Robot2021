@@ -64,8 +64,8 @@ public class AutonConfig {
     // Static flag for singleton
     private static AutonConfig lastInstance = null;
 
-    public static double xOffset = inchesToMeters(35.25);
-    public static double yOffset = inchesToMeters(6.5);
+    public static double xOffset = 0; // inchesToMeters(35.25);
+    public static double yOffset = 0; // inchesToMeters(6.5);
 
     //----- CONSTRUCTOR(S) -----\\
 

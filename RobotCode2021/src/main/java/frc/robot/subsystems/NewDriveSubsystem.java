@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.AutonConfig;
 
 public class NewDriveSubsystem extends SubsystemBase {
     /**
@@ -56,10 +57,10 @@ public class NewDriveSubsystem extends SubsystemBase {
 
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0
             * SdsModuleConfigurations.MK3_STANDARD.getDriveReduction()
-            * SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
+            * SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI / 10;
 
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND
-            / Math.hypot(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0);
+            / Math.hypot(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0) / 3;
 
     private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
             // Front left
@@ -71,7 +72,7 @@ public class NewDriveSubsystem extends SubsystemBase {
             // Back right
             new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
-    private final PigeonIMU m_pigeon = new PigeonIMU(DRIVETRAIN_PIGEON_ID);
+    private final PigeonIMU m_pigeon;
 
     private final SwerveModule m_frontLeftModule;
     private final SwerveModule m_frontRightModule;
@@ -82,7 +83,7 @@ public class NewDriveSubsystem extends SubsystemBase {
 
     private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
-    public NewDriveSubsystem() {
+    public NewDriveSubsystem(IntakeMotorSubsystem intake) {
         m_frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(Mk3SwerveModuleHelper.GearRatio.FAST,
                 FRONT_LEFT_MODULE_DRIVE_MOTOR, FRONT_LEFT_MODULE_STEER_MOTOR, FRONT_LEFT_MODULE_STEER_ENCODER,
                 FRONT_LEFT_MODULE_STEER_OFFSET);
@@ -100,6 +101,10 @@ public class NewDriveSubsystem extends SubsystemBase {
                 BACK_RIGHT_MODULE_STEER_OFFSET);
 
         swerveDriveOdometry = new SwerveDriveOdometry(m_kinematics, Rotation2d.fromDegrees(0.0));
+
+        m_pigeon = new PigeonIMU(intake.getIntakeMotor());
+
+        AutonConfig.initInstance(this);
     }
 
     public void zeroGyro() {

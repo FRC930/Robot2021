@@ -15,14 +15,15 @@ public class NewDriveCommand extends CommandBase {
     private final DoubleSupplier translationY;
     private final DoubleSupplier rotation;
 
-    public NewDriveCommand(NewDriveSubsystem driveSubsystem, Joystick driverController) {
+    public NewDriveCommand(NewDriveSubsystem driveSubsystem, Joystick driverController, int driverLeftX,
+            int driverLeftY, int driverRightX) {
         m_driveSubsystem = driveSubsystem;
         m_driverController = driverController;
-        translationX = () -> -modifyAxis(m_driverController.getY(GenericHID.Hand.kLeft))
+        translationX = () -> -modifyAxis(m_driverController.getRawAxis(driverLeftX))
                 * NewDriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND;
-        translationY = () -> -modifyAxis(m_driverController.getX(GenericHID.Hand.kLeft))
+        translationY = () -> -modifyAxis(m_driverController.getRawAxis(driverLeftY))
                 * NewDriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND;
-        rotation = () -> -modifyAxis(m_driverController.getX(GenericHID.Hand.kRight))
+        rotation = () -> -modifyAxis(m_driverController.getRawAxis(driverRightX))
                 * NewDriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
 
         addRequirements(m_driveSubsystem);
