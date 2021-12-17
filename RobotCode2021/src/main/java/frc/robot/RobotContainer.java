@@ -2,80 +2,95 @@
 
 package frc.robot;
 
-// --Library Commands
-import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.commands.autocommands.LakeshorePath.LeFishe;
-import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening;
-import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening_Long;
-import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheForwarding;
-import frc.robot.commands.autocommands.LakeshorePath.LeFishe_Long;
-// import frc.robot.commands.autocommands.LakeshorePath.LeFisheCantAim;
-import frc.robot.commands.autocommands.LakeshorePath.LeFisheThe2nd;
-import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening;
-import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening_Long;
-// --Our Commands
-// import frc.robot.commands.autocommands.paths.*;
-import frc.robot.commands.drivecommands.*;
-
-import frc.robot.commands.intakecommands.intakemotorcommands.*;
-import frc.robot.commands.intakecommands.intakepistoncommands.*;
-import frc.robot.commands.kickercommands.*;
-import frc.robot.commands.limelightcommands.*;
-import frc.robot.commands.shootercommands.*;
-import frc.robot.commands.shootercommands.flywheelcommands.*;
-import frc.robot.commands.shootercommands.pistoncommands.*;
-import frc.robot.commands.shuffleboardcommands.ShuffleboardCompetitionCommand;
-import frc.robot.commands.shuffleboardcommands.ShuffleboardDebugCommand;
-import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
-
-import frc.robot.commands.towercommands.*;
-
-import frc.robot.commands.turretcommads.*;
-//import frc.robot.commands.ultrasoniccommands.UltrasonicPingCommand;
-import frc.robot.commands.endgamecommands.*;
-// import frc.robot.commands.hoppercommands.DefaultHopperCommand;
-import frc.robot.commands.hoppercommands.DefaultHopperCommandGroup;
-import frc.robot.commands.hoppercommands.DefaultStopHopperCommand;
-import frc.robot.commands.hoppercommands.SetHopperCommand;
-import frc.robot.commands.hoppercommands.SetHopperReverseCommand;
-// import frc.robot.commands.hoppercommands.StopHopperStateCommand;
-// --Subsystem imports
-import frc.robot.subsystems.*;
-import frc.robot.subsystems.LimelightSubsystem.LimelightPipelines;
-// --Trigger imports
-import frc.robot.triggers.*;
-
-// --Utility imports
-import frc.robot.utilities.*;
-
-import java.util.logging.Logger;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+// limelight
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 // --Other imports
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.system.LinearSystem;
-import edu.wpi.first.wpilibj.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+// --Library Commands
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpiutil.math.numbers.N2;
-
-// limelight
-import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.commands.autocommands.LakeshorePath.LeFishe;
+// import frc.robot.commands.autocommands.LakeshorePath.LeFisheCantAim;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheThe2nd;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheBackening_Long;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheFishening_Long;
+import frc.robot.commands.autocommands.LakeshorePath.LeFisheTheForwarding;
+import frc.robot.commands.autocommands.LakeshorePath.LeFishe_Long;
+// --Our Commands
+// import frc.robot.commands.autocommands.paths.*;
+import frc.robot.commands.drivecommands.DriveCommand;
+import frc.robot.commands.drivecommands.ResetSwerveDriveCommand;
+//import frc.robot.commands.ultrasoniccommands.UltrasonicPingCommand;
+import frc.robot.commands.endgamecommands.*;
+// import frc.robot.commands.hoppercommands.DefaultHopperCommand;
+import frc.robot.commands.hoppercommands.DefaultHopperCommandGroup;
+import frc.robot.commands.hoppercommands.DefaultStopHopperCommand;
+import frc.robot.commands.hoppercommands.SetHopperReverseCommand;
+import frc.robot.commands.intakecommands.intakemotorcommands.RunIntakeMotorsCommand;
+import frc.robot.commands.intakecommands.intakemotorcommands.StopIntakeMotorsCommand;
+import frc.robot.commands.intakecommands.intakepistoncommands.ExtendIntakePistonCommand;
+import frc.robot.commands.intakecommands.intakepistoncommands.RetractIntakePistonCommand;
+import frc.robot.commands.kickercommands.RunKickerCommand;
+import frc.robot.commands.kickercommands.StopKickerCommand;
+import frc.robot.commands.limelightcommands.SetLimelightLEDStateCommand;
+import frc.robot.commands.shootercommands.AccuracyChallengeCommand;
+import frc.robot.commands.shootercommands.ShootPowerCellCommandGroup;
+import frc.robot.commands.shootercommands.StopJamCommandGroup;
+import frc.robot.commands.shootercommands.StopTowerKickerCommandGroup;
+import frc.robot.commands.shootercommands.flywheelcommands.DefaultFlywheelCommand;
+import frc.robot.commands.shootercommands.pistoncommands.FullExtendFlywheelPistonCommand;
+import frc.robot.commands.shootercommands.pistoncommands.FullRetractFlywheelPistonCommand;
+import frc.robot.commands.shuffleboardcommands.ShuffleboardCompetitionCommand;
+import frc.robot.commands.shuffleboardcommands.ShuffleboardDebugCommand;
+import frc.robot.commands.towercommands.RunTowerCommand;
+import frc.robot.commands.towercommands.StopTowerCommand;
+import frc.robot.commands.turretcommads.AutoAimTurretCommand;
+import frc.robot.commands.turretcommads.JoystickTurretCommand;
+import frc.robot.commands.turretcommads.SetTurretPositionCommand;
+// import frc.robot.commands.hoppercommands.StopHopperStateCommand;
+// --Subsystem imports
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.EndgameSubsystem;
+import frc.robot.subsystems.FlywheelPistonSubsystem;
+import frc.robot.subsystems.FlywheelSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.IntakeMotorSubsystem;
+import frc.robot.subsystems.IntakePistonSubsystem;
+import frc.robot.subsystems.KickerSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.TowerSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
+// --Trigger imports
+import frc.robot.triggers.*;
+// --Utility imports
+import frc.robot.utilities.AutonConfig;
+import frc.robot.utilities.RobotPreferences;
+import frc.robot.utilities.ShuffleboardUtility;
+import frc.robot.utilities.SimulatedDrivetrain;
 
 //-------- CLASS RobotContainer --------\\
 
@@ -209,7 +224,7 @@ public class RobotContainer {
   // private final UltrasonicSubsystem ultrasonicSubsystem;
 
   // --LED subsystem
-  LEDSubsystem ledSubsystem;
+  //LEDSubsystem ledSubsystem;
 
   // -------- COMMANDS --------\\
 
@@ -314,7 +329,7 @@ public class RobotContainer {
     // (CLIMBER_ARM_ID, CLIMBER_ENCODER_PORT_ID)
     // climberArmSubsystem = new ClimberArmSubsystem(12, 2);
 
-    ledSubsystem = new LEDSubsystem(0, 60);
+    //ledSubsystem = new LEDSubsystem(0, 60);
 
     // (_limelightNetworkInstance)
     limelightSubsystem = new LimelightSubsystem(NetworkTableInstance.getDefault().getTable("limelight"));

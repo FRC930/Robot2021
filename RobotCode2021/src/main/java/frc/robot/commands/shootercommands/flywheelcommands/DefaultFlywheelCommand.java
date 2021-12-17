@@ -9,21 +9,19 @@
 
 package frc.robot.commands.shootercommands.flywheelcommands;
 
-//import java.util.logging.*;
-
-import edu.wpi.first.wpilibj.controller.LinearQuadraticRegulator;
-import edu.wpi.first.wpilibj.estimator.KalmanFilter;
-import edu.wpi.first.wpilibj.system.LinearSystem;
-import edu.wpi.first.wpilibj.system.LinearSystemLoop;
-import edu.wpi.first.wpilibj.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.LinearQuadraticRegulator;
+import edu.wpi.first.math.estimator.KalmanFilter;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.LinearSystemLoop;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.utilities.ShuffleboardUtility;
-import edu.wpi.first.wpiutil.math.Nat;
-import edu.wpi.first.wpiutil.math.VecBuilder;
-import edu.wpi.first.wpiutil.math.numbers.N1;
 
 //-------- COMMAND CLASS --------\\
 
@@ -76,7 +74,7 @@ public class DefaultFlywheelCommand extends CommandBase {
     //this code has been implamented from the Wpilib control base system
     m_FlywheelSubsystem = flywheelSubsystem;
     addRequirements(m_FlywheelSubsystem);
-    m_flywheelPlant = LinearSystemId.createFlywheelSystem(DCMotor.getNEO(2), KFLYWHEELMOMENTOFINERTIA,
+    m_flywheelPlant = LinearSystemId.createFlywheelSystem(edu.wpi.first.math.system.plant.DCMotor.getNEO(2), KFLYWHEELMOMENTOFINERTIA,
         KFLYWHEELGEARING);
 
     m_controller = new LinearQuadraticRegulator<>(m_flywheelPlant, 

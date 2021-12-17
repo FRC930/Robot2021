@@ -14,13 +14,16 @@
     "**/.factorypath": true,
     "**/*~": true
   },
-
-  "java.test.config": {
-    "name": "testlibs",
-    "env": {
-      "path": "{$workspaceFolder}\\build\\tmp\\jniExtractDir"
-    }
-  },
-
-  "java.test.deafultConfig": "testlibs"
+  "java.test.config": [
+    {
+      "name": "WPIlibUnitTests",
+      "workingDirectory": "${workspaceFolder}/build/jni/release",
+      "vmargs": [ "-Djava.library.path=${workspaceFolder}/build/jni/release" ],
+      "env": {
+        "LD_LIBRARY_PATH": "${workspaceFolder}/build/jni/release" ,
+        "DYLD_LIBRARY_PATH": "${workspaceFolder}/build/jni/release"
+      }
+    },
+  ],
+  "java.test.defaultConfig": "WPIlibUnitTests"
 }

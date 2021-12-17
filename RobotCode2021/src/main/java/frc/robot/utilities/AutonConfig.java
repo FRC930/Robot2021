@@ -3,12 +3,11 @@ package frc.robot.utilities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.*;
-import edu.wpi.first.wpilibj.geometry.Transform2d;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
-import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint;
-import frc.robot.subsystems.DriveSubsystem;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.Trajectory.State;
+import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
 import java.util.logging.Logger;
@@ -57,7 +58,7 @@ public class FlywheelPistonSubsystem extends SubsystemBase {
      */
     public FlywheelPistonSubsystem(int shooterSolenoidTopID, int shooterSolenoidBottomID) {
         //small
-        flywheelPiston = new Solenoid(shooterSolenoidBottomID);
+        flywheelPiston = new Solenoid(PneumaticsModuleType.CTREPCM,shooterSolenoidBottomID);
     }
 
     //-------- METHODS --------\\

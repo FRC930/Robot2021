@@ -10,6 +10,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
 import java.util.logging.Logger;
@@ -40,7 +41,7 @@ public class IntakePistonSubsystem extends SubsystemBase {
      * @param INTAKE_SOLENOID_ID solenoid ID
      */
     public IntakePistonSubsystem(int INTAKE_SOLENOID_ID) {
-        intakePistonController = new Solenoid(INTAKE_SOLENOID_ID);
+        intakePistonController = new Solenoid(PneumaticsModuleType.CTREPCM,INTAKE_SOLENOID_ID);
     }
 
     // -------- METHODS --------\\

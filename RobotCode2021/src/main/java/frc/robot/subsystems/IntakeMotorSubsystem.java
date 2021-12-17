@@ -57,6 +57,7 @@ public class IntakeMotorSubsystem extends SubsystemBase {
      * @param speed the speed at which to set the motor
      */
     public void setMotorSpeed(double speed) {
+        System.out.print(intakeMotorController);
         intakeMotorController.set(ControlMode.PercentOutput, -speed);
         logger.log(Constants.LOG_LEVEL_FINE, "sets motor speed");
     }

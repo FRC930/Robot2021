@@ -1,23 +1,19 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
-import com.swervedrivespecialties.swervelib.Mk3ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.AutonConfig;
 
@@ -90,25 +86,19 @@ public class DriveSubsystem extends SubsystemBase {
     private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
     public DriveSubsystem(IntakeMotorSubsystem intake) {
-        Mk3ModuleConfiguration conf = new Mk3ModuleConfiguration();
-        conf.setDriveCurrentLimit(10.0);
-        conf.setSteerCurrentLimit(10.0);
-        SmartDashboard.putString("currentLimits", conf.toString());
-
-        m_frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(conf, Mk3SwerveModuleHelper.GearRatio.FAST,
+        m_frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(Mk3SwerveModuleHelper.GearRatio.FAST,
                 FRONT_LEFT_MODULE_DRIVE_MOTOR, FRONT_LEFT_MODULE_STEER_MOTOR, FRONT_LEFT_MODULE_STEER_ENCODER,
                 FRONT_LEFT_MODULE_STEER_OFFSET);
-        
 
-        m_frontRightModule = Mk3SwerveModuleHelper.createFalcon500(conf, Mk3SwerveModuleHelper.GearRatio.FAST,
+        m_frontRightModule = Mk3SwerveModuleHelper.createFalcon500(Mk3SwerveModuleHelper.GearRatio.FAST,
                 FRONT_RIGHT_MODULE_DRIVE_MOTOR, FRONT_RIGHT_MODULE_STEER_MOTOR, FRONT_RIGHT_MODULE_STEER_ENCODER,
                 FRONT_RIGHT_MODULE_STEER_OFFSET);
 
-        m_backLeftModule = Mk3SwerveModuleHelper.createFalcon500(conf, Mk3SwerveModuleHelper.GearRatio.FAST,
+        m_backLeftModule = Mk3SwerveModuleHelper.createFalcon500(Mk3SwerveModuleHelper.GearRatio.FAST,
                 BACK_LEFT_MODULE_DRIVE_MOTOR, BACK_LEFT_MODULE_STEER_MOTOR, BACK_LEFT_MODULE_STEER_ENCODER,
                 BACK_LEFT_MODULE_STEER_OFFSET);
 
-        m_backRightModule = Mk3SwerveModuleHelper.createFalcon500(conf, Mk3SwerveModuleHelper.GearRatio.FAST,
+        m_backRightModule = Mk3SwerveModuleHelper.createFalcon500(Mk3SwerveModuleHelper.GearRatio.FAST,
                 BACK_RIGHT_MODULE_DRIVE_MOTOR, BACK_RIGHT_MODULE_STEER_MOTOR, BACK_RIGHT_MODULE_STEER_ENCODER,
                 BACK_RIGHT_MODULE_STEER_OFFSET);
 

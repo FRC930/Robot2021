@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.util.Units;
-
 import java.util.logging.*;
 
 /**
