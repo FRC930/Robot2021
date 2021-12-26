@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
+import java.lang.reflect.Field;
+
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
@@ -8,6 +11,7 @@ import com.swervedrivespecialties.swervelib.Mk3ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
+import com.swervedrivespecialties.swervelib.ctre.Falcon500DriveControllerFactoryBuilder;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -92,13 +96,12 @@ public class DriveSubsystem extends SubsystemBase {
     public DriveSubsystem(IntakeMotorSubsystem intake) {
         Mk3ModuleConfiguration conf = new Mk3ModuleConfiguration();
         conf.setDriveCurrentLimit(10.0);
-        conf.setSteerCurrentLimit(10.0);
+        conf.setSteerCurrentLimit(80.0);
         SmartDashboard.putString("currentLimits", conf.toString());
 
         m_frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(conf, Mk3SwerveModuleHelper.GearRatio.FAST,
                 FRONT_LEFT_MODULE_DRIVE_MOTOR, FRONT_LEFT_MODULE_STEER_MOTOR, FRONT_LEFT_MODULE_STEER_ENCODER,
                 FRONT_LEFT_MODULE_STEER_OFFSET);
-        
 
         m_frontRightModule = Mk3SwerveModuleHelper.createFalcon500(conf, Mk3SwerveModuleHelper.GearRatio.FAST,
                 FRONT_RIGHT_MODULE_DRIVE_MOTOR, FRONT_RIGHT_MODULE_STEER_MOTOR, FRONT_RIGHT_MODULE_STEER_ENCODER,
